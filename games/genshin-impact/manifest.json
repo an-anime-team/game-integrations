@@ -1,0 +1,13 @@
+{
+	"manifest_version": "1",
+	"game": {
+		"name": "genshin-impact",
+		"title": "Genshin Impact",
+		"developer": "Hoyoverse"
+	},
+	"script": {
+		"path": "integration.lua",
+		"version": "0.0.0",
+		"standard": "1"
+	}
+}

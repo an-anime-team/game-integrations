@@ -1,0 +1,13 @@
+{
+	"manifest_version": "1",
+	"game": {
+		"name": "honkai-impact",
+		"title": "Honkai Impact 3rd",
+		"developer": "Hoyoverse"
+	},
+	"script": {
+		"path": "integration.lua",
+		"version": "0.0.0",
+		"standard": "1"
+	}
+}
