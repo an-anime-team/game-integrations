@@ -47,7 +47,7 @@ function v1_visual_get_background_picture(edition)
 end
 
 -- Get list of game editions
-function v1_game_get_editions_list(edition)
+function v1_game_get_editions_list()
   return {
     {
       ["name"]  = "global",
@@ -83,24 +83,8 @@ function v1_game_is_installed(path)
   return file ~= nil
 end
 
--- Get installed game info
-function v1_game_get_info(path)
-  local edition = nil
-  local version = nil
-
-  local appinfo_path = path .. "/BH3_Data/app.info"
-  local appinfo = io.lines(appinfo_path)[2]
-  if not appinfo then
-    return nil
-  end
-
-  -- FIXME
-  local appinfo_map = {
-    ["Honkai Impact 3rd"] = "global",
-    ["崩坏3"]               = "china"
-  }
-  edition = appinfo_map[appinfo]
-
+-- Get installed game version
+function v1_game_get_version(path)
   local manager_path = path .. "/BH3_Data/globalgamemanagers"
   local manager_file = io.open(manager_path, "rb")
   if not manager_file then
@@ -108,12 +92,7 @@ function v1_game_get_info(path)
   end
 
   manager_file:seek("set", 4000)
-  version = manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
-
-  return {
-    ["version"] = version,
-    ["edition"] = edition
-  }
+  return manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
 end
 
 -- Get full game downloading info
@@ -132,44 +111,47 @@ function v1_game_get_download(edition)
 end
 
 -- Get game version diff
-function v1_game_get_diff(path)
-  local installed_info = v1_game_get_info(path)
-
-  if installed_info == nil then
+function v1_game_get_diff(path, edition)
+  local version = v1_game_get_version(path)
+  if not version then
     return nil
-  else
-    local latest_info = game_api(installed_info["edition"])["data"]["game"]["latest"]
+  end
 
-    -- It should be impossible to have higher installed version
-    -- but just in case I have to cover this case as well
-    if installed_info["version"] >= latest_info["version"] then
-      return {
-        ["current_version"] = installed_info["version"],
-        ["latest_version"]  = latest_info["version"],
+  local latest_info = game_api(edition)["data"]["game"]["latest"]
 
-        ["edition"] = installed_info["edition"],
-        ["status"]  = "latest"
+  -- FIXME: comparing versions like that will not work
+
+  -- It should be impossible to have higher installed version
+  -- but just in case I have to cover this case as well
+  if version >= latest_info["version"] then
+    return {
+      ["current_version"] = version,
+      ["latest_version"]  = latest_info["version"],
+
+      ["edition"] = edition,
+      ["status"]  = "latest"
+    }
+  elseif version < latest_info["version"] then
+    return {
+      ["current_version"] = version,
+      ["latest_version"]  = latest_info["version"],
+
+      ["edition"] = edition,
+      ["status"]  = "outdated",
+
+      ["diff"] = {
+        ["type"] = "archive",
+        ["size"] = latest_info["package_size"],
+        ["uri"]  = latest_info["path"]
       }
-    elseif installed_info["version"] < latest_info["version"] then
-      return {
-        ["current_version"] = installed_info["version"],
-        ["latest_version"]  = latest_info["version"],
-
-        ["edition"] = installed_info["edition"],
-        ["status"]  = "outdated",
-
-        ["diff"] = {
-          ["type"] = "archive",
-          ["size"] = latest_info["package_size"],
-          ["uri"]  = latest_info["path"]
-        }
-      }
-    end
+    }
   end
 end
 
 -- Get game launching options
-function v1_game_get_launch_options(path)
+function v1_game_get_launch_options(path, edition)
+  -- TODO: patcher
+
   return {
     ["executable"]  = "BH3.exe",
     ["environment"] = {}

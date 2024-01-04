@@ -43,7 +43,7 @@ function v1_visual_get_background_picture(edition)
 end
 
 -- Get list of game editions
-function v1_game_get_editions_list(edition)
+function v1_game_get_editions_list()
   return {
     {
       ["name"]  = "global",
@@ -63,34 +63,25 @@ function v1_game_is_installed(path)
   return file ~= nil
 end
 
--- Get installed game info
-function v1_game_get_info(path)
-  local edition = nil
-  local version = nil
+-- Get installed game version
+function v1_game_get_version(path, edition)
+  local manager_path = nil
 
-  local manager_path = path .. "/GenshinImpact_Data/globalgamemanagers"
-  local manager_file = io.open(manager_path, "rb")
-
-  if manager_file then
-    edition = "global"
-  else
+  if edition == "global" then
+    manager_path = path .. "/GenshinImpact_Data/globalgamemanagers"
+  elseif edition == "china" then
     manager_path = path .. "/YuanShen_Data/globalgamemanagers"
-    manager_file = io.open(manager_path, "rb")
+  else
+    return nil
+  end
 
-    if manager_file then
-      edition = "china"
-    else
-      return nil
-    end
+  local manager_file = io.open(manager_path, "rb")
+  if not manager_file then
+    return nil
   end
 
   file:seek("set", 4000)
-  version = manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
-
-  return {
-    ["version"] = version,
-    ["edition"] = edition
-  }
+  return manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
 end
 
 -- Get full game downloading info
@@ -117,61 +108,69 @@ function v1_game_get_download(edition)
 end
 
 -- Get game version diff
-function v1_game_get_diff(path)
-  local installed_info = v1_game_get_info(path)
-
-  if installed_info == nil then
+function v1_game_get_diff(path, edition)
+  local version = v1_game_get_version(path, edition)
+  if not version then
     return nil
-  else
-    local latest_info = game_api(installed_info["edition"])["data"]["game"]["latest"]
+  end
 
-    -- It should be impossible to have higher installed version
-    -- but just in case I have to cover this case as well
-    if installed_info["version"] >= latest_info["version"] then
-      return {
-        ["current_version"] = installed_info["version"],
-        ["latest_version"]  = latest_info["version"],
+  local latest_info = game_api(edition)["data"]["game"]["latest"]
 
-        ["edition"] = installed_info["edition"],
-        ["status"]  = "latest"
-      }
-    elseif installed_info["version"] < latest_info["version"] then
-      local segments = {}
-      local size = 0
+  -- FIXME: comparing versions like that will not work
 
-      for _, segment in pairs(latest_info["segments"]) do
-        -- table.insert(segments, {
-        --   ["uri"]  = segment["path"],
-        --   ["size"] = segment["package_size"],
-        --   ["md5"]  = segment["md5"]
-        -- })
+  -- It should be impossible to have higher installed version
+  -- but just in case I have to cover this case as well
+  if version >= latest_info["version"] then
+    return {
+      ["current_version"] = version,
+      ["latest_version"]  = latest_info["version"],
 
-        table.insert(segments, segment["path"])
+      ["edition"] = edition,
+      ["status"]  = "latest"
+    }
+  elseif version < latest_info["version"] then
+    local segments = {}
+    local size = 0
 
-        size = size + segment["package_size"]
-      end
+    for _, segment in pairs(latest_info["segments"]) do
+      -- table.insert(segments, {
+      --   ["uri"]  = segment["path"],
+      --   ["size"] = segment["package_size"],
+      --   ["md5"]  = segment["md5"]
+      -- })
 
-      return {
-        ["current_version"] = installed_info["version"],
-        ["latest_version"]  = latest_info["version"],
+      table.insert(segments, segment["path"])
 
-        ["edition"] = installed_info["edition"],
-        ["status"]  = "outdated",
-
-        ["diff"] = {
-          ["type"]     = "segments",
-          ["size"]     = size,
-          ["segments"] = segments
-        }
-      }
+      size = size + segment["package_size"]
     end
+
+    return {
+      ["current_version"] = version,
+      ["latest_version"]  = latest_info["version"],
+
+      ["edition"] = edition,
+      ["status"]  = "outdated",
+
+      ["diff"] = {
+        ["type"]     = "segments",
+        ["size"]     = size,
+        ["segments"] = segments
+      }
+    }
   end
 end
 
 -- Get game launching options
-function v1_game_get_launch_options(path)
+function v1_game_get_launch_options(path, edition)
+  local executable = nil
+  if edition == "global" then
+    executable = "GenshinImpact.exe"
+  elseif edition == "china" then
+    executable = "YuanShen.exe"
+  end
+
   return {
-    ["executable"]  = "GenshinImpact.exe",
+    ["executable"]  = executable,
     ["environment"] = {}
   }
 end
