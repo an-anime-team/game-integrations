@@ -2,29 +2,29 @@ local game_api_cache = {}
 local social_api_cache = {}
 
 function game_api(edition)
-	if game_api_cache[edition] == nil then
-		local uri = {
-			["global"] = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10",
-			["china"]  = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10"
-		}
+  if game_api_cache[edition] == nil then
+    local uri = {
+      ["global"] = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10",
+      ["china"]  = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10"
+    }
 
-		game_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
-	end
+    game_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
+  end
 
-	return game_api_cache[edition]
+  return game_api_cache[edition]
 end
 
 function social_api(edition)
-	if social_api_cache[edition] == nil then
-		local uri = {
-			["global"] = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us",
-			["china"]  = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us"
-		}
+  if social_api_cache[edition] == nil then
+    local uri = {
+      ["global"] = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us",
+      ["china"]  = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us"
+    }
 
-		social_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
-	end
+    social_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
+  end
 
-	return social_api_cache[edition]
+  return social_api_cache[edition]
 end
 
 -- Get card picture URI
@@ -44,16 +44,16 @@ end
 
 -- Get list of game editions
 function v1_game_get_editions_list(edition)
-	return {
-		{
-			["name"]  = "global",
-			["title"] = "Global"
-		},
-		{
-			["name"]  = "china",
-			["title"] = "China"
-		}
-	}
+  return {
+    {
+      ["name"]  = "global",
+      ["title"] = "Global"
+    },
+    {
+      ["name"]  = "china",
+      ["title"] = "China"
+    }
+  }
 end
 
 -- Check if the game is installed
@@ -189,21 +189,21 @@ end
 
 -- Get list of game DLCs (voice packages)
 function v1_dlc_get_list(edition)
-	local voiceovers = {}
+  local voiceovers = {}
 
-	for _, package in pairs(game_api(edition)["data"]["game"]["latest"]["voice_packs"]) do
-		table.insert(voiceovers, {
-			["name"]  = package["language"],
-			["title"] = package["language"],
+  for _, package in pairs(game_api(edition)["data"]["game"]["latest"]["voice_packs"]) do
+    table.insert(voiceovers, {
+      ["name"]  = package["language"],
+      ["title"] = package["language"],
       ["required"] = false
-		})
-	end
+    })
+  end
 
-	return {
-		{
-			["name"]  = "voiceover",
-			["title"] = "Voiceover",
-			["dlcs"]  = voiceovers
-		}
-	}
+  return {
+    {
+      ["name"]  = "voiceover",
+      ["title"] = "Voiceover",
+      ["dlcs"]  = voiceovers
+    }
+  }
 end
