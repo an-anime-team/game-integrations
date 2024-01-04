@@ -89,34 +89,26 @@ function v1_game_get_info(path)
   local version = nil
 
   local appinfo_path = path .. "/BH3_Data/app.info"
-  local appinfo_file = io.open(appinfo_path, "rb")
-  
-  if not appinfo_file then
-    return nil
-  end
-  
-  local appinfo = io.lines(appinfo_file)[2]
+  local appinfo = io.lines(appinfo_path)[2]
   if not appinfo then
     return nil
   end
-  
+
   -- FIXME
   local appinfo_map = {
     ["Honkai Impact 3rd"] = "global",
     ["崩坏3"]               = "china"
   }
-  edition = appinfo_map[appinfo] 
-  
+  edition = appinfo_map[appinfo]
+
   local manager_path = path .. "/BH3_Data/globalgamemanagers"
   local manager_file = io.open(manager_path, "rb")
+  if not manager_file then
+    return nil
+  end
 
   manager_file:seek("set", 4000)
-
-  for found in manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+") do
-    version = found
-
-    break
-  end
+  version = manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
 
   return {
     ["version"] = version,

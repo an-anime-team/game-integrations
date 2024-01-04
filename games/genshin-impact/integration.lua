@@ -60,10 +60,6 @@ end
 function v1_game_is_installed(path)
   local file = io.open(path .. "/UnityPlayer.dll", "rb")
 
-  if file ~= nil then
-    file:close()
-  end
-
   return file ~= nil
 end
 
@@ -73,15 +69,15 @@ function v1_game_get_info(path)
   local version = nil
 
   local manager_path = path .. "/GenshinImpact_Data/globalgamemanagers"
-  local file = io.open(manager_path, "rb")
+  local manager_file = io.open(manager_path, "rb")
 
-  if file ~= nil then
+  if manager_file then
     edition = "global"
   else
     manager_path = path .. "/YuanShen_Data/globalgamemanagers"
-    file = io.open(manager_path, "rb")
+    manager_file = io.open(manager_path, "rb")
 
-    if file ~= nil then
+    if manager_file then
       edition = "china"
     else
       return nil
@@ -89,14 +85,7 @@ function v1_game_get_info(path)
   end
 
   file:seek("set", 4000)
-
-  for found in file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+") do
-    version = found
-
-    break
-  end
-
-  file:close()
+  version = manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
 
   return {
     ["version"] = version,

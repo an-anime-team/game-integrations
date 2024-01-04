@@ -55,10 +55,6 @@ end
 function v1_game_is_installed(path)
   local file = io.open(path .. "/UnityPlayer.dll", "rb")
 
-  if file ~= nil then
-    file:close()
-  end
-
   return file ~= nil
 end
 
@@ -68,33 +64,25 @@ function v1_game_get_info(path)
   local version = nil
 
   local appinfo_path = path .. "/StarRail_Data/app.info"
-  local appinfo_file = io.open(appinfo_path, "rb")
-  
-  if not appinfo_file then
-    return nil
-  end
-  
-  local appinfo = appinfo_file:read("*line")
+  local appinfo = io.lines(appinfo_path)[2]
   if not appinfo then
     return nil
   end
-  
-  if appinfo == "Cognosphere" then
-    edition = "global"
-  elseif appinfo == "miHoYo" then
-    edition = "china"
-  end
-  
+
+  local appinfo_map = {
+    ["Star Rail"]     = "global",
+    ["崩坏：星穹铁道"] = "china"
+  }
+  edition = appinfo_map[appinfo]
+
   local manager_path = path .. "/StarRail_Data/data.unity3d"
   local manager_file = io.open(manager_path, "rb")
+  if not manager_file then
+    return nil
+  end
 
   manager_file:seek("set", 4000)
-
-  for found in manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+") do
-    version = found
-
-    break
-  end
+  version = manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
 
   return {
     ["version"] = version,
