@@ -80,7 +80,7 @@ function v1_game_get_version(path, edition)
     return nil
   end
 
-  file:seek("set", 4000)
+  manager_file:seek("set", 4000)
   return manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
 end
 
