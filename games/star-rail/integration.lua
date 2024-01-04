@@ -142,6 +142,14 @@ function v1_game_get_diff(path)
   end
 end
 
+-- Get game launching options
+function v1_game_get_launch_options(path)
+  return {
+    ["executable"]  = "StarRail.exe",
+    ["environment"] = {}
+  }
+end
+
 -- Get list of game DLCs (voice packages)
 function v1_dlc_get_list(edition)
   local voiceovers = {}
