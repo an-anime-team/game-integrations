@@ -2,7 +2,7 @@ local game_api_cache = {}
 local social_api_cache = {}
 
 function game_api(edition)
-  if game_api_cache[edition] == nil then
+  if not game_api_cache[edition] then
     local uri = {
       ["global"] = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10",
       ["sea"]    = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/resource?launcher_id=9",
@@ -19,7 +19,7 @@ function game_api(edition)
 end
 
 function social_api(edition)
-  if social_api_cache[edition] == nil then
+  if not social_api_cache[edition] then
     local uri = {
       ["global"] = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/content?filter_adv=true&key=gcStgarh&launcher_id=10&language=en-us",
       ["sea"]    = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/content?filter_adv=true&key=gcStgarh&launcher_id=10&language=en-us",
@@ -77,21 +77,20 @@ function v1_game_get_editions_list()
 end
 
 -- Check if the game is installed
-function v1_game_is_installed(path)
-  local file = io.open(path .. "/UnityPlayer.dll", "rb")
-
-  return file ~= nil
+function v1_game_is_installed(game_path)
+  return io.open(game_path .. "/UnityPlayer.dll", "rb") ~= nil
 end
 
 -- Get installed game version
-function v1_game_get_version(path)
-  local manager_path = path .. "/BH3_Data/globalgamemanagers"
-  local manager_file = io.open(manager_path, "rb")
+function v1_game_get_version(game_path)
+  local manager_file = io.open(game_path .. "/BH3_Data/globalgamemanagers", "rb")
+
   if not manager_file then
     return nil
   end
 
   manager_file:seek("set", 4000)
+
   return manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
 end
 
@@ -111,9 +110,9 @@ function v1_game_get_download(edition)
 end
 
 -- Get game version diff
-function v1_game_get_diff(path, edition)
-  local version = v1_game_get_version(path)
-  if not version then
+function v1_game_get_diff(game_path, edition)
+  local installed_version = v1_game_get_version(game_path)
+  if not installed_version then
     return nil
   end
 
@@ -123,17 +122,17 @@ function v1_game_get_diff(path, edition)
 
   -- It should be impossible to have higher installed version
   -- but just in case I have to cover this case as well
-  if version >= latest_info["version"] then
+  if installed_version >= latest_info["version"] then
     return {
-      ["current_version"] = version,
+      ["current_version"] = installed_version,
       ["latest_version"]  = latest_info["version"],
 
       ["edition"] = edition,
       ["status"]  = "latest"
     }
-  elseif version < latest_info["version"] then
+  elseif installed_version < latest_info["version"] then
     return {
-      ["current_version"] = version,
+      ["current_version"] = installed_version,
       ["latest_version"]  = latest_info["version"],
 
       ["edition"] = edition,
@@ -158,7 +157,39 @@ function v1_game_get_launch_options(path, edition)
   }
 end
 
--- Get list of game DLCs (voice packages)
-function v1_dlc_get_list(edition)
+-- Get list of game addons
+function v1_addons_get_list(edition)
   return {}
+end
+
+-- Check if addon is installed
+function v1_addons_is_installed(group_name, addon_name, addon_path, edition)
+  return false
+end
+
+-- Get installed addon version
+function v1_addons_get_version(group_name, addon_name, addon_path, edition)
+  local version_file = io.open(addon_path .. "/.version", "rb")
+
+  if not version_file then
+    return nil
+  end
+
+  local version = version_file:read(3)
+
+  local major = version:sub(1, 1):byte()
+  local minor = version:sub(2, 2):byte()
+  local patch = version:sub(3, 3):byte()
+
+  return major .. "." .. minor .. "." .. patch
+end
+
+-- Get full addon downloading info
+function v1_addons_get_download(group_name, addon_name, edition)
+  return nil
+end
+
+-- Get addon version diff
+function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
+  return nil
 end
