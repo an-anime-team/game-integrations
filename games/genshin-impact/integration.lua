@@ -220,8 +220,6 @@ end
 
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
-  return "4.2.0"
-
   local version = io.open(addon_path .. "/.version", "rb")
 
   if version == nil then
