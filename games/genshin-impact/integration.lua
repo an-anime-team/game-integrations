@@ -57,17 +57,15 @@ function v1_game_get_editions_list(edition)
 end
 
 -- Check if the game is installed
-function v1_game_is_installed(path)
-  local file = io.open(path .. "/UnityPlayer.dll", "rb")
-
-  return file ~= nil
+function v1_game_is_installed(game_path)
+  return io.open(game_path .. "/UnityPlayer.dll", "rb") ~= nil
 end
 
 -- Get installed game version
-function v1_game_get_version(path, edition)
+function v1_game_get_version(game_path, edition)
   local manager_path = {
-    ["global"] = path .. "/GenshinImpact_Data/globalgamemanagers",
-    ["china"]  = path .. "/YuanShen_Data/globalgamemanagers"
+    ["global"] = game_path .. "/GenshinImpact_Data/globalgamemanagers",
+    ["china"]  = game_path .. "/YuanShen_Data/globalgamemanagers"
   }
 
   local manager_file = io.open(manager_path[edition], "rb")
@@ -106,10 +104,10 @@ function v1_game_get_download(edition)
 end
 
 -- Get game version diff
-function v1_game_get_diff(path, edition)
-  local version = v1_game_get_version(path, edition)
+function v1_game_get_diff(game_path, edition)
+  local installed_version = v1_game_get_version(game_path, edition)
 
-  if not version then
+  if not installed_version then
     return nil
   end
 
@@ -119,15 +117,15 @@ function v1_game_get_diff(path, edition)
 
   -- It should be impossible to have higher installed version
   -- but just in case I have to cover this case as well
-  if version >= latest_info["version"] then
+  if installed_version >= latest_info["version"] then
     return {
-      ["current_version"] = version,
+      ["current_version"] = installed_version,
       ["latest_version"]  = latest_info["version"],
 
       ["edition"] = edition,
       ["status"]  = "latest"
     }
-  elseif version < latest_info["version"] then
+  else
     local segments = {}
     local size = 0
 
@@ -144,7 +142,7 @@ function v1_game_get_diff(path, edition)
     end
 
     return {
-      ["current_version"] = version,
+      ["current_version"] = installed_version,
       ["latest_version"]  = latest_info["version"],
 
       ["edition"] = edition,
@@ -160,7 +158,7 @@ function v1_game_get_diff(path, edition)
 end
 
 -- Get game launching options
-function v1_game_get_launch_options(path, edition)
+function v1_game_get_launch_options(game_path, edition)
   local executable = {
     ["global"] = "GenshinImpact.exe",
     ["china"]  = "YuanShen.exe"
@@ -211,74 +209,97 @@ function v1_addons_get_list(edition)
   }
 end
 
+-- Check if addon is installed
+function v1_addons_is_installed(group_name, addon_name, addon_path, edition)
+  if group_name == "voiceovers" then
+    return io.open(addon_path .. "/1001.pck", "rb") ~= nil
+  end
+
+  return false
+end
+
+-- Get installed addon version
+function v1_addons_get_version(group_name, addon_name, addon_path, edition)
+  local version = io.open(addon_path .. "/.version", "rb")
+
+  if version == nil then
+    return nil
+  end
+
+  local version = version:read(3)
+
+  local major = string.byte(version:sub(1, 1))
+  local minor = string.byte(version:sub(2, 2))
+  local patch = string.byte(version:sub(3, 3))
+
+  return major .. "." .. minor .. "." .. patch
+end
+
 -- Get full addon downloading info
 function v1_addons_get_download(group_name, addon_name, edition)
   local latest_info = game_api(edition)["data"]["game"]["latest"]
-  local results = {}
 
-  for _, package in pairs(latest_info["voice_packs"]) do
-    results["voiceovers." .. package["language"]] = {
-      ["version"] = latest_info["version"],
-      ["edition"] = edition,
-      ["download"] = {
-        ["type"] = "archive",
-        ["size"] = package["size"],
-        ["uri"]  = package["path"]
-      }
-    }
+  if group_name == "voiceovers" then
+    for _, package in pairs(latest_info["voice_packs"]) do
+      if package["language"] == addon_name then
+        return {
+          ["version"] = latest_info["version"],
+          ["edition"] = edition,
+
+          ["download"] = {
+            ["type"] = "archive",
+            ["size"] = package["size"],
+            ["uri"]  = package["path"]
+          }
+        }
+      end
+    end
   end
 
-  return results[group_name .. "." .. dlc_name]
+  return nil
 end
 
--- -- Get dlc version diff
--- function v1_dlc_get_diff(group_name, dlc_name, path, edition)
---   local installed_info = v1_game_get_info(path)
+-- Get addon version diff
+function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
+  local installed_version = v1_addons_get_version(group_name, addon_name, addon_path, edition)
 
---   if installed_info == nil then
---     return nil
---   else
---     local latest_info = game_api(installed_info["edition"])["data"]["game"]["latest"]
+  if installed_version ~= nil then
+    local latest_info = game_api(edition)["data"]["game"]["latest"]
 
---     -- It should be impossible to have higher installed version
---     -- but just in case I have to cover this case as well
---     if installed_info["version"] >= latest_info["version"] then
---       return {
---         ["current_version"] = installed_info["version"],
---         ["latest_version"]  = latest_info["version"],
+    if group_name == "voiceovers" then
+      for _, package in pairs(latest_info["voice_packs"]) do
+        if package["language"] == addon_name then
+          -- FIXME: comparing versions like that will not work
 
---         ["edition"] = installed_info["edition"],
---         ["status"]  = "latest"
---       }
---     elseif installed_info["version"] < latest_info["version"] then
---       local segments = {}
---       local size = 0
+          -- It should be impossible to have higher installed version
+          -- but just in case I have to cover this case as well
+          if installed_version >= latest_info["version"] then
+            return {
+              ["current_version"] = installed_version,
+              ["latest_version"]  = latest_info["version"],
 
---       for _, segment in pairs(latest_info["segments"]) do
---         -- table.insert(segments, {
---         --   ["uri"]  = segment["path"],
---         --   ["size"] = segment["package_size"],
---         --   ["md5"]  = segment["md5"]
---         -- })
+              ["edition"] = edition,
+              ["status"]  = "latest"
+            }
+          else
+            return {
+              ["current_version"] = installed_version,
+              ["latest_version"]  = latest_info["version"],
 
---         table.insert(segments, segment["path"])
+              ["edition"] = edition,
+              ["status"]  = "outdated",
 
---         size = size + segment["package_size"]
---       end
+              ["diff"] = {
+                ["type"] = "archive",
+                ["size"] = package["size"],
+                ["uri"]  = package["path"]
+              }
+            }
+          end
+        end
+      end
+    end
+  end
 
---       return {
---         ["current_version"] = installed_info["version"],
---         ["latest_version"]  = latest_info["version"],
-
---         ["edition"] = installed_info["edition"],
---         ["status"]  = "outdated",
-
---         ["diff"] = {
---           ["type"]     = "segments",
---           ["size"]     = size,
---           ["segments"] = segments
---         }
---       }
---     end
---   end
--- end
+  return nil
+end
