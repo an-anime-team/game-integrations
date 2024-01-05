@@ -30,8 +30,8 @@ end
 -- Get card picture URI
 function v1_visual_get_card_picture(edition)
   local uri = {
-    ["global"] = "card.jpg",
-    ["china"]  = "card-china.jpg"
+    ["global"] = "/var/home/observer/projects/new-anime-core/anime-games-launcher/assets/images/games/genshin/card.jpg",
+    ["china"]  = "/var/home/observer/projects/new-anime-core/anime-games-launcher/assets/images/games/genshin/card-china.jpg"
   }
 
   return uri[edition]
@@ -111,7 +111,10 @@ function v1_game_get_diff(game_path, edition)
     return nil
   end
 
-  local latest_info = game_api(edition)["data"]["game"]["latest"]
+  local game_data = game_api(edition)["data"]["game"]
+
+  local latest_info = game_data["latest"]
+  local diffs = game_data["diffs"]
 
   -- FIXME: comparing versions like that will not work
 
@@ -126,19 +129,22 @@ function v1_game_get_diff(game_path, edition)
       ["status"]  = "latest"
     }
   else
-    local segments = {}
-    local size = 0
+    for _, diff in pairs(diffs) do
+      if diff["version"] == installed_version then
+        return {
+          ["current_version"] = installed_version,
+          ["latest_version"]  = latest_info["version"],
 
-    for _, segment in pairs(latest_info["segments"]) do
-      -- table.insert(segments, {
-      --   ["uri"]  = segment["path"],
-      --   ["size"] = segment["package_size"],
-      --   ["md5"]  = segment["md5"]
-      -- })
+          ["edition"] = edition,
+          ["status"]  = "outdated",
 
-      table.insert(segments, segment["path"])
-
-      size = size + segment["package_size"]
+          ["diff"] = {
+            ["type"] = "archive",
+            ["size"] = diff["package_size"],
+            ["uri"]  = diff["path"]
+          }
+        }
+      end
     end
 
     return {
@@ -146,13 +152,7 @@ function v1_game_get_diff(game_path, edition)
       ["latest_version"]  = latest_info["version"],
 
       ["edition"] = edition,
-      ["status"]  = "outdated",
-
-      ["diff"] = {
-        ["type"]     = "segments",
-        ["size"]     = size,
-        ["segments"] = segments
-      }
+      ["status"]  = "unavailable"
     }
   end
 end
@@ -220,6 +220,8 @@ end
 
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
+  return "4.2.0"
+
   local version = io.open(addon_path .. "/.version", "rb")
 
   if version == nil then
@@ -264,39 +266,56 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   local installed_version = v1_addons_get_version(group_name, addon_name, addon_path, edition)
 
   if installed_version ~= nil then
-    local latest_info = game_api(edition)["data"]["game"]["latest"]
+    local game_data = game_api(edition)["data"]["game"]
 
-    if group_name == "voiceovers" then
-      for _, package in pairs(latest_info["voice_packs"]) do
-        if package["language"] == addon_name then
-          -- FIXME: comparing versions like that will not work
+    local latest_info = game_data["latest"]
+    local diffs = game_data["diffs"]
 
-          -- It should be impossible to have higher installed version
-          -- but just in case I have to cover this case as well
-          if installed_version >= latest_info["version"] then
-            return {
-              ["current_version"] = installed_version,
-              ["latest_version"]  = latest_info["version"],
+    -- FIXME: comparing versions like that will not work
 
-              ["edition"] = edition,
-              ["status"]  = "latest"
-            }
-          else
-            return {
-              ["current_version"] = installed_version,
-              ["latest_version"]  = latest_info["version"],
+    -- It should be impossible to have higher installed version
+    -- but just in case I have to cover this case as well
+    if installed_version >= latest_info["version"] then
+      return {
+        ["current_version"] = installed_version,
+        ["latest_version"]  = latest_info["version"],
 
-              ["edition"] = edition,
-              ["status"]  = "outdated",
+        ["edition"] = edition,
+        ["status"]  = "latest"
+      }
+    else
+      if group_name == "voiceovers" then
+        for _, diff in pairs(diffs) do
+          if diff["version"] == installed_version then
+            for _, package in pairs(diff["voice_packs"]) do
+              if package["language"] == addon_name then
+                return {
+                  ["current_version"] = installed_version,
+                  ["latest_version"]  = latest_info["version"],
 
-              ["diff"] = {
-                ["type"] = "archive",
-                ["size"] = package["size"],
-                ["uri"]  = package["path"]
-              }
-            }
+                  ["edition"] = edition,
+                  ["status"]  = "outdated",
+
+                  ["diff"] = {
+                    ["type"] = "archive",
+                    ["size"] = package["package_size"],
+                    ["uri"]  = package["path"]
+                  }
+                }
+              end
+            end
+
+            return nil
           end
         end
+
+        return {
+          ["current_version"] = installed_version,
+          ["latest_version"]  = latest_info["version"],
+
+          ["edition"] = edition,
+          ["status"]  = "unavailable"
+        }
       end
     end
   end
