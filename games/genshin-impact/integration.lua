@@ -2,7 +2,7 @@ local game_api_cache = {}
 local social_api_cache = {}
 
 function game_api(edition)
-  if game_api_cache[edition] == nil then
+  if not game_api_cache[edition] then
     local uri = {
       ["global"] = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10",
       ["china"]  = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10"
@@ -15,7 +15,7 @@ function game_api(edition)
 end
 
 function social_api(edition)
-  if social_api_cache[edition] == nil then
+  if not social_api_cache[edition] then
     local uri = {
       ["global"] = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us",
       ["china"]  = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us"
@@ -43,7 +43,7 @@ function v1_visual_get_background_picture(edition)
 end
 
 -- Get list of game editions
-function v1_game_get_editions_list(edition)
+function v1_game_get_editions_list()
   return {
     {
       ["name"]  = "global",
@@ -63,12 +63,12 @@ end
 
 -- Get installed game version
 function v1_game_get_version(game_path, edition)
-  local manager_path = {
-    ["global"] = game_path .. "/GenshinImpact_Data/globalgamemanagers",
-    ["china"]  = game_path .. "/YuanShen_Data/globalgamemanagers"
+  local manager_paths = {
+    ["global"] = "/GenshinImpact_Data/globalgamemanagers",
+    ["china"]  = "/YuanShen_Data/globalgamemanagers"
   }
 
-  local manager_file = io.open(manager_path[edition], "rb")
+  local manager_file = io.open(game_path .. manager_paths[edition], "rb")
 
   if not manager_file then
     return nil
@@ -94,7 +94,7 @@ function v1_game_get_download(edition)
   return {
     ["version"] = latest_info["version"],
     ["edition"] = edition,
-  
+
     ["download"] = {
       ["type"]     = "segments",
       ["size"]     = size,
@@ -178,11 +178,7 @@ function get_voiceover_title(language)
     ["zh-cn"] = "Chinese"
   }
 
-  if names[language] ~= nil then
-    return names[language]
-  else
-    return language
-  end
+  return names[language] or language
 end
 
 -- Get list of game addons (voice packages)
@@ -220,17 +216,17 @@ end
 
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
-  local version = io.open(addon_path .. "/.version", "rb")
+  local version_file = io.open(addon_path .. "/.version", "rb")
 
-  if version == nil then
+  if not version_file then
     return nil
   end
 
-  local version = version:read(3)
+  local version = version_file:read(3)
 
-  local major = string.byte(version:sub(1, 1))
-  local minor = string.byte(version:sub(2, 2))
-  local patch = string.byte(version:sub(3, 3))
+  local major = version:sub(1, 1):byte()
+  local minor = version:sub(2, 2):byte()
+  local patch = version:sub(3, 3):byte()
 
   return major .. "." .. minor .. "." .. patch
 end
@@ -263,60 +259,60 @@ end
 function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   local installed_version = v1_addons_get_version(group_name, addon_name, addon_path, edition)
 
-  if installed_version ~= nil then
-    local game_data = game_api(edition)["data"]["game"]
+  if not installed_version then
+    return nil
+  end
 
-    local latest_info = game_data["latest"]
-    local diffs = game_data["diffs"]
+  local game_data = game_api(edition)["data"]["game"]
 
-    -- FIXME: comparing versions like that will not work
+  local latest_info = game_data["latest"]
+  local diffs = game_data["diffs"]
 
-    -- It should be impossible to have higher installed version
-    -- but just in case I have to cover this case as well
-    if installed_version >= latest_info["version"] then
+  -- FIXME: comparing versions like that will not work
+
+  -- It should be impossible to have higher installed version
+  -- but just in case I have to cover this case as well
+  if installed_version >= latest_info["version"] then
+    return {
+      ["current_version"] = installed_version,
+      ["latest_version"]  = latest_info["version"],
+
+      ["edition"] = edition,
+      ["status"]  = "latest"
+    }
+  else
+    if group_name == "voiceovers" then
+      for _, diff in pairs(diffs) do
+        if diff["version"] == installed_version then
+          for _, package in pairs(diff["voice_packs"]) do
+            if package["language"] == addon_name then
+              return {
+                ["current_version"] = installed_version,
+                ["latest_version"]  = latest_info["version"],
+
+                ["edition"] = edition,
+                ["status"]  = "outdated",
+
+                ["diff"] = {
+                  ["type"] = "archive",
+                  ["size"] = package["package_size"],
+                  ["uri"]  = package["path"]
+                }
+              }
+            end
+          end
+
+          return nil
+        end
+      end
+
       return {
         ["current_version"] = installed_version,
         ["latest_version"]  = latest_info["version"],
 
         ["edition"] = edition,
-        ["status"]  = "latest"
+        ["status"]  = "unavailable"
       }
-    else
-      if group_name == "voiceovers" then
-        for _, diff in pairs(diffs) do
-          if diff["version"] == installed_version then
-            for _, package in pairs(diff["voice_packs"]) do
-              if package["language"] == addon_name then
-                return {
-                  ["current_version"] = installed_version,
-                  ["latest_version"]  = latest_info["version"],
-
-                  ["edition"] = edition,
-                  ["status"]  = "outdated",
-
-                  ["diff"] = {
-                    ["type"] = "archive",
-                    ["size"] = package["package_size"],
-                    ["uri"]  = package["path"]
-                  }
-                }
-              end
-            end
-
-            return nil
-          end
-        end
-
-        return {
-          ["current_version"] = installed_version,
-          ["latest_version"]  = latest_info["version"],
-
-          ["edition"] = edition,
-          ["status"]  = "unavailable"
-        }
-      end
     end
   end
-
-  return nil
 end
