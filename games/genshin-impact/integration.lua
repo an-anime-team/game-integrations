@@ -1,8 +1,48 @@
 local game_api_cache = {}
 local social_api_cache = {}
 
-function game_api(edition)
-  if not game_api_cache[edition] then
+-- Convert raw number string into table of version numbers
+local function split_version(version)
+  local numbers = version:gmatch("([1-9]+)%.([0-9]+)%.([0-9]+)")
+
+  for major, minor, patch in numbers do
+    return {
+      ["major"] = major,
+      ["minor"] = minor,
+      ["patch"] = patch
+    }
+  end
+
+  return nil
+end
+
+-- Compare two raw version strings
+-- [ 1] if version_1 > version_2
+-- [ 0] if version_1 = version_2
+-- [-1] if version_1 < version_2
+local function compare_versions(version_1, version_2)
+  local version_1 = split_version(version_1)
+  local version_2 = split_version(version_2)
+  
+  if version_1 == nil or version_2 == nil then
+    return nil
+  end
+
+  -- Thanks, noir!
+  if version_1.major > version_2.major then return  1 end
+  if version_1.major < version_2.major then return -1 end
+
+  if version_1.minor > version_2.minor then return  1 end
+  if version_1.minor < version_2.minor then return -1 end
+
+  if version_1.patch > version_2.patch then return  1 end
+  if version_1.patch < version_2.patch then return -1 end
+
+  return 0
+end
+
+local function game_api(edition)
+  if game_api_cache[edition] == nil then
     local uri = {
       ["global"] = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10",
       ["china"]  = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10"
@@ -14,8 +54,8 @@ function game_api(edition)
   return game_api_cache[edition]
 end
 
-function social_api(edition)
-  if not social_api_cache[edition] then
+local function social_api(edition)
+  if social_api_cache[edition] == nil then
     local uri = {
       ["global"] = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us",
       ["china"]  = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us"
@@ -63,12 +103,12 @@ end
 
 -- Get installed game version
 function v1_game_get_version(game_path, edition)
-  local manager_paths = {
-    ["global"] = "/GenshinImpact_Data/globalgamemanagers",
-    ["china"]  = "/YuanShen_Data/globalgamemanagers"
+  local manager_path = {
+    ["global"] = game_path .. "/GenshinImpact_Data/globalgamemanagers",
+    ["china"]  = game_path .. "/YuanShen_Data/globalgamemanagers"
   }
 
-  local manager_file = io.open(game_path .. manager_paths[edition], "rb")
+  local manager_file = io.open(manager_path[edition], "rb")
 
   if not manager_file then
     return nil
@@ -94,7 +134,7 @@ function v1_game_get_download(edition)
   return {
     ["version"] = latest_info["version"],
     ["edition"] = edition,
-
+  
     ["download"] = {
       ["type"]     = "segments",
       ["size"]     = size,
@@ -116,11 +156,9 @@ function v1_game_get_diff(game_path, edition)
   local latest_info = game_data["latest"]
   local diffs = game_data["diffs"]
 
-  -- FIXME: comparing versions like that will not work
-
   -- It should be impossible to have higher installed version
   -- but just in case I have to cover this case as well
-  if installed_version >= latest_info["version"] then
+  if compare_versions(installed_version, latest_info["version"]) ~= -1 then
     return {
       ["current_version"] = installed_version,
       ["latest_version"]  = latest_info["version"],
@@ -166,7 +204,7 @@ function v1_game_get_status(game_path, edition)
 end
 
 -- Get game launching options
-function v1_game_get_launch_options(game_path, edition)
+function v1_game_get_launch_options(game_path, addons_path, edition)
   local executable = {
     ["global"] = "GenshinImpact.exe",
     ["china"]  = "YuanShen.exe"
@@ -174,11 +212,12 @@ function v1_game_get_launch_options(game_path, edition)
 
   return {
     ["executable"]  = executable[edition],
+    ["options"]     = {},
     ["environment"] = {}
   }
 end
 
-function get_voiceover_title(language)
+local function get_voiceover_title(language)
   local names = {
     ["en-us"] = "English",
     ["ja-jp"] = "Japanese",
@@ -186,7 +225,26 @@ function get_voiceover_title(language)
     ["zh-cn"] = "Chinese"
   }
 
-  return names[language] or language
+  if names[language] ~= nil then
+    return names[language]
+  else
+    return language
+  end
+end
+
+local function get_voiceover_folder(language)
+  local names = {
+    ["en-us"] = "English(US)",
+    ["ja-jp"] = "Japanese",
+    ["ko-kr"] = "Korean",
+    ["zh-cn"] = "Chinese"
+  }
+
+  if names[language] ~= nil then
+    return names[language]
+  else
+    return language
+  end
 end
 
 -- Get list of game addons (voice packages)
@@ -216,7 +274,7 @@ end
 -- Check if addon is installed
 function v1_addons_is_installed(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    return io.open(addon_path .. "/1001.pck", "rb") ~= nil
+    return io.open(addon_path .. "/GenshinImpact_Data/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/1001.pck", "rb") ~= nil
   end
 
   return false
@@ -224,19 +282,13 @@ end
 
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
-  local version_file = io.open(addon_path .. "/.version", "rb")
+  local version = io.open(addon_path .. "/.version", "r")
 
-  if not version_file then
+  if version == nil then
     return nil
   end
 
-  local version = version_file:read(3)
-
-  local major = version:sub(1, 1):byte()
-  local minor = version:sub(2, 2):byte()
-  local patch = version:sub(3, 3):byte()
-
-  return major .. "." .. minor .. "." .. patch
+  return version:read("*all")
 end
 
 -- Get full addon downloading info
@@ -276,11 +328,9 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   local latest_info = game_data["latest"]
   local diffs = game_data["diffs"]
 
-  -- FIXME: comparing versions like that will not work
-
   -- It should be impossible to have higher installed version
   -- but just in case I have to cover this case as well
-  if installed_version >= latest_info["version"] then
+  if compare_versions(installed_version, latest_info["version"]) ~= -1 then
     return {
       ["current_version"] = installed_version,
       ["latest_version"]  = latest_info["version"],
@@ -323,4 +373,16 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
       }
     end
   end
+end
+
+-- Update post-processing
+function v1_diff_post_transition(path, edition)
+  local file = io.open(path .. "/.version", "w+")
+
+  local version = v1_game_get_version(path) or game_api(edition)["data"]["game"]["latest"]["version"]
+
+  file:write(version)
+  file:close()
+
+  -- TODO: deletefiles.txt, hdifffiles.txt
 end
