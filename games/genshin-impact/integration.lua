@@ -43,7 +43,7 @@ function v1_visual_get_background_picture(edition)
 end
 
 -- Get list of game editions
-function v1_game_get_editions_list(edition)
+function v1_game_get_editions_list()
   return {
     {
       ["name"]  = "global",
@@ -155,6 +155,14 @@ function v1_game_get_diff(game_path, edition)
       ["status"]  = "unavailable"
     }
   end
+end
+
+-- Get installed game status before launching it
+function v1_game_get_status(game_path, edition)
+  return {
+    ["allow_launch"] = true,
+    ["severity"] = "none"
+  }
 end
 
 -- Get game launching options
