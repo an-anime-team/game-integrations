@@ -105,16 +105,40 @@ end
 -- Get card picture URI
 function v1_visual_get_card_picture(edition)
   local uri = {
-    ["global"] = "/var/home/observer/projects/new-anime-core/anime-games-launcher/assets/images/games/genshin/card.jpg",
-    ["china"]  = "/var/home/observer/projects/new-anime-core/anime-games-launcher/assets/images/games/genshin/card-china.jpg"
+    ["global"] = "https://raw.githubusercontent.com/an-anime-team/game-integrations/main/games/genshin-impact/card.jpg",
+    ["china"]  = "https://raw.githubusercontent.com/an-anime-team/game-integrations/main/games/genshin-impact/card-china.jpg"
   }
 
-  return uri[edition]
+  local path = "/tmp/.genshin-" .. edition .. "-card"
+
+  if io.open(path, "rb") ~= nil then
+    return path
+  end
+
+  local file = io.open(path, "w+")
+
+  file:write(v1_network_http_get(uri[edition]))
+  file:close()
+
+  return path
 end
 
 -- Get background picture URI
 function v1_visual_get_background_picture(edition)
-  return social_api(edition)["data"]["adv"]["background"]
+  local uri = social_api(edition)["data"]["adv"]["background"]
+
+  local path = "/tmp/.genshin-" .. edition .. "-background"
+
+  if io.open(path, "rb") ~= nil then
+    return path
+  end
+
+  local file = io.open(path, "w+")
+
+  file:write(v1_network_http_get(uri))
+  file:close()
+
+  return path
 end
 
 -- Get list of game editions
