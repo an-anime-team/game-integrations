@@ -379,7 +379,10 @@ end
 
 function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    return addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name)
+    return {
+      addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name),
+      addon_path .. "/Audio_" .. get_voiceover_folder(addon_name) .. "_pkg_version"
+    }
   end
 end
 
