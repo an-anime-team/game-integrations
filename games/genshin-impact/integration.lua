@@ -282,13 +282,15 @@ end
 
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
-  local version = io.open(addon_path .. "/.version", "r")
+  if group_name == "voiceovers" then
+    local version = io.open(addon_path .. "/GenshinImpact_Data/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "r")
 
-  if version == nil then
-    return nil
+    if version ~= nil then
+      return version:read("*all")
+    end
   end
 
-  return version:read("*all")
+  return nil
 end
 
 -- Get full addon downloading info
@@ -375,14 +377,28 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   end
 end
 
--- Update post-processing
-function v1_diff_post_transition(path, edition)
-  local file = io.open(path .. "/.version", "w+")
+-- Game update post-processing
+function v1_game_diff_post_transition(game_path, edition)
+  local file = io.open(game_path .. "/.version", "w+")
 
-  local version = v1_game_get_version(path) or game_api(edition)["data"]["game"]["latest"]["version"]
+  local version = v1_game_get_version(game_path) or game_api(edition)["data"]["game"]["latest"]["version"]
 
   file:write(version)
   file:close()
+
+  -- TODO: deletefiles.txt, hdifffiles.txt
+end
+
+-- Addons update post-processing
+function v1_addons_diff_post_transition(group_name, addon_name, addon_path, edition)
+  if group_name == "voiceovers" then
+    local file = io.open(addon_path .. "/GenshinImpact_Data/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
+
+    local version = v1_addons_get_version(group_name, addon_name, addon_path, edition) or game_api(edition)["data"]["game"]["latest"]["version"]
+
+    file:write(version)
+    file:close()
+  end
 
   -- TODO: deletefiles.txt, hdifffiles.txt
 end
