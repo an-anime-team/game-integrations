@@ -1,6 +1,32 @@
 local game_api_cache = {}
 local social_api_cache = {}
 
+local function game_api(edition)
+  if game_api_cache[edition] == nil then
+    local uri = {
+      ["global"] = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10",
+      ["china"]  = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10"
+    }
+
+    game_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
+  end
+
+  return game_api_cache[edition]
+end
+
+local function social_api(edition)
+  if social_api_cache[edition] == nil then
+    local uri = {
+      ["global"] = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us",
+      ["china"]  = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us"
+    }
+
+    social_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
+  end
+
+  return social_api_cache[edition]
+end
+
 -- Convert raw number string into table of version numbers
 local function split_version(version)
   local numbers = version:gmatch("([1-9]+)%.([0-9]+)%.([0-9]+)")
@@ -41,31 +67,40 @@ local function compare_versions(version_1, version_2)
   return 0
 end
 
-local function game_api(edition)
-  if game_api_cache[edition] == nil then
-    local uri = {
-      ["global"] = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10",
-      ["china"]  = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10"
-    }
+local function get_voiceover_title(language)
+  local names = {
+    ["en-us"] = "English",
+    ["ja-jp"] = "Japanese",
+    ["ko-kr"] = "Korean",
+    ["zh-cn"] = "Chinese"
+  }
 
-    game_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
-  end
-
-  return game_api_cache[edition]
+  return names[language] or language
 end
 
-local function social_api(edition)
-  if social_api_cache[edition] == nil then
-    local uri = {
-      ["global"] = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us",
-      ["china"]  = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/content?filter_adv=true&key=vplOVX8Vn7cwG8yb&launcher_id=35&language=en-us"
-    }
+local function get_voiceover_folder(language)
+  local names = {
+    ["en-us"] = "English(US)",
+    ["ja-jp"] = "Japanese",
+    ["ko-kr"] = "Korean",
+    ["zh-cn"] = "Chinese"
+  }
 
-    social_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
-  end
-
-  return social_api_cache[edition]
+  return names[language] or language
 end
+
+local function get_edition_data_folder(edition)
+  local names = {
+    ["global"] = "GenshinImpact_Data",
+    ["china"]  = "YuanShen_Data"
+  }
+
+  return names[edition]
+end
+
+----------------------------------------------------+-----------------------+----------------------------------------------------
+----------------------------------------------------| v1 standard functions |----------------------------------------------------
+----------------------------------------------------+-----------------------+----------------------------------------------------
 
 -- Get card picture URI
 function v1_visual_get_card_picture(edition)
@@ -103,20 +138,15 @@ end
 
 -- Get installed game version
 function v1_game_get_version(game_path, edition)
-  local manager_path = {
-    ["global"] = game_path .. "/GenshinImpact_Data/globalgamemanagers",
-    ["china"]  = game_path .. "/YuanShen_Data/globalgamemanagers"
-  }
+  local file = io.open(game_path .. "/" .. get_edition_data_folder(edition) .. "/globalgamemanagers", "rb")
 
-  local manager_file = io.open(manager_path[edition], "rb")
-
-  if not manager_file then
+  if not file then
     return nil
   end
 
-  manager_file:seek("set", 4000)
+  file:seek("set", 4000)
 
-  return manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
+  return file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
 end
 
 -- Get full game downloading info
@@ -217,36 +247,6 @@ function v1_game_get_launch_options(game_path, addons_path, edition)
   }
 end
 
-local function get_voiceover_title(language)
-  local names = {
-    ["en-us"] = "English",
-    ["ja-jp"] = "Japanese",
-    ["ko-kr"] = "Korean",
-    ["zh-cn"] = "Chinese"
-  }
-
-  if names[language] ~= nil then
-    return names[language]
-  else
-    return language
-  end
-end
-
-local function get_voiceover_folder(language)
-  local names = {
-    ["en-us"] = "English(US)",
-    ["ja-jp"] = "Japanese",
-    ["ko-kr"] = "Korean",
-    ["zh-cn"] = "Chinese"
-  }
-
-  if names[language] ~= nil then
-    return names[language]
-  else
-    return language
-  end
-end
-
 -- Get list of game addons (voice packages)
 function v1_addons_get_list(edition)
   local latest_info = game_api(edition)["data"]["game"]["latest"]
@@ -274,7 +274,7 @@ end
 -- Check if addon is installed
 function v1_addons_is_installed(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    return io.open(addon_path .. "/GenshinImpact_Data/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/1001.pck", "rb") ~= nil
+    return io.open(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/1001.pck", "rb") ~= nil
   end
 
   return false
@@ -283,7 +283,7 @@ end
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    local version = io.open(addon_path .. "/GenshinImpact_Data/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "r")
+    local version = io.open(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "r")
 
     if version ~= nil then
       return version:read("*all")
@@ -377,6 +377,12 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   end
 end
 
+function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
+  if group_name == "voiceovers" then
+    return addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name)
+  end
+end
+
 -- Game update post-processing
 function v1_game_diff_post_transition(game_path, edition)
   local file = io.open(game_path .. "/.version", "w+")
@@ -392,7 +398,7 @@ end
 -- Addons update post-processing
 function v1_addons_diff_post_transition(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    local file = io.open(addon_path .. "/GenshinImpact_Data/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
+    local file = io.open(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
 
     local version = v1_addons_get_version(group_name, addon_name, addon_path, edition) or game_api(edition)["data"]["game"]["latest"]["version"]
 
