@@ -1,8 +1,8 @@
 local game_api_cache = {}
 local social_api_cache = {}
 
-function game_api(edition)
-  if not game_api_cache[edition] then
+local function game_api(edition)
+  if game_api_cache[edition] == nil then
     local uri = {
       ["global"] = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10",
       ["sea"]    = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/resource?launcher_id=9",
@@ -18,8 +18,8 @@ function game_api(edition)
   return game_api_cache[edition]
 end
 
-function social_api(edition)
-  if not social_api_cache[edition] then
+local function social_api(edition)
+  if social_api_cache[edition] == nil then
     local uri = {
       ["global"] = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/content?filter_adv=true&key=gcStgarh&launcher_id=10&language=en-us",
       ["sea"]    = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/content?filter_adv=true&key=gcStgarh&launcher_id=10&language=en-us",
@@ -35,15 +35,88 @@ function social_api(edition)
   return social_api_cache[edition]
 end
 
+-- Convert raw number string into table of version numbers
+local function split_version(version)
+  local numbers = version:gmatch("([1-9]+)%.([0-9]+)%.([0-9]+)")
+
+  for major, minor, patch in numbers do
+    return {
+      ["major"] = major,
+      ["minor"] = minor,
+      ["patch"] = patch
+    }
+  end
+
+  return nil
+end
+
+-- Compare two raw version strings
+-- [ 1] if version_1 > version_2
+-- [ 0] if version_1 = version_2
+-- [-1] if version_1 < version_2
+local function compare_versions(version_1, version_2)
+  local version_1 = split_version(version_1)
+  local version_2 = split_version(version_2)
+  
+  if version_1 == nil or version_2 == nil then
+    return nil
+  end
+
+  -- Thanks, noir!
+  if version_1.major > version_2.major then return  1 end
+  if version_1.major < version_2.major then return -1 end
+
+  if version_1.minor > version_2.minor then return  1 end
+  if version_1.minor < version_2.minor then return -1 end
+
+  if version_1.patch > version_2.patch then return  1 end
+  if version_1.patch < version_2.patch then return -1 end
+
+  return 0
+end
+
+----------------------------------------------------+-----------------------+----------------------------------------------------
+----------------------------------------------------| v1 standard functions |----------------------------------------------------
+----------------------------------------------------+-----------------------+----------------------------------------------------
+
 -- Get card picture URI
 function v1_visual_get_card_picture(edition)
-  -- FIXME
-  return "/var/home/observer/projects/new-anime-core/anime-games-launcher/assets/images/games/honkai/card.jpg"
+  local uri = "https://raw.githubusercontent.com/an-anime-team/game-integrations/main/games/honkai-impact/card.jpg"
+  local path = "/tmp/.honkai-" .. edition .. "-card"
+
+  if io.open(path, "rb") ~= nil then
+    return path
+  end
+
+  local file = io.open(path, "w+")
+
+  file:write(v1_network_http_get(uri))
+  file:close()
+
+  return path
 end
 
 -- Get background picture URI
 function v1_visual_get_background_picture(edition)
-  return social_api(edition)["data"]["adv"]["background"]
+  local uri = social_api(edition)["data"]["adv"]["background"]
+
+  local path = "/tmp/.honkai-" .. edition .. "-background"
+
+  if io.open(path, "rb") ~= nil then
+    return path
+  end
+
+  local file = io.open(path, "w+")
+
+  file:write(v1_network_http_get(uri))
+  file:close()
+
+  return path
+end
+
+-- Get CSS styles for game details background
+function v1_visual_get_details_background_css(edition)
+  return "background: radial-gradient(#f8c2d0, #4078c5);"
 end
 
 -- Get list of game editions
@@ -63,7 +136,7 @@ function v1_game_get_editions_list()
     },
     {
       ["name"]  = "taiwan",
-      ["title"] = "TW-HK-MO" -- FIXME: ?
+      ["title"] = "Taiwan"
     },
     {
       ["name"]  = "korea",
@@ -82,16 +155,16 @@ function v1_game_is_installed(game_path)
 end
 
 -- Get installed game version
-function v1_game_get_version(game_path)
-  local manager_file = io.open(game_path .. "/BH3_Data/globalgamemanagers", "rb")
+function v1_game_get_version(game_path, edition)
+  local file = io.open(game_path .. "/BH3_Data/globalgamemanagers", "rb")
 
-  if not manager_file then
+  if not file then
     return nil
   end
 
-  manager_file:seek("set", 4000)
+  file:seek("set", 4000)
 
-  return manager_file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
+  return file:read(10000):gmatch("[1-9]+[.][0-9]+[.][0-9]+")()
 end
 
 -- Get full game downloading info
@@ -111,18 +184,20 @@ end
 
 -- Get game version diff
 function v1_game_get_diff(game_path, edition)
-  local installed_version = v1_game_get_version(game_path)
+  local installed_version = v1_game_get_version(game_path, edition)
+
   if not installed_version then
     return nil
   end
 
-  local latest_info = game_api(edition)["data"]["game"]["latest"]
+  local game_data = game_api(edition)["data"]["game"]
 
-  -- FIXME: comparing versions like that will not work
+  local latest_info = game_data["latest"]
+  local diffs = game_data["diffs"]
 
   -- It should be impossible to have higher installed version
   -- but just in case I have to cover this case as well
-  if installed_version >= latest_info["version"] then
+  if compare_versions(installed_version, latest_info["version"]) ~= -1 then
     return {
       ["current_version"] = installed_version,
       ["latest_version"]  = latest_info["version"],
@@ -130,29 +205,48 @@ function v1_game_get_diff(game_path, edition)
       ["edition"] = edition,
       ["status"]  = "latest"
     }
-  elseif installed_version < latest_info["version"] then
+  else
+    for _, diff in pairs(diffs) do
+      if diff["version"] == installed_version then
+        return {
+          ["current_version"] = installed_version,
+          ["latest_version"]  = latest_info["version"],
+
+          ["edition"] = edition,
+          ["status"]  = "outdated",
+
+          ["diff"] = {
+            ["type"] = "archive",
+            ["size"] = diff["package_size"],
+            ["uri"]  = diff["path"]
+          }
+        }
+      end
+    end
+
     return {
       ["current_version"] = installed_version,
       ["latest_version"]  = latest_info["version"],
 
       ["edition"] = edition,
-      ["status"]  = "outdated",
-
-      ["diff"] = {
-        ["type"] = "archive",
-        ["size"] = latest_info["package_size"],
-        ["uri"]  = latest_info["path"]
-      }
+      ["status"]  = "unavailable"
     }
   end
 end
 
--- Get game launching options
-function v1_game_get_launch_options(path, edition)
-  -- TODO: patcher
+-- Get installed game status before launching it
+function v1_game_get_status(game_path, edition)
+  return {
+    ["allow_launch"] = true,
+    ["severity"] = "none"
+  }
+end
 
+-- Get game launching options
+function v1_game_get_launch_options(game_path, addons_path, edition)
   return {
     ["executable"]  = "BH3.exe",
+    ["options"]     = {},
     ["environment"] = {}
   }
 end
@@ -169,19 +263,7 @@ end
 
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
-  local version_file = io.open(addon_path .. "/.version", "rb")
-
-  if not version_file then
-    return nil
-  end
-
-  local version = version_file:read(3)
-
-  local major = version:sub(1, 1):byte()
-  local minor = version:sub(2, 2):byte()
-  local patch = version:sub(3, 3):byte()
-
-  return major .. "." .. minor .. "." .. patch
+  return nil
 end
 
 -- Get full addon downloading info
@@ -192,4 +274,25 @@ end
 -- Get addon version diff
 function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   return nil
+end
+
+function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
+  return {}
+end
+
+-- Game update post-processing
+function v1_game_diff_post_transition(game_path, edition)
+  local file = io.open(game_path .. "/.version", "w+")
+
+  local version = v1_game_get_version(game_path) or game_api(edition)["data"]["game"]["latest"]["version"]
+
+  file:write(version)
+  file:close()
+
+  -- TODO: deletefiles.txt, hdifffiles.txt
+end
+
+-- Addons update post-processing
+function v1_addons_diff_post_transition(group_name, addon_name, addon_path, edition)
+  
 end

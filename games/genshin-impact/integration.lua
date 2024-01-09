@@ -401,6 +401,7 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   end
 end
 
+-- Get addons files / folders paths
 function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
     return {
@@ -408,6 +409,8 @@ function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
       addon_path .. "/Audio_" .. get_voiceover_folder(addon_name) .. "_pkg_version"
     }
   end
+
+  return {}
 end
 
 -- Game update post-processing
