@@ -429,13 +429,44 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   end
 end
 
--- Get addons files / folders paths
+-- Get addon files / folders paths
 function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
     return {
       addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name),
       addon_path .. "/Audio_" .. get_voiceover_folder(addon_name) .. "_pkg_version"
     }
+  end
+
+  return {}
+end
+
+-- Get addon integrity info
+function v1_addons_get_integrity_info(group_name, addon_name, addon_path, edition)
+  if group_name == "voiceovers" then
+    local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
+    local pkg_version = v1_network_http_get(base_uri .. "/Audio_" .. get_voiceover_folder(addon_name) .. "_pkg_version")
+
+    local integrity = {}
+
+    for line in pkg_version:gmatch("([^\n]*)\n") do
+      if line ~= "" then
+        local info = v1_json_decode(line)
+
+        table.insert(integrity, {
+          ["hash"]  = "md5",
+          ["value"] = info["md5"],
+
+          ["file"] = {
+            ["path"] = info["remoteName"],
+            ["uri"]  = base_uri .. "/" .. info["remoteName"],
+            ["size"] = info["fileSize"]
+          }
+        })
+      end
+    end
+
+    return integrity
   end
 
   return {}
@@ -453,7 +484,7 @@ function v1_game_diff_post_transition(game_path, edition)
   -- TODO: deletefiles.txt, hdifffiles.txt
 end
 
--- Addons update post-processing
+-- Addon update post-processing
 function v1_addons_diff_post_transition(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
     local file = io.open(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
