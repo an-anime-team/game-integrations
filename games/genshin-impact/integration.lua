@@ -271,6 +271,33 @@ function v1_game_get_launch_options(game_path, addons_path, edition)
   }
 end
 
+-- Get game integrity info
+function v1_game_get_integrity_info(game_path, edition)
+  local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
+  local pkg_version = v1_network_http_get(base_uri .. "/pkg_version")
+
+  local integrity = {}
+
+  for line in pkg_version:gmatch("([^\n]*)\n") do
+    if line ~= "" then
+      local info = v1_json_decode(line)
+
+      table.insert(integrity, {
+        ["hash"]  = "md5",
+        ["value"] = info["md5"],
+
+        ["file"] = {
+          ["path"] = info["remoteName"],
+          ["uri"]  = base_uri .. "/" .. info["remoteName"],
+          ["size"] = info["fileSize"]
+        }
+      })
+    end
+  end
+
+  return integrity
+end
+
 -- Get list of game addons (voice packages)
 function v1_addons_get_list(edition)
   local latest_info = game_api(edition)["data"]["game"]["latest"]
