@@ -116,7 +116,7 @@ end
 
 -- Get CSS styles for game details background
 function v1_visual_get_details_background_css(edition)
-  return "background: radial-gradient(#f8c2d0, #4078c5);"
+  return "background: radial-gradient(circle, rgba(177,132,89,1) 30%, rgba(72,80,167,1) 100%);"
 end
 
 -- Get list of game editions

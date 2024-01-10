@@ -137,6 +137,11 @@ function v1_visual_get_background_picture(edition)
   return path
 end
 
+-- Get CSS styles for game details background
+function v1_visual_get_details_background_css(edition)
+  return "background: radial-gradient(circle, rgba(168,144,111,1) 30%, rgba(88,88,154,1) 100%);"
+end
+
 -- Get list of game editions
 function v1_game_get_editions_list()
   return {
