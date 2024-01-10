@@ -174,6 +174,7 @@ function v1_game_get_download(edition)
   return {
     ["version"] = latest_info["version"],
     ["edition"] = edition,
+
     ["download"] = {
       ["type"] = "archive",
       ["size"] = latest_info["package_size"],
@@ -252,6 +253,33 @@ function v1_game_get_launch_options(game_path, addons_path, edition)
   }
 end
 
+-- Get game integrity info
+function v1_game_get_integrity_info(game_path, edition)
+  local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
+  local pkg_version = v1_network_http_get(base_uri .. "/pkg_version")
+
+  local integrity = {}
+
+  for line in pkg_version:gmatch("([^\n]*)\n") do
+    if line ~= "" then
+      local info = v1_json_decode(line)
+
+      table.insert(integrity, {
+        ["hash"]  = "md5",
+        ["value"] = info["md5"]:lower(),
+
+        ["file"] = {
+          ["path"] = info["remoteName"],
+          ["uri"]  = base_uri .. "/" .. info["remoteName"],
+          ["size"] = info["fileSize"]
+        }
+      })
+    end
+  end
+
+  return integrity
+end
+
 -- Get list of game addons
 function v1_addons_get_list(edition)
   return {}
@@ -277,7 +305,13 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   return nil
 end
 
+-- Get addon files / folders paths
 function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
+  return {}
+end
+
+-- Get addon integrity info
+function v1_addons_get_integrity_info(group_name, addon_name, addon_path, edition)
   return {}
 end
 
@@ -293,7 +327,7 @@ function v1_game_diff_post_transition(game_path, edition)
   -- TODO: deletefiles.txt, hdifffiles.txt
 end
 
--- Addons update post-processing
+-- Addon update post-processing
 function v1_addons_diff_post_transition(group_name, addon_name, addon_path, edition)
   
 end

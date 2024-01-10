@@ -455,7 +455,7 @@ function v1_addons_get_integrity_info(group_name, addon_name, addon_path, editio
 
         table.insert(integrity, {
           ["hash"]  = "md5",
-          ["value"] = info["md5"],
+          ["value"] = info["md5"]:lower(),
 
           ["file"] = {
             ["path"] = info["remoteName"],
