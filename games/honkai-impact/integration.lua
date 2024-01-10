@@ -237,8 +237,9 @@ end
 -- Get installed game status before launching it
 function v1_game_get_status(game_path, edition)
   return {
-    ["allow_launch"] = true,
-    ["severity"] = "none"
+    ["allow_launch"] = false,
+    ["severity"]     = "critical",
+    ["reason"]       = "The game doesn't support launching yet"
   }
 end
 
