@@ -279,7 +279,7 @@ end
 -- Check if addon is installed
 function v1_addons_is_installed(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    return io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/1001.pck", "rb") ~= nil
+    return io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/VoBanks0.pck", "rb") ~= nil
   end
 
   return false
