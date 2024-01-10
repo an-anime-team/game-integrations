@@ -279,7 +279,7 @@ end
 -- Check if addon is installed
 function v1_addons_is_installed(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    return io.open(addon_path .. "/StarRail_Data/StreamingAssets/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/1001.pck", "rb") ~= nil
+    return io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/1001.pck", "rb") ~= nil
   end
 
   return false
@@ -288,7 +288,7 @@ end
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    local version = io.open(addon_path .. "/StarRail_Data/StreamingAssets/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version", "r")
+    local version = io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version", "r")
 
     if version ~= nil then
       version = version:read("*all")
@@ -390,7 +390,7 @@ end
 function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
     return {
-      addon_path .. "/StarRail_Data/StreamingAssets/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name)
+      addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name)
     }
   end
 
@@ -412,7 +412,7 @@ end
 -- Addons update post-processing
 function v1_addons_diff_post_transition(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    local file = io.open(addon_path .. "/StarRail_Data/StreamingAssets/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
+    local file = io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
 
     local version = v1_addons_get_version(group_name, addon_name, addon_path, edition) or game_api(edition)["data"]["game"]["latest"]["version"]
 
