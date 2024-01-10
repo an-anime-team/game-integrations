@@ -81,7 +81,7 @@ end
 
 -- Get card picture URI
 function v1_visual_get_card_picture(edition)
-  local uri = "https://raw.githubusercontent.com/an-anime-team/game-integrations/main/games/honkai-impact/card.jpg"
+  local uri = "https://cdn.steamgriddb.com/grid/dad17817cb7f0d4655bbe4460538f1ab.jpg"
   local path = "/tmp/.honkai-" .. edition .. "-card"
 
   if io.open(path, "rb") ~= nil then

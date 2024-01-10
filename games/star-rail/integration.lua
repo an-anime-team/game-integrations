@@ -95,7 +95,7 @@ end
 
 -- Get card picture URI
 function v1_visual_get_card_picture(edition)
-  local uri = "https://raw.githubusercontent.com/an-anime-team/game-integrations/main/games/star-rail/card.jpg"
+  local uri = "https://cdn.steamgriddb.com/grid/e8cf1f5c9177fd140fd704cf74a2a2b9.png"
   local path = "/tmp/.star-rail-" .. edition .. "-card"
 
   if io.open(path, "rb") ~= nil then

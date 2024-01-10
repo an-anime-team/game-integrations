@@ -104,11 +104,7 @@ end
 
 -- Get card picture URI
 function v1_visual_get_card_picture(edition)
-  local uri = {
-    ["global"] = "https://raw.githubusercontent.com/an-anime-team/game-integrations/main/games/genshin-impact/card.jpg",
-    ["china"]  = "https://raw.githubusercontent.com/an-anime-team/game-integrations/main/games/genshin-impact/card-china.jpg"
-  }
-
+  local uri = "https://cdn.steamgriddb.com/grid/393b37dd7097776b1b56b10897e1a054.png"
   local path = "/tmp/.genshin-" .. edition .. "-card"
 
   if io.open(path, "rb") ~= nil then
@@ -117,7 +113,7 @@ function v1_visual_get_card_picture(edition)
 
   local file = io.open(path, "w+")
 
-  file:write(v1_network_http_get(uri[edition]))
+  file:write(v1_network_http_get(uri))
   file:close()
 
   return path
