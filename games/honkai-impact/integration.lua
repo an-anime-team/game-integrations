@@ -434,6 +434,12 @@ end
 
 -- Get addon version diff
 function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
+  local installed_version = v1_addons_get_version(group_name, addon_name, addon_path, edition)
+
+  if not installed_version then
+    return nil
+  end
+
   if group_name == "extra" and addon_name == "jadeite" then
     local jadeite_metadata = get_jadeite_metadata()
 
