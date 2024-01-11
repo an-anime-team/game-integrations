@@ -29,6 +29,10 @@ end
 
 -- Convert raw number string into table of version numbers
 local function split_version(version)
+  if version == nil then
+    return nil
+  end
+
   local numbers = version:gmatch("([1-9]+)%.([0-9]+)%.([0-9]+)")
 
   for major, minor, patch in numbers do
