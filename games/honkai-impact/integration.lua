@@ -35,6 +35,29 @@ local function social_api(edition)
   return social_api_cache[edition]
 end
 
+local jadeite_metadata = nil
+local jadeite_download = nil
+
+local function get_jadeite_metadata()
+  local uri = "https://codeberg.org/mkrsym1/jadeite/raw/branch/master/metadata.json"
+
+  if not jadeite_metadata then
+    jadeite_metadata = v1_json_decode(v1_network_http_get(uri))
+  end
+
+  return jadeite_metadata
+end
+
+local function get_jadeite_download()
+  local uri = "https://codeberg.org/api/v1/repos/mkrsym1/jadeite/releases/latest"
+
+  if not jadeite_download then
+    jadeite_download = v1_json_decode(v1_network_http_get(uri))
+  end
+
+  return jadeite_download
+end
+
 -- Convert raw number string into table of version numbers
 local function split_version(version)
   local numbers = version:gmatch("([1-9]+)%.([0-9]+)%.([0-9]+)")
@@ -237,18 +260,64 @@ end
 
 -- Get installed game status before launching it
 function v1_game_get_status(game_path, edition)
-  return {
-    ["allow_launch"] = false,
-    ["severity"]     = "critical",
-    ["reason"]       = "The game doesn't support launching yet"
+  local jadeite_metadata = get_jadeite_metadata()
+  local jadeite_status   = jadeite_metadata["games"]["hsr"][edition]["status"]
+
+  if jadeite_status == nil then
+    return {
+      ["allow_launch"] = false,
+      ["severity"]     = "critical",
+      ["reason"]       = "Failed to get patch status"
+    }
+  end
+
+  local statuses = {
+    -- Everything's fine, we've tried it on our mains (0% unsafe)
+    ["verified"] = {
+      ["allow_launch"] = true,
+      ["severity"]     = "none"
+    },
+
+    -- We have no clue, but most likely everything is fine. Try it yourself (25% unsafe)
+    ["unverified"] = {
+      ["allow_launch"] = true,
+      ["severity"]     = "warning",
+      ["reason"]       = "Patch status is not verified"
+    },
+
+    -- Doesn't work at all (100% unsafe)
+    ["broken"] = {
+      ["allow_launch"] = false,
+      ["severity"]     = "critical",
+      ["reason"]       = "Patch doesn't work"
+    },
+
+    -- We're sure that you'll be banned. But the patch technically is working fine (100% unsafe)
+    ["unsafe"] = {
+      ["allow_launch"] = false,
+      ["severity"]     = "critical",
+      ["reason"]       = "Patch is unsafe to use"
+    },
+
+    -- We have some clue that you can be banned as there's some technical or other signs of it (75% unsafe)
+    ["concerning"] = {
+      ["allow_launch"] = true,
+      ["severity"]     = "warning",
+      ["reason"]       = "We have some concerns about current patch version"
+    }
   }
+
+  return statuses[jadeite_status]
 end
 
 -- Get game launching options
 function v1_game_get_launch_options(game_path, addons_path, edition)
   return {
-    ["executable"]  = "BH3.exe",
-    ["options"]     = {},
+    ["executable"] = addons_path .. "/extra/jadeite/jadeite.exe",
+    ["options"] = {
+      "'Z:\\" .. game_path .. "/BH3.exe'",
+      "--"
+    },
     ["environment"] = {}
   }
 end
@@ -282,31 +351,117 @@ end
 
 -- Get list of game addons
 function v1_addons_get_list(edition)
-  return {}
+  local jadeite = get_jadeite_metadata()
+
+  return {
+    {
+      ["name"]   = "extra",
+      ["title"]  = "Extra",
+      ["addons"] = {
+        {
+          ["type"]     = "component",
+          ["name"]     = "jadeite",
+          ["title"]    = "Jadeite",
+          ["version"]  = jadeite["jadeite"]["version"],
+          ["required"] = true
+        }
+      }
+    }
+  }
 end
 
 -- Check if addon is installed
 function v1_addons_is_installed(group_name, addon_name, addon_path, edition)
+  if group_name == "extra" and addon_name == "jadeite" then
+    return io.open(addon_path .. "/jadeite.exe", "rb") ~= nil
+  end
+
   return false
 end
 
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
+  if group_name == "extra" and addon_name == "jadeite" then
+    local version = io.open(addon_path .. "/.version", "r")
+
+    if version ~= nil then
+      version = version:read("*all")
+
+      -- Verify that stored version number is correct
+      if split_version(version) ~= nil then
+        return version
+      end
+    end
+  end
+
   return nil
 end
 
 -- Get full addon downloading info
 function v1_addons_get_download(group_name, addon_name, edition)
+  if group_name == "extra" and addon_name == "jadeite" then
+    local jadeite_metadata = get_jadeite_metadata()
+    local jadeite_download = get_jadeite_download()
+
+    -- Check release version tag
+    if jadeite_download["tag_name"] == "v" .. jadeite_metadata["jadeite"]["version"] then
+      return {
+        ["version"] = jadeite_metadata["jadeite"]["version"],
+        ["edition"] = edition,
+
+        ["download"] = {
+          ["type"] = "archive",
+          ["size"] = jadeite_download["assets"][1]["size"],
+          ["uri"]  = jadeite_download["assets"][1]["browser_download_url"]
+        }
+      }
+    end
+  end
+
   return nil
 end
 
 -- Get addon version diff
 function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
+  if group_name == "extra" and addon_name == "jadeite" then
+    local jadeite_metadata = get_jadeite_metadata()
+
+    if compare_versions(installed_version, jadeite_metadata["jadeite"]["version"]) ~= -1 then
+      return {
+        ["current_version"] = installed_version,
+        ["latest_version"]  = jadeite_metadata["jadeite"]["version"],
+
+        ["edition"] = edition,
+        ["status"]  = "latest"
+      }
+    else
+      local jadeite_download = v1_addons_get_download(group_name, addon_name, addon_path, edition)
+
+      if jadeite_download ~= nil then
+        return {
+          ["current_version"] = installed_version,
+          ["latest_version"]  = jadeite_metadata["jadeite"]["version"],
+
+          ["edition"] = edition,
+          ["status"]  = "outdated",
+
+          ["diff"] = jadeite_download["download"]
+        }
+      end
+    end
+  end
+
   return nil
 end
 
 -- Get addon files / folders paths
 function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
+  if group_name == "extra" and addon_name == "jadeite" then
+    return {
+      addon_path
+    }
+  end
+
   return {}
 end
 
@@ -329,5 +484,12 @@ end
 
 -- Addon update post-processing
 function v1_addons_diff_post_transition(group_name, addon_name, addon_path, edition)
-  
+  if group_name == "extra" and addon_name == "jadeite" then
+    local file = io.open(addon_path .. "/.version", "w+")
+
+    local version = get_jadeite_metadata()["jadeite"]["version"]
+
+    file:write(version)
+    file:close()
+  end
 end
