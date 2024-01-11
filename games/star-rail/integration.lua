@@ -31,9 +31,16 @@ local jadeite_metadata = nil
 local jadeite_download = nil
 
 local function get_jadeite_metadata()
-  local uri = "https://codeberg.org/mkrsym1/jadeite/raw/branch/master/metadata.json"
+  local uris = {
+    "https://codeberg.org/mkrsym1/jadeite/raw/branch/master/metadata.json",
+    "https://notabug.org/mkrsym1/jadeite-mirror/raw/master/metadata.json"
+  }
 
-  if not jadeite_metadata then
+  for _, uri in pairs(uris) do
+    if jadeite_metadata ~= nil then
+      break
+    end
+
     jadeite_metadata = v1_json_decode(v1_network_http_get(uri))
   end
 
