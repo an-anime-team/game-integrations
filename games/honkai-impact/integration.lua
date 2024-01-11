@@ -272,7 +272,7 @@ end
 -- Get installed game status before launching it
 function v1_game_get_status(game_path, edition)
   local jadeite_metadata = get_jadeite_metadata()
-  local jadeite_status   = jadeite_metadata["games"]["hsr"][edition]["status"]
+  local jadeite_status   = jadeite_metadata["games"]["hi3rd"][edition]["status"]
 
   if jadeite_status == nil then
     return {
