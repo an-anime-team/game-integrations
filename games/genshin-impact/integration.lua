@@ -276,6 +276,31 @@ function v1_game_get_launch_options(game_path, addons_path, edition)
   }
 end
 
+-- Check if the game is running
+function v1_game_is_running(game_path, edition)
+  local process_name = {
+    ["global"] = "GenshinImpact.e",
+    ["china"]  = "YuanShen.exe"
+  }
+
+  local handle = io.popen("ps -A", "r")
+  local result = handle:read("*a")
+
+  handle:close()
+
+  return result:find(process_name[edition])
+end
+
+-- Kill running game process
+function v1_game_kill(game_path, edition)
+  local process_name = {
+    ["global"] = "GenshinImpact.e",
+    ["china"]  = "YuanShen.exe"
+  }
+
+  os.execute("pkill -f " .. process_name[edition])
+end
+
 -- Get game integrity info
 function v1_game_get_integrity_info(game_path, edition)
   local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
