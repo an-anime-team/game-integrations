@@ -57,28 +57,13 @@ local function get_jadeite_download()
   return jadeite_download
 end
 
-local hdiff_cache = nil
-
 local function get_hdiff_info()
-  local uri = "https://api.github.com/repos/sisong/HDiffPatch/releases/latest"
-
-  if not hdiff_cache then
-    local response = v1_json_decode(v1_network_http_get(uri))
-
-    for _, asset in response["assets"] do
-      if asset["name"]:gmatch("bin_linux64")() then
-        hdiff_cache = {
-          ["version"] = response["tag_name"]:gsub("v", ""),
-          ["size"]    = asset["size"]
-          ["uri"]     = asset["browser_download_url"]
-        }
-
-        break
-      end
-    end
-  end
-
-  return hdiff_cache
+  -- TODO: there's a proper implementation in the experimental branch history, although it didn't work because of github user agent restrictions
+  return {
+    ["version"] = "4.6.9",
+    ["size"]    = 973226,
+    ["uri"]     = "https://github.com/sisong/HDiffPatch/releases/download/v4.6.9/hdiffpatch_v4.6.9_bin_linux64.zip"
+  }
 end
 
 -- Convert raw number string into table of version numbers
