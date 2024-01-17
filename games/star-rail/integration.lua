@@ -682,33 +682,52 @@ end
 
 -- Game update post-processing
 function v1_game_diff_post_transition(game_path, edition)
-  local file = io.open(game_path .. "/.version", "w+")
+  -- Process hdifffiles.txt
 
+  -- TODO
+
+  -- Process deletefiles.txt
+
+  -- TODO
+
+  -- Save updated game version only when all the transition code was done
+
+  local file = io.open(game_path .. "/.version", "w+")
   local version = v1_game_get_version(game_path) or game_api(edition)["data"]["game"]["latest"]["version"]
 
   file:write(version)
   file:close()
-
-  -- TODO: deletefiles.txt, hdifffiles.txt
 end
 
 -- Addon update post-processing
 function v1_addons_diff_post_transition(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    local file = io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
+    -- Process hdifffiles.txt
 
+    -- TODO
+
+    -- Process deletefiles.txt
+
+    -- TODO
+
+    -- Save updated voiceover version only when all the transition code was done
+
+    local file = io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
     local version = v1_addons_get_version(group_name, addon_name, addon_path, edition) or game_api(edition)["data"]["game"]["latest"]["version"]
 
     file:write(version)
     file:close()
   elseif group_name == "extra" and addon_name == "jadeite" then
     local file = io.open(addon_path .. "/.version", "w+")
-
     local version = get_jadeite_metadata()["jadeite"]["version"]
 
     file:write(version)
     file:close()
-  end
+  elseif group_name == "extra" and addon_name == "hdiffpatch" then
+    local file = io.open(addon_path .. "/.version", "w+")
+    local version = get_hdiff_info()["version"]
 
-  -- TODO: deletefiles.txt, hdifffiles.txt
+    file:write(version)
+    file:close()
+  end
 end
