@@ -226,9 +226,7 @@ function v1_game_get_diff(game_path, edition)
   end
 
   local game_data = game_api(edition)["data"]["game"]
-
   local latest_info = game_data["latest"]
-  local diffs = game_data["diffs"]
 
   -- It should be impossible to have higher installed version
   -- but just in case I have to cover this case as well
@@ -241,30 +239,18 @@ function v1_game_get_diff(game_path, edition)
       ["status"]  = "latest"
     }
   else
-    for _, diff in pairs(diffs) do
-      if diff["version"] == installed_version then
-        return {
-          ["current_version"] = installed_version,
-          ["latest_version"]  = latest_info["version"],
-
-          ["edition"] = edition,
-          ["status"]  = "outdated",
-
-          ["diff"] = {
-            ["type"] = "archive",
-            ["size"] = diff["package_size"],
-            ["uri"]  = diff["path"]
-          }
-        }
-      end
-    end
-
     return {
       ["current_version"] = installed_version,
       ["latest_version"]  = latest_info["version"],
 
       ["edition"] = edition,
-      ["status"]  = "unavailable"
+      ["status"]  = "outdated",
+
+      ["diff"] = {
+        ["type"] = "archive",
+        ["size"] = latest_info["package_size"],
+        ["uri"]  = latest_info["path"]
+      }
     }
   end
 end
