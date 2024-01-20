@@ -8,7 +8,13 @@ local function game_api(edition)
       ["china"]  = "https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?key=eYd89JmJ&launcher_id=18"
     }
 
-    game_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
+    local response = v1_network_http_get(uri[edition])
+
+    if not response["ok"] then
+      error("Failed to request game API (code " .. response["status"] .. "): " .. response["statusText"])
+    end
+
+    game_api_cache[edition] = response.json()
   end
 
   return game_api_cache[edition]
@@ -21,7 +27,13 @@ local function social_api(edition)
       ["china"]  = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/content?filter_adv=true&key=gcStgarh&launcher_id=10&language=zh-cn"
     }
 
-    social_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
+    local response = v1_network_http_get(uri[edition])
+
+    if not response["ok"] then
+      error("Failed to request social API (code " .. response["status"] .. "): " .. response["statusText"])
+    end
+
+    social_api_cache[edition] = response.json()
   end
 
   return social_api_cache[edition]
@@ -36,9 +48,15 @@ local function get_hdiff(edition)
   }
 
   if not io.open("/tmp/hpatchz", "rb") then
+    local response = v1_network_http_get(uri[edition])
+
+    if not response["ok"] then
+      error("Failed to download hpatchz binary (code " .. response["status"] .. "): " .. response["statusText"])
+    end
+
     local file = io.open("/tmp/hpatchz", "bw+")
 
-    file:write(v1_network_http_get(uri[edition]))
+    file:write(response["body"])
     file:close()
   end
 
@@ -142,9 +160,15 @@ function v1_visual_get_card_picture(edition)
     return path
   end
 
-  local file = io.open(path, "w+")
+  local response = v1_network_http_get(uri)
 
-  file:write(v1_network_http_get(uri))
+  if not response["ok"] then
+    error("Failed to download card picture (code " .. response["status"] .. "): " .. response["statusText"])
+  end
+
+  local file = io.open(path, "bw+")
+
+  file:write(response["body"])
   file:close()
 
   return path
@@ -160,9 +184,15 @@ function v1_visual_get_background_picture(edition)
     return path
   end
 
-  local file = io.open(path, "w+")
+  local response = v1_network_http_get(uri)
 
-  file:write(v1_network_http_get(uri))
+  if not response["ok"] then
+    error("Failed to download background picture (code " .. response["status"] .. "): " .. response["statusText"])
+  end
+
+  local file = io.open(path, "bw+")
+
+  file:write(response["body"])
   file:close()
 
   return path
@@ -333,9 +363,13 @@ function v1_game_get_integrity_info(game_path, edition)
   local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
   local pkg_version = v1_network_http_get(base_uri .. "/pkg_version")
 
+  if not pkg_version["ok"] then
+    error("Failed to request game integrity info (code " .. pkg_version["status"] .. "): " .. pkg_version["statusText"])
+  end
+
   local integrity = {}
 
-  for line in pkg_version:gmatch("([^\n]*)\n") do
+  for line in pkg_version["body"]:gmatch("([^\n]*)\n") do
     if line ~= "" then
       local info = v1_json_decode(line)
 
@@ -370,26 +404,11 @@ function v1_addons_get_list(edition)
     })
   end
 
-  local hdiff = get_hdiff_info()
-
   return {
     {
       ["name"]   = "voiceovers",
       ["title"]  = "Voiceovers",
       ["addons"] = voiceovers
-    },
-    {
-      ["name"]   = "extra",
-      ["title"]  = "Extra",
-      ["addons"] = {
-        {
-          ["type"]     = "component",
-          ["name"]     = "hdiffpatch",
-          ["title"]    = "HDiffPatch",
-          ["version"]  = hdiff["version"], -- TODO: will crash if get_hdiff_info() is nil
-          ["required"] = true
-        }
-      }
     }
   }
 end
@@ -398,8 +417,6 @@ end
 function v1_addons_is_installed(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
     return io.open(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/1001.pck", "rb") ~= nil
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
-    return io.open(addon_path .. "/linux64/hpatchz", "rb") ~= nil
   end
 
   return false
@@ -407,20 +424,11 @@ end
 
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
-  local version = nil
-
   if group_name == "voiceovers" then
-    version = io.open(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "r")
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
-    version = io.open(addon_path .. "/.version", "r")
-  end
+    local version = io.open(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "r")
 
-  if version ~= nil then
-    version = version:read("*all")
-
-    -- Verify that stored version number is correct
-    if split_version(version) ~= nil then
-      return version
+    if version ~= nil then
+      return version:read("*all")
     end
   end
 
@@ -429,9 +437,9 @@ end
 
 -- Get full addon downloading info
 function v1_addons_get_download(group_name, addon_name, edition)
-  if group_name == "voiceovers" then
-    local latest_info = game_api(edition)["data"]["game"]["latest"]
+  local latest_info = game_api(edition)["data"]["game"]["latest"]
 
+  if group_name == "voiceovers" then
     for _, package in pairs(latest_info["voice_packs"]) do
       if package["language"] == addon_name then
         return {
@@ -446,21 +454,6 @@ function v1_addons_get_download(group_name, addon_name, edition)
         }
       end
     end
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
-    local latest_info = get_hdiff_info()
-
-    if latest_info ~= nil then
-      return {
-        ["version"] = latest_info["version"],
-        ["edition"] = edition,
-  
-        ["download"] = {
-          ["type"] = "archive",
-          ["size"] = latest_info["size"],
-          ["uri"]  = latest_info["uri"]
-        }
-      }
-    end
   end
 
   return nil
@@ -474,23 +467,23 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
     return nil
   end
 
-  if group_name == "voiceovers" then
-    local game_data = game_api(edition)["data"]["game"]
+  local game_data = game_api(edition)["data"]["game"]
 
-    local latest_info = game_data["latest"]
-    local diffs = game_data["diffs"]
+  local latest_info = game_data["latest"]
+  local diffs = game_data["diffs"]
 
-    -- It should be impossible to have higher installed version
-    -- but just in case I have to cover this case as well
-    if compare_versions(installed_version, latest_info["version"]) ~= -1 then
-      return {
-        ["current_version"] = installed_version,
-        ["latest_version"]  = latest_info["version"],
+  -- It should be impossible to have higher installed version
+  -- but just in case I have to cover this case as well
+  if compare_versions(installed_version, latest_info["version"]) ~= -1 then
+    return {
+      ["current_version"] = installed_version,
+      ["latest_version"]  = latest_info["version"],
 
-        ["edition"] = edition,
-        ["status"]  = "latest"
-      }
-    else
+      ["edition"] = edition,
+      ["status"]  = "latest"
+    }
+  else
+    if group_name == "voiceovers" then
       for _, diff in pairs(diffs) do
         if diff["version"] == installed_version then
           for _, package in pairs(diff["voice_packs"]) do
@@ -523,35 +516,7 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
         ["status"]  = "unavailable"
       }
     end
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
-    local latest_info = get_hdiff_info()
-
-    if compare_versions(installed_version, latest_info["version"]) ~= -1 then
-      return {
-        ["current_version"] = installed_version,
-        ["latest_version"]  = latest_info["version"],
-
-        ["edition"] = edition,
-        ["status"]  = "latest"
-      }
-    else
-      local hdiff_download = v1_addons_get_download(group_name, addon_name, addon_path, edition)
-
-      if hdiff_download ~= nil then
-        return {
-          ["current_version"] = installed_version,
-          ["latest_version"]  = latest_info["version"],
-  
-          ["edition"] = edition,
-          ["status"]  = "outdated",
-  
-          ["diff"] = hdiff_download["download"]
-        }
-      end
-    end
   end
-
-  return nil
 end
 
 -- Get addon files / folders paths
@@ -560,10 +525,6 @@ function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
     return {
       addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name),
       addon_path .. "/Audio_" .. get_voiceover_folder(addon_name) .. "_pkg_version"
-    }
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
-    return {
-      addon_path
     }
   end
 
@@ -576,9 +537,13 @@ function v1_addons_get_integrity_info(group_name, addon_name, addon_path, editio
     local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
     local pkg_version = v1_network_http_get(base_uri .. "/Audio_" .. get_voiceover_folder(addon_name) .. "_pkg_version")
 
+    if not pkg_version["ok"] then
+      error("Failed to request addon integrity info (code " .. pkg_version["status"] .. "): " .. pkg_version["statusText"])
+    end
+  
     local integrity = {}
-
-    for line in pkg_version:gmatch("([^\n]*)\n") do
+  
+    for line in pkg_version["body"]:gmatch("([^\n]*)\n") do
       if line ~= "" then
         local info = v1_json_decode(line)
 
@@ -614,9 +579,15 @@ local function process_hdifffiles(game_path, edition)
     local output = game_path .. "/" .. file_info["remoteName"] .. ".hdiff_patched"
 
     if not apply_hdiff(hdiff, file, patch, output) then
+      local response = v1_network_http_get(base_uri .. "/" .. file_info["remoteName"])
+
+      if not pkg_version["ok"] then
+        error("Failed to download file (code " .. pkg_version["status"] .. "): " .. pkg_version["statusText"])
+      end
+
       local file = io.open(output, "bw+")
 
-      file:write(v1_network_http_get(base_uri .. "/" .. file_info["remoteName"]))
+      file:write(response["body"])
       file:close()
     end
 

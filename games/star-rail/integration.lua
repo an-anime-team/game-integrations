@@ -8,7 +8,13 @@ local function game_api(edition)
       ["china"]  = "https://api-launcher.mihoyo.com/hkrpg_cn/mdk/launcher/api/resource?channel_id=1&key=6KcVuOkbcqjJomjZ&launcher_id=33"
     }
 
-    game_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
+    local response = v1_network_http_get(uri[edition])
+
+    if not response["ok"] then
+      error("Failed to request game API (code " .. response["status"] .. "): " .. response["statusText"])
+    end
+
+    game_api_cache[edition] = response.json()
   end
 
   return game_api_cache[edition]
@@ -21,7 +27,13 @@ local function social_api(edition)
       ["china"]  = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/content?filter_adv=true&key=gcStgarh&launcher_id=10&language=zh-cn"
     }
 
-    social_api_cache[edition] = v1_json_decode(v1_network_http_get(uri[edition]))
+    local response = v1_network_http_get(uri[edition])
+
+    if not response["ok"] then
+      error("Failed to request social API (code " .. response["status"] .. "): " .. response["statusText"])
+    end
+
+    social_api_cache[edition] = response.json()
   end
 
   return social_api_cache[edition]
@@ -41,7 +53,13 @@ local function get_jadeite_metadata()
       break
     end
 
-    jadeite_metadata = v1_json_decode(v1_network_http_get(uri))
+    local response = v1_network_http_get(uri)
+
+    if not response["ok"] then
+      error("Failed to request jadeite metadata (code " .. response["status"] .. "): " .. response["statusText"])
+    end
+
+    jadeite_metadata = response.json()
   end
 
   return jadeite_metadata
@@ -51,7 +69,13 @@ local function get_jadeite_download()
   local uri = "https://codeberg.org/api/v1/repos/mkrsym1/jadeite/releases/latest"
 
   if not jadeite_download then
-    jadeite_download = v1_json_decode(v1_network_http_get(uri))
+    local response = v1_network_http_get(uri)
+
+    if not response["ok"] then
+      error("Failed to request jadeite releases (code " .. response["status"] .. "): " .. response["statusText"])
+    end
+
+    jadeite_download = response.json()
   end
 
   return jadeite_download
@@ -66,9 +90,15 @@ local function get_hdiff(edition)
   }
 
   if not io.open("/tmp/hpatchz", "rb") then
+    local response = v1_network_http_get(uri[edition])
+
+    if not response["ok"] then
+      error("Failed to download hpatchz binary (code " .. response["status"] .. "): " .. response["statusText"])
+    end
+
     local file = io.open("/tmp/hpatchz", "bw+")
 
-    file:write(v1_network_http_get(uri[edition]))
+    file:write(response["body"])
     file:close()
   end
 
@@ -163,9 +193,15 @@ function v1_visual_get_card_picture(edition)
     return path
   end
 
-  local file = io.open(path, "w+")
+  local response = v1_network_http_get(uri)
 
-  file:write(v1_network_http_get(uri))
+  if not response["ok"] then
+    error("Failed to download card picture (code " .. response["status"] .. "): " .. response["statusText"])
+  end
+
+  local file = io.open(path, "bw+")
+
+  file:write(response["body"])
   file:close()
 
   return path
@@ -181,9 +217,15 @@ function v1_visual_get_background_picture(edition)
     return path
   end
 
-  local file = io.open(path, "w+")
+  local response = v1_network_http_get(uri)
 
-  file:write(v1_network_http_get(uri))
+  if not response["ok"] then
+    error("Failed to download background picture (code " .. response["status"] .. "): " .. response["statusText"])
+  end
+
+  local file = io.open(path, "bw+")
+
+  file:write(response["body"])
   file:close()
 
   return path
@@ -379,9 +421,13 @@ function v1_game_get_integrity_info(game_path, edition)
   local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
   local pkg_version = v1_network_http_get(base_uri .. "/pkg_version")
 
+  if not pkg_version["ok"] then
+    error("Failed to request game integrity info (code " .. pkg_version["status"] .. "): " .. pkg_version["statusText"])
+  end
+
   local integrity = {}
 
-  for line in pkg_version:gmatch("([^\n]*)\n") do
+  for line in pkg_version["body"]:gmatch("([^\n]*)\n") do
     if line ~= "" then
       local info = v1_json_decode(line)
 
@@ -420,7 +466,6 @@ function v1_addons_get_list(edition)
   end
 
   local jadeite = get_jadeite_metadata()
-  local hdiff   = get_hdiff_info()
 
   return {
     {
@@ -438,13 +483,6 @@ function v1_addons_get_list(edition)
           ["title"]    = "Jadeite",
           ["version"]  = jadeite["jadeite"]["version"],
           ["required"] = true
-        },
-        {
-          ["type"]     = "component",
-          ["name"]     = "hdiffpatch",
-          ["title"]    = "HDiffPatch",
-          ["version"]  = hdiff["version"], -- TODO: will crash if get_hdiff_info() is nil
-          ["required"] = true
         }
       }
     }
@@ -457,8 +495,6 @@ function v1_addons_is_installed(group_name, addon_name, addon_path, edition)
     return io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/VoBanks0.pck", "rb") ~= nil
   elseif group_name == "extra" and addon_name == "jadeite" then
     return io.open(addon_path .. "/jadeite.exe", "rb") ~= nil
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
-    return io.open(addon_path .. "/linux64/hpatchz", "rb") ~= nil
   end
 
   return false
@@ -471,8 +507,6 @@ function v1_addons_get_version(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
     version = io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version", "r")
   elseif group_name == "extra" and addon_name == "jadeite" then
-    version = io.open(addon_path .. "/.version", "r")
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
     version = io.open(addon_path .. "/.version", "r")
   end
 
@@ -521,21 +555,6 @@ function v1_addons_get_download(group_name, addon_name, edition)
           ["type"] = "archive",
           ["size"] = jadeite_download["assets"][1]["size"],
           ["uri"]  = jadeite_download["assets"][1]["browser_download_url"]
-        }
-      }
-    end
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
-    local latest_info = get_hdiff_info()
-
-    if latest_info ~= nil then
-      return {
-        ["version"] = latest_info["version"],
-        ["edition"] = edition,
-  
-        ["download"] = {
-          ["type"] = "archive",
-          ["size"] = latest_info["size"],
-          ["uri"]  = latest_info["uri"]
         }
       }
     end
@@ -627,32 +646,6 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
         }
       end
     end
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
-    local latest_info = get_hdiff_info()
-
-    if compare_versions(installed_version, latest_info["version"]) ~= -1 then
-      return {
-        ["current_version"] = installed_version,
-        ["latest_version"]  = latest_info["version"],
-
-        ["edition"] = edition,
-        ["status"]  = "latest"
-      }
-    else
-      local hdiff_download = v1_addons_get_download(group_name, addon_name, addon_path, edition)
-
-      if hdiff_download ~= nil then
-        return {
-          ["current_version"] = installed_version,
-          ["latest_version"]  = latest_info["version"],
-  
-          ["edition"] = edition,
-          ["status"]  = "outdated",
-  
-          ["diff"] = hdiff_download["download"]
-        }
-      end
-    end
   end
 
   return nil
@@ -665,10 +658,6 @@ function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
       addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name)
     }
   elseif group_name == "extra" and addon_name == "jadeite" then
-    return {
-      addon_path
-    }
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
     return {
       addon_path
     }
@@ -690,9 +679,15 @@ local function process_hdifffiles(game_path, edition)
     local output = game_path .. "/" .. file_info["remoteName"] .. ".hdiff_patched"
 
     if not apply_hdiff(hdiff, file, patch, output) then
+      local response = v1_network_http_get(base_uri .. "/" .. file_info["remoteName"])
+
+      if not pkg_version["ok"] then
+        error("Failed to download file (code " .. pkg_version["status"] .. "): " .. pkg_version["statusText"])
+      end
+
       local file = io.open(output, "bw+")
 
-      file:write(v1_network_http_get(base_uri .. "/" .. file_info["remoteName"]))
+      file:write(response["body"])
       file:close()
     end
 
