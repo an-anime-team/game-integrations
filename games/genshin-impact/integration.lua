@@ -27,13 +27,31 @@ local function social_api(edition)
   return social_api_cache[edition]
 end
 
-local function get_hdiff_info()
-  -- TODO: there's a proper implementation in the experimental branch history, although it didn't work because of github user agent restrictions
-  return {
-    ["version"] = "4.6.9",
-    ["size"]    = 973226,
-    ["uri"]     = "https://github.com/sisong/HDiffPatch/releases/download/v4.6.9/hdiffpatch_v4.6.9_bin_linux64.zip"
+local function get_hdiff(edition)
+  local uri = {
+    ["global"] = "https://github.com/an-anime-team/anime-game-core/raw/main/external/hpatchz/hpatchz",
+
+    -- Github is blocked in China so we're using a mirror here
+    ["china"]  = "https://hub.gitmirror.com/https://raw.githubusercontent.com/an-anime-team/anime-game-core/main/external/hpatchz/hpatchz"
   }
+
+  if not io.open("/tmp/hpatchz", "rb") then
+    local file = io.open("/tmp/hpatchz", "bw+")
+
+    file:write(v1_network_http_get(uri[edition]))
+    file:close()
+  end
+
+  return "/tmp/hpatchz"
+end
+
+local function apply_hdiff(hdiff_path, file, patch, output)
+  local handle = io.popen(hdiff_path .. " -f '" .. file .. "' '" .. patch .. "' '" .. output .. "'", "r")
+  local result = handle:read("*a")
+
+  handle:close()
+
+  return result:find("patch ok!")
 end
 
 -- Convert raw number string into table of version numbers
@@ -583,18 +601,45 @@ function v1_addons_get_integrity_info(group_name, addon_name, addon_path, editio
   return {}
 end
 
--- Game update post-processing
-function v1_game_diff_post_transition(game_path, edition)
-  -- Process hdifffiles.txt
+local function process_hdifffiles(game_path, edition)
+  local hdiff = get_hdiff(edition)
+  local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
 
-  -- TODO
+  -- {"remoteName": "AnimeGame_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/Japanese/1001.pck"}
+  for line in io.lines(game_path .. "/hdifffiles.txt") do
+    local file_info = v1_json_decode(line)
 
-  -- Process deletefiles.txt
+    local file   = game_path .. "/" .. file_info["remoteName"]
+    local patch  = game_path .. "/" .. file_info["remoteName"] .. ".hdiff"
+    local output = game_path .. "/" .. file_info["remoteName"] .. ".hdiff_patched"
 
-  -- TODO
+    if not apply_hdiff(hdiff, file, patch, output) then
+      local file = io.open(output, "bw+")
 
-  -- Save updated game version only when all the transition code was done
+      file:write(v1_network_http_get(base_uri .. "/" .. file_info["remoteName"]))
+      file:close()
+    end
 
+    os.remove(file)
+    os.remove(patch)
+
+    os.rename(output, file)
+  end
+
+  os.remove(game_path .. "/hdifffiles.txt")
+end
+
+local function process_deletefiles()
+  -- AnimeGame_Data/Plugins/metakeeper.dll
+  for line in io.lines(game_path .. "/deletefiles.txt") do
+    os.remove(game_path .. "/" .. line)
+  end
+
+  os.remove(game_path .. "/deletefiles.txt")
+end
+
+-- Game update processing
+function v1_game_diff_transition(game_path, edition)
   local file = io.open(game_path .. "/.version", "w+")
   local version = v1_game_get_version(game_path) or game_api(edition)["data"]["game"]["latest"]["version"]
 
@@ -602,29 +647,32 @@ function v1_game_diff_post_transition(game_path, edition)
   file:close()
 end
 
+-- Game update post-processing
+function v1_game_diff_post_transition(game_path, edition)
+  process_hdifffiles(game_path, edition)
+  process_deletefiles(game_path, edition)
+end
+
+-- Addon update processing
+function v1_addons_diff_transition(group_name, addon_name, addon_path, edition)
+  local file = nil
+  local version = nil
+
+  if group_name == "voiceovers" then
+    file = io.open(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
+    version = v1_addons_get_version(group_name, addon_name, addon_path, edition) or game_api(edition)["data"]["game"]["latest"]["version"]
+  end
+
+  if file ~= nil and version ~= nil then
+    file:write(version)
+    file:close()
+  end
+end
+
 -- Addon update post-processing
 function v1_addons_diff_post_transition(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    -- Process hdifffiles.txt
-
-    -- TODO
-
-    -- Process deletefiles.txt
-
-    -- TODO
-
-    -- Save updated voiceover version only when all the transition code was done
-
-    local file = io.open(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
-    local version = v1_addons_get_version(group_name, addon_name, addon_path, edition) or game_api(edition)["data"]["game"]["latest"]["version"]
-
-    file:write(version)
-    file:close()
-  elseif group_name == "extra" and addon_name == "hdiffpatch" then
-    local file = io.open(addon_path .. "/.version", "w+")
-    local version = get_hdiff_info()["version"]
-
-    file:write(version)
-    file:close()
+    process_hdifffiles(game_path, edition)
+    process_deletefiles(game_path, edition)
   end
 end
