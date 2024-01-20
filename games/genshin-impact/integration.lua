@@ -8,7 +8,7 @@ local function game_api(edition)
       ["china"]  = "https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?key=eYd89JmJ&launcher_id=18"
     }
 
-    local response = v1_network_http_get(uri[edition])
+    local response = v1_network_fetch(uri[edition])
 
     if not response["ok"] then
       error("Failed to request game API (code " .. response["status"] .. "): " .. response["statusText"])
@@ -27,7 +27,7 @@ local function social_api(edition)
       ["china"]  = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/content?filter_adv=true&key=gcStgarh&launcher_id=10&language=zh-cn"
     }
 
-    local response = v1_network_http_get(uri[edition])
+    local response = v1_network_fetch(uri[edition])
 
     if not response["ok"] then
       error("Failed to request social API (code " .. response["status"] .. "): " .. response["statusText"])
@@ -48,7 +48,7 @@ local function get_hdiff(edition)
   }
 
   if not io.open("/tmp/hpatchz", "rb") then
-    local response = v1_network_http_get(uri[edition])
+    local response = v1_network_fetch(uri[edition])
 
     if not response["ok"] then
       error("Failed to download hpatchz binary (code " .. response["status"] .. "): " .. response["statusText"])
@@ -160,7 +160,7 @@ function v1_visual_get_card_picture(edition)
     return path
   end
 
-  local response = v1_network_http_get(uri)
+  local response = v1_network_fetch(uri)
 
   if not response["ok"] then
     error("Failed to download card picture (code " .. response["status"] .. "): " .. response["statusText"])
@@ -184,7 +184,7 @@ function v1_visual_get_background_picture(edition)
     return path
   end
 
-  local response = v1_network_http_get(uri)
+  local response = v1_network_fetch(uri)
 
   if not response["ok"] then
     error("Failed to download background picture (code " .. response["status"] .. "): " .. response["statusText"])
@@ -361,7 +361,7 @@ end
 -- Get game integrity info
 function v1_game_get_integrity_info(game_path, edition)
   local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
-  local pkg_version = v1_network_http_get(base_uri .. "/pkg_version")
+  local pkg_version = v1_network_fetch(base_uri .. "/pkg_version")
 
   if not pkg_version["ok"] then
     error("Failed to request game integrity info (code " .. pkg_version["status"] .. "): " .. pkg_version["statusText"])
@@ -535,7 +535,7 @@ end
 function v1_addons_get_integrity_info(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
     local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
-    local pkg_version = v1_network_http_get(base_uri .. "/Audio_" .. get_voiceover_folder(addon_name) .. "_pkg_version")
+    local pkg_version = v1_network_fetch(base_uri .. "/Audio_" .. get_voiceover_folder(addon_name) .. "_pkg_version")
 
     if not pkg_version["ok"] then
       error("Failed to request addon integrity info (code " .. pkg_version["status"] .. "): " .. pkg_version["statusText"])
@@ -579,7 +579,7 @@ local function process_hdifffiles(game_path, edition)
     local output = game_path .. "/" .. file_info["remoteName"] .. ".hdiff_patched"
 
     if not apply_hdiff(hdiff, file, patch, output) then
-      local response = v1_network_http_get(base_uri .. "/" .. file_info["remoteName"])
+      local response = v1_network_fetch(base_uri .. "/" .. file_info["remoteName"])
 
       if not pkg_version["ok"] then
         error("Failed to download file (code " .. pkg_version["status"] .. "): " .. pkg_version["statusText"])
