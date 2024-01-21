@@ -152,7 +152,7 @@ function v1_visual_get_card_picture(edition)
     error("Failed to download card picture (code " .. response["status"] .. "): " .. response["statusText"])
   end
 
-  local file = io.open(path, "bw+")
+  local file = io.open(path, "wb+")
 
   file:write(response["body"])
   file:close()
@@ -176,7 +176,7 @@ function v1_visual_get_background_picture(edition)
     error("Failed to download background picture (code " .. response["status"] .. "): " .. response["statusText"])
   end
 
-  local file = io.open(path, "bw+")
+  local file = io.open(path, "wb+")
 
   file:write(response["body"])
   file:close()

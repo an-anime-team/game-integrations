@@ -54,7 +54,7 @@ local function get_hdiff(edition)
       error("Failed to download hpatchz binary (code " .. response["status"] .. "): " .. response["statusText"])
     end
 
-    local file = io.open("/tmp/hpatchz", "bw+")
+    local file = io.open("/tmp/hpatchz", "wb+")
 
     file:write(response["body"])
     file:close()
@@ -166,7 +166,7 @@ function v1_visual_get_card_picture(edition)
     error("Failed to download card picture (code " .. response["status"] .. "): " .. response["statusText"])
   end
 
-  local file = io.open(path, "bw+")
+  local file = io.open(path, "wb+")
 
   file:write(response["body"])
   file:close()
@@ -190,7 +190,7 @@ function v1_visual_get_background_picture(edition)
     error("Failed to download background picture (code " .. response["status"] .. "): " .. response["statusText"])
   end
 
-  local file = io.open(path, "bw+")
+  local file = io.open(path, "wb+")
 
   file:write(response["body"])
   file:close()
@@ -585,7 +585,7 @@ local function process_hdifffiles(game_path, edition)
         error("Failed to download file (code " .. pkg_version["status"] .. "): " .. pkg_version["statusText"])
       end
 
-      local file = io.open(output, "bw+")
+      local file = io.open(output, "wb+")
 
       file:write(response["body"])
       file:close()
