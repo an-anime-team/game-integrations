@@ -566,8 +566,8 @@ function v1_addons_get_integrity_info(group_name, addon_name, addon_path, editio
   return {}
 end
 
-local function process_hdifffiles(game_path, edition)
-  local txt = io.open(game_path .. "/hdifffiles.txt", "r")
+local function process_hdifffiles(path, edition)
+  local txt = io.open(path .. "/hdifffiles.txt", "r")
   if not txt then
     return
   end
@@ -579,9 +579,9 @@ local function process_hdifffiles(game_path, edition)
   for line in txt:lines() do
     local file_info = v1_json_decode(line)
 
-    local file   = game_path .. "/" .. file_info["remoteName"]
-    local patch  = game_path .. "/" .. file_info["remoteName"] .. ".hdiff"
-    local output = game_path .. "/" .. file_info["remoteName"] .. ".hdiff_patched"
+    local file   = path .. "/" .. file_info["remoteName"]
+    local patch  = path .. "/" .. file_info["remoteName"] .. ".hdiff"
+    local output = path .. "/" .. file_info["remoteName"] .. ".hdiff_patched"
 
     if not apply_hdiff(hdiff, file, patch, output) then
       local response = v1_network_fetch(base_uri .. "/" .. file_info["remoteName"])
@@ -602,21 +602,21 @@ local function process_hdifffiles(game_path, edition)
     os.rename(output, file)
   end
 
-  os.remove(game_path .. "/hdifffiles.txt")
+  os.remove(path .. "/hdifffiles.txt")
 end
 
-local function process_deletefiles(game_path, edition)
-  local txt = io.open(game_path .. "/deletefiles.txt", "r")
+local function process_deletefiles(path, edition)
+  local txt = io.open(path .. "/deletefiles.txt", "r")
   if not txt then
     return
   end
 
   -- AnimeGame_Data/Plugins/metakeeper.dll
   for line in txt:lines() do
-    os.remove(game_path .. "/" .. line)
+    os.remove(path .. "/" .. line)
   end
 
-  os.remove(game_path .. "/deletefiles.txt")
+  os.remove(path .. "/deletefiles.txt")
 end
 
 -- Game update processing
@@ -653,7 +653,7 @@ end
 -- Addon update post-processing
 function v1_addons_diff_post_transition(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    process_hdifffiles(game_path, edition)
-    process_deletefiles(game_path, edition)
+    process_hdifffiles(addon_path, edition)
+    process_deletefiles(addon_path, edition)
   end
 end
