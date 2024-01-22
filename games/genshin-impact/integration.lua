@@ -567,11 +567,16 @@ function v1_addons_get_integrity_info(group_name, addon_name, addon_path, editio
 end
 
 local function process_hdifffiles(game_path, edition)
+  local txt = io.open(game_path .. "/hdifffiles.txt", "r")
+  if not txt then
+    return
+  end
+
   local hdiff = get_hdiff(edition)
   local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
 
   -- {"remoteName": "AnimeGame_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/Japanese/1001.pck"}
-  for line in io.lines(game_path .. "/hdifffiles.txt") do
+  for line in txt:lines() do
     local file_info = v1_json_decode(line)
 
     local file   = game_path .. "/" .. file_info["remoteName"]
@@ -600,9 +605,14 @@ local function process_hdifffiles(game_path, edition)
   os.remove(game_path .. "/hdifffiles.txt")
 end
 
-local function process_deletefiles()
+local function process_deletefiles(game_path, edition)
+  local txt = io.open(game_path .. "/deletefiles.txt", "r")
+  if not txt then
+    return
+  end
+
   -- AnimeGame_Data/Plugins/metakeeper.dll
-  for line in io.lines(game_path .. "/deletefiles.txt") do
+  for line in txt:lines() do
     os.remove(game_path .. "/" .. line)
   end
 
@@ -612,7 +622,7 @@ end
 -- Game update processing
 function v1_game_diff_transition(game_path, edition)
   local file = io.open(game_path .. "/.version", "w+")
-  local version = v1_game_get_version(game_path) or game_api(edition)["data"]["game"]["latest"]["version"]
+  local version = v1_game_get_version(game_path, edition) or game_api(edition)["data"]["game"]["latest"]["version"]
 
   file:write(version)
   file:close()

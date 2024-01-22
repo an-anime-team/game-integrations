@@ -494,7 +494,7 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
         ["status"]  = "latest"
       }
     else
-      local jadeite_download = v1_addons_get_download(group_name, addon_name, addon_path, edition)
+      local jadeite_download = v1_addons_get_download(group_name, addon_name, edition)
 
       if jadeite_download ~= nil then
         return {
@@ -533,7 +533,7 @@ end
 function v1_game_diff_post_transition(game_path, edition)
   local file = io.open(game_path .. "/.version", "w+")
 
-  local version = v1_game_get_version(game_path) or game_api(edition)["data"]["game"]["latest"]["version"]
+  local version = v1_game_get_version(game_path, edition) or game_api(edition)["data"]["game"]["latest"]["version"]
 
   file:write(version)
   file:close()
