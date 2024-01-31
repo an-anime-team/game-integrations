@@ -100,6 +100,9 @@ local function get_hdiff(edition)
 
     file:write(response["body"])
     file:close()
+
+    -- Make downloaded binary executable
+    os.execute("chmod +x /tmp/hpatchz")
   end
 
   return "/tmp/hpatchz"
