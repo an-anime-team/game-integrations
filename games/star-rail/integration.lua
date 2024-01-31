@@ -667,8 +667,9 @@ function v1_addons_get_paths(group_name, addon_name, addon_path, edition)
 end
 
 local function process_hdifffiles(path, edition)
-  local txt = io.open(path .. "/hdifffiles.txt", "r")
-  if not txt then
+  local hdifffiles = io.open(path .. "/hdifffiles.txt", "r")
+
+  if not hdifffiles then
     return
   end
 
@@ -676,7 +677,7 @@ local function process_hdifffiles(path, edition)
   local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
 
   -- {"remoteName": "AnimeGame_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/Japanese/1001.pck"}
-  for line in txt:lines() do
+  for line in hdifffiles:lines() do
     local file_info = v1_json_decode(line)
 
     local file   = path .. "/" .. file_info["remoteName"]
@@ -686,8 +687,8 @@ local function process_hdifffiles(path, edition)
     if not apply_hdiff(hdiff, file, patch, output) then
       local response = v1_network_fetch(base_uri .. "/" .. file_info["remoteName"])
 
-      if not pkg_version["ok"] then
-        error("Failed to download file (code " .. pkg_version["status"] .. "): " .. pkg_version["statusText"])
+      if not response["ok"] then
+        error("Failed to download file (code " .. response["status"] .. "): " .. response["statusText"])
       end
 
       local file = io.open(output, "wb+")
