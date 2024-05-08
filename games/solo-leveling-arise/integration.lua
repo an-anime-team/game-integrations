@@ -1,5 +1,3 @@
---!/usr/bin/lua
-
 local game_api_cache = {}
 
 function game_api(edition)
@@ -7,6 +5,7 @@ function game_api(edition)
     local uri = {
       ["global"] = "https://apis.netmarble.com/cpplauncher/api/game/sololv/builds?buildCode=A"
     }
+
     local header = {
       ["global"] = {
         ["headers"] = {
@@ -265,18 +264,23 @@ end
 function v1_addons_get_list(edition)
   return {}
 end
+
 function v1_addons_is_installed(group_name, addon_name, addon_path, edition)
   return true
 end
+
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
   return nil
 end
+
 function v1_addons_get_download(group_name, addon_name, edition)
   return nil
 end
+
 function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   return addon_path 
 end
+
 function v1_addons_get_integrity_info(group_name, addon_name, addon_path, edition)
   return nil
 end
