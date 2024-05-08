@@ -4,12 +4,12 @@ local social_api_cache = {}
 local function game_api(edition)
   if game_api_cache[edition] == nil then
     local uri = {
-      ["global"] = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/resource?key=gcStgarh&launcher_id=10",
-      ["sea"]    = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/resource?launcher_id=9",
-      ["china"]  = "https://bh3-launcher-static.mihoyo.com/bh3_cn/mdk/launcher/api/resource?launcher_id=4",
-      ["taiwan"] = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/resource?launcher_id=8",
-      ["korea"]  = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/resource?launcher_id=11",
-      ["japan"]  = "https://sdk-os-static.hoyoverse.com/bh3_global/mdk/launcher/api/resource?key=ojevZ0EyIyZNCy4n&launcher_id=19"
+      ["global"] = "https://bh3-launcher.hoyoverse.com/bh3_global/mdk/launcher/api/resource?launcher_id=10&key=dpz65xJ3",
+      ["sea"]    = "https://bh3-launcher.hoyoverse.com/bh3_global/mdk/launcher/api/resource?launcher_id=9&key=tEGNtVhN",
+      ["china"]  = "https://bh3-launcher.mihoyo.com/bh3_global/mdk/launcher/api/resource?launcher_id=4&key=SyvuPnqL",
+      ["taiwan"] = "https://bh3-launcher.hoyoverse.com/bh3_global/mdk/launcher/api/resource?launcher_id=8&key=demhUTcW",
+      ["korea"]  = "https://bh3-launcher.hoyoverse.com/bh3_global/mdk/launcher/api/resource?launcher_id=11&key=PRg571Xh",
+      ["japan"]  = "https://bh3-launcher.hoyoverse.com/bh3_global/mdk/launcher/api/resource?key=ojevZ0EyIyZNCy4n&launcher_id=19"
     }
 
     local response = v1_network_fetch(uri[edition])
