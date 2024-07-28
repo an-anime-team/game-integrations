@@ -1,0 +1,13 @@
+{
+	"manifest_version": "1",
+	"game": {
+		"name": "zzz",
+		"title": "Zenless Zone Zero",
+		"developer": "Hoyoverse"
+	},
+	"script": {
+		"path": "integration.lua",
+		"version": "1.0.0",
+		"standard": "1"
+	}
+}
