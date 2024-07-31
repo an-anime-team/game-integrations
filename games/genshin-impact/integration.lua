@@ -515,7 +515,7 @@ end
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
   if group_name == "voiceovers" then
-    local version read_version_file(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version", "r")
+    local version = read_version_file(addon_path .. "/" .. get_edition_data_folder(edition) .. "/StreamingAssets/AudioAssets/" .. get_voiceover_folder(addon_name) .. "/.version")
     if version then
       return string.format("%d.%d.%d", version.major, version.minor, version.patch)
     end
