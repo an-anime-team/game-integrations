@@ -1,0 +1,31 @@
+{
+    "standard": 1,
+    "game": {
+        "title": "Genshin Impact",
+        "description": {
+            "en": "WIP implementation used for testing",
+            "ru": "Реализация пакета, используемая для тестов"
+        },
+        "developer": "HoYoverse",
+        "publisher": "COGNOSPHERE",
+        "images": {
+            "icon": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/icon.jpg",
+            "poster": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/poster.jpg",
+            "background": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/background.jpg",
+            "slides": [
+                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/slide1.jpg"
+            ]
+        }
+    },
+    "package": {
+        "url": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/package.json"
+    },
+    "info": {
+        "tags": [
+            "gambling",
+            "payments",
+            "anti-cheat",
+            "unsupported-platform"
+        ]
+    }
+}

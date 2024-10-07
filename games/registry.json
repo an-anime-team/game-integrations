@@ -1,0 +1,13 @@
+{
+    "format": 1,
+    "title": {
+        "en": "Anime Games Launcher Standard Registry",
+        "ru": "Стандартный реестр Anime Games Launcher"
+    },
+    "games": [
+        {
+            "url": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/manifest.json",
+            "featured": true
+        }
+    ]
+}
