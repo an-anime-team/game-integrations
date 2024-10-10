@@ -1,0 +1,35 @@
+{
+    "standard": 1,
+    "game": {
+        "title": "Zenless Zone Zero",
+        "description": {
+            "en": "WIP implementation used for testing",
+            "ru": "Реализация пакета, используемая для тестов"
+        },
+        "developer": "HoYoverse",
+        "publisher": "COGNOSPHERE",
+        "images": {
+            "icon": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/zzz/icon.png",
+            "poster": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/zzz/poster.png",
+            "background": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/zzz/background.png",
+            "slides": [
+                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/zzz/slide1.jpg",
+                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/zzz/slide2.jpg",
+                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/zzz/slide3.jpg",
+                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/zzz/slide4.jpg",
+                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/zzz/slide5.jpg"
+            ]
+        }
+    },
+    "package": {
+        "url": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/zzz/package.json"
+    },
+    "info": {
+        "tags": [
+            "gambling",
+            "payments",
+            "anti-cheat",
+            "unsupported-platform"
+        ]
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "standard": 1,
+    "package": {
+        "maintainers": [
+            "Nikita Podvirnyi <krypt0nn@vk.com>"
+        ]
+    },
+    "outputs": {
+        "integration": {
+            "uri": "integration.lua",
+            "format": "module/v1"
+        }
+    }
+}
