@@ -9,16 +9,16 @@
         "developer": "HoYoverse",
         "publisher": "COGNOSPHERE",
         "images": {
-            "icon": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/icon.jpg",
-            "poster": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/poster.jpg",
-            "background": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/background.jpg",
+            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/genshin/icon.jpg",
+            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/genshin/poster.jpg",
+            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/genshin/background.jpg",
             "slides": [
-                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/slide1.jpg"
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/genshin/slide1.jpg"
             ]
         }
     },
     "package": {
-        "url": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/genshin/package.json"
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/genshin/package.json"
     },
     "info": {
         "tags": [
