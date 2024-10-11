@@ -8,6 +8,10 @@
         {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/genshin/manifest.json",
             "featured": true
-        }
+        },
+
+        "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/zzz/manifest.json",
+        "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/manifest.json",
+        "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/manifest.json"
     ]
 }
