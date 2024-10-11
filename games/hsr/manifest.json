@@ -9,20 +9,20 @@
         "developer": "HoYoverse",
         "publisher": "COGNOSPHERE",
         "images": {
-            "icon": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/hsr/icon.jpg",
-            "poster": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/hsr/poster.jpg",
-            "background": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/hsr/background.jpg",
+            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/icon.jpg",
+            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/poster.jpg",
+            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/background.jpg",
             "slides": [
-                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/hsr/slide1.jpg",
-                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/hsr/slide2.jpg",
-                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/hsr/slide3.jpg",
-                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/hsr/slide4.jpg",
-                "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/hsr/slide5.jpg"
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/slide1.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/slide2.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/slide3.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/slide4.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/slide5.jpg"
             ]
         }
     },
     "package": {
-        "url": "https://github.com/an-anime-team/game-integrations/blob/rewrite/games/hsr/package.json"
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/package.json"
     },
     "info": {
         "tags": [
