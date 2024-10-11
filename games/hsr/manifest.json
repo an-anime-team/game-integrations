@@ -1,0 +1,36 @@
+{
+    "standard": 1,
+    "game": {
+        "title": "Honkai: Star Rail",
+        "description": {
+            "en": "WIP implementation used for testing",
+            "ru": "Реализация пакета, используемая для тестов"
+        },
+        "developer": "HoYoverse",
+        "publisher": "COGNOSPHERE",
+        "images": {
+            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/icon.jpg",
+            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/poster.jpg",
+            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/background.jpg",
+            "slides": [
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/slide1.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/slide2.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/slide3.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/slide4.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/slide5.jpg"
+            ]
+        }
+    },
+    "package": {
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/package.json"
+    },
+    "info": {
+        "tags": [
+            "gambling",
+            "payments",
+            "anti-cheat",
+            "workarounds",
+            "unsupported-platform"
+        ]
+    }
+}
