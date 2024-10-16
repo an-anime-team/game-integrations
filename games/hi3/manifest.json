@@ -23,7 +23,8 @@
         }
     },
     "package": {
-        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/package.json"
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/package.json",
+        "output": "integration"
     },
     "info": {
         "tags": [
