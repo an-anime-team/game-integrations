@@ -1,11 +1,29 @@
 local game_api_cache = {}
 local social_api_cache = {}
 
+local function get_game_biz(edition)
+  local biz = {
+    ["global"] = "hkrpg_global",
+    ["china"]  = "hkrpg_cn"
+  }
+  return biz[edition]
+end
+
+local function lookup_game_info(games, edition)
+  local biz = get_game_biz(edition)
+  for _, game_info in ipairs(games) do
+    if game_info["game"]["biz"] == biz then
+      return game_info
+    end
+  end
+  return nil
+end
+
 local function game_api(edition)
   if game_api_cache[edition] == nil then
     local uri = {
-      ["global"] = "https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/resource?channel_id=1&key=vplOVX8Vn7cwG8yb&launcher_id=35",
-      ["china"]  = "https://api-launcher.mihoyo.com/hkrpg_cn/mdk/launcher/api/resource?channel_id=1&key=6KcVuOkbcqjJomjZ&launcher_id=33"
+      ["global"] = "https://sg-hyp-api.hoyoverse.com/hyp/hyp-connect/api/getGamePackages?launcher_id=VYTpXlbWo8",
+      ["china"]  = "https://hyp-api.mihoyo.com/hyp/hyp-connect/api/getGamePackages?launcher_id=jGHBHlcOq1"
     }
 
     local response = v1_network_fetch(uri[edition])
@@ -14,7 +32,13 @@ local function game_api(edition)
       error("Failed to request game API (code " .. response["status"] .. "): " .. response["statusText"])
     end
 
-    game_api_cache[edition] = response.json()
+    local game_packages = response.json()["data"]["game_packages"]
+    local game_info = lookup_game_info(game_packages, edition)
+
+    if not game_info then
+      error("Failed to find game packages")
+    end
+    game_api_cache[edition] = game_info
   end
 
   return game_api_cache[edition]
@@ -23,8 +47,8 @@ end
 local function social_api(edition)
   if social_api_cache[edition] == nil then
     local uri = {
-      ["global"] = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/content?filter_adv=true&key=gcStgarh&launcher_id=10&language=en-us",
-      ["china"]  = "https://sdk-os-static.hoyoverse.com/hk4e_global/mdk/launcher/api/content?filter_adv=true&key=gcStgarh&launcher_id=10&language=zh-cn"
+      ["global"] = "https://sg-hyp-api.hoyoverse.com/hyp/hyp-connect/api/getAllGameBasicInfo?launcher_id=VYTpXlbWo8&language=en-us",
+      ["china"]  = "https://hyp-api.mihoyo.com/hyp/hyp-connect/api/getAllGameBasicInfo?launcher_id=jGHBHlcOq1"
     }
 
     local response = v1_network_fetch(uri[edition])
@@ -39,8 +63,8 @@ local function social_api(edition)
   return social_api_cache[edition]
 end
 
-local jadeite_metadata = nil
-local jadeite_download = nil
+local jadeite_metadata_cache = nil
+local jadeite_download_cache = nil
 
 local function get_jadeite_metadata()
   local uris = {
@@ -49,7 +73,7 @@ local function get_jadeite_metadata()
   }
 
   for _, uri in pairs(uris) do
-    if jadeite_metadata ~= nil then
+    if jadeite_metadata_cache ~= nil then
       break
     end
 
@@ -59,26 +83,26 @@ local function get_jadeite_metadata()
       error("Failed to request jadeite metadata (code " .. response["status"] .. "): " .. response["statusText"])
     end
 
-    jadeite_metadata = response.json()
+    jadeite_metadata_cache = response.json()
   end
 
-  return jadeite_metadata
+  return jadeite_metadata_cache
 end
 
 local function get_jadeite_download()
   local uri = "https://codeberg.org/api/v1/repos/mkrsym1/jadeite/releases/latest"
 
-  if not jadeite_download then
+  if not jadeite_download_cache then
     local response = v1_network_fetch(uri)
 
     if not response["ok"] then
       error("Failed to request jadeite releases (code " .. response["status"] .. "): " .. response["statusText"])
     end
 
-    jadeite_download = response.json()
+    jadeite_download_cache = response.json()
   end
 
-  return jadeite_download
+  return jadeite_download_cache
 end
 
 local function get_hdiff(edition)
@@ -136,19 +160,13 @@ local function split_version(version)
   return nil
 end
 
--- Compare two raw version strings
+-- Compare two structural versions
+--
+-- Structural version expect version parameters are like the output of split_version.
 -- [ 1] if version_1 > version_2
 -- [ 0] if version_1 = version_2
 -- [-1] if version_1 < version_2
-local function compare_versions(version_1, version_2)
-  local version_1 = split_version(version_1)
-  local version_2 = split_version(version_2)
-  
-  if version_1 == nil or version_2 == nil then
-    return nil
-  end
-
-  -- Thanks, noir!
+local function compare_structural_versions(version_1, version_2)
   if version_1.major > version_2.major then return  1 end
   if version_1.major < version_2.major then return -1 end
 
@@ -159,6 +177,66 @@ local function compare_versions(version_1, version_2)
   if version_1.patch < version_2.patch then return -1 end
 
   return 0
+end
+
+-- Compare two raw version strings
+-- [ 1] if version_1 > version_2
+-- [ 0] if version_1 = version_2
+-- [-1] if version_1 < version_2
+local function compare_string_versions(version_1, version_2)
+  local version_1 = split_version(version_1)
+  local version_2 = split_version(version_2)
+
+  if version_1 == nil or version_2 == nil then
+    return nil
+  end
+
+  return compare_structural_versions(version_1, version_2)
+end
+
+--- Write a version to a file in binary format
+--- version can be either a string version or a structural version
+local function write_version_file(path, version)
+  local file = io.open(path, "wb+")
+  local structural_version
+  if type(version) == 'string' then
+    structural_version = split_version(version)
+  else
+    structural_version = version
+  end
+
+  file:write(string.char(structural_version.major, structural_version.minor, structural_version.patch))
+  file:close()
+end
+
+-- Reads a binary or string version file and returns a structural version
+--
+-- Returns nil on error for fail-open.
+local function read_version_file(filepath)
+  local file = io.open(filepath, "rb")
+
+  if not file then
+    return nil, "Failed to open file"
+  end
+
+  -- Read the 3 bytes from the file
+  local version_bytes = file:read(100)
+  file:close()
+  -- Check if we have read exactly 3 bytes
+  if #version_bytes > 3 then
+    -- The content is likely a string version, created by older version of the integration
+    return split_version(version_bytes)
+  end
+
+  local major = string.byte(version_bytes, 1)
+  local minor = string.byte(version_bytes, 2)
+  local patch = string.byte(version_bytes, 3)
+
+  return {
+      ["major"] = major,
+      ["minor"] = minor,
+      ["patch"] = patch,
+  }
 end
 
 local function get_voiceover_title(language)
@@ -212,7 +290,13 @@ end
 
 -- Get background picture URI
 function v1_visual_get_background_picture(edition)
-  local uri = social_api(edition)["data"]["adv"]["background"]
+  local game_infos = social_api(edition)["data"]["game_info_list"]
+  local game_info = lookup_game_info(game_infos, edition)
+  if not game_info then
+    error("Failed to find background info.")
+  end
+
+  local uri = game_info["backgrounds"][0]["background"]["url"]
 
   local path = "/tmp/.star-rail-" .. edition .. "-background"
 
@@ -273,16 +357,24 @@ end
 
 -- Get full game downloading info
 function v1_game_get_download(edition)
-  local latest_info = game_api(edition)["data"]["game"]["latest"]
+  local latest_info = game_api(edition)["main"]["major"]
+  local segments = {}
+  local size = 0
+
+  for _, segment in pairs(latest_info["game_pkgs"]) do
+    table.insert(segments, segment["url"])
+
+    size = size + segment["size"]
+  end
 
   return {
     ["version"] = latest_info["version"],
     ["edition"] = edition,
 
     ["download"] = {
-      ["type"] = "archive",
-      ["size"] = latest_info["package_size"],
-      ["uri"]  = latest_info["path"]
+      ["type"]     = "segments",
+      ["size"]     = size,
+      ["segments"] = segments
     }
   }
 end
@@ -295,14 +387,14 @@ function v1_game_get_diff(game_path, edition)
     return nil
   end
 
-  local game_data = game_api(edition)["data"]["game"]
+  local game_data = game_api(edition)
 
-  local latest_info = game_data["latest"]
-  local diffs = game_data["diffs"]
+  local latest_info = game_data["main"]["major"]
+  local patches = game_data["main"]["patches"]
 
   -- It should be impossible to have higher installed version
   -- but just in case I have to cover this case as well
-  if compare_versions(installed_version, latest_info["version"]) ~= -1 then
+  if compare_string_versions(installed_version, latest_info["version"]) ~= -1 then
     return {
       ["current_version"] = installed_version,
       ["latest_version"]  = latest_info["version"],
@@ -310,33 +402,33 @@ function v1_game_get_diff(game_path, edition)
       ["edition"] = edition,
       ["status"]  = "latest"
     }
-  else
-    for _, diff in pairs(diffs) do
-      if diff["version"] == installed_version then
-        return {
-          ["current_version"] = installed_version,
-          ["latest_version"]  = latest_info["version"],
-
-          ["edition"] = edition,
-          ["status"]  = "outdated",
-
-          ["diff"] = {
-            ["type"] = "archive",
-            ["size"] = diff["package_size"],
-            ["uri"]  = diff["path"]
-          }
-        }
-      end
-    end
-
-    return {
-      ["current_version"] = installed_version,
-      ["latest_version"]  = latest_info["version"],
-
-      ["edition"] = edition,
-      ["status"]  = "unavailable"
-    }
   end
+
+  for _, patch in ipairs(patches) do
+    if patch["version"] == installed_version then
+      return {
+        ["current_version"] = installed_version,
+        ["latest_version"]  = latest_info["version"],
+
+        ["edition"] = edition,
+        ["status"]  = "outdated",
+
+        ["diff"] = {
+          ["type"] = "archive",
+          ["size"] = patch["game_pkgs"][1]["size"],
+          ["uri"]  = patch["game_pkgs"][1]["url"]
+        }
+      }
+    end
+  end
+
+  return {
+    ["current_version"] = installed_version,
+    ["latest_version"]  = latest_info["version"],
+
+    ["edition"] = edition,
+    ["status"]  = "unavailable"
+  }
 end
 
 -- Get installed game status before launching it
@@ -421,7 +513,10 @@ end
 
 -- Get game integrity info
 function v1_game_get_integrity_info(game_path, edition)
-  local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
+  local base_uri = game_api(edition)["main"]["major"]["res_list_url"]
+  if base_uri == nil or base_uri == '' then
+    return {}
+  end
   local pkg_version = v1_network_fetch(base_uri .. "/pkg_version")
 
   if not pkg_version["ok"] then
@@ -452,10 +547,10 @@ end
 
 -- Get list of game addons (voice packages)
 function v1_addons_get_list(edition)
-  local latest_info = game_api(edition)["data"]["game"]["latest"]
+  local latest_info = game_api(edition)["main"]["major"]
   local voiceovers = {}
 
-  for _, package in pairs(latest_info["voice_packs"]) do
+  for _, package in pairs(latest_info["audio_pkgs"]) do
     -- zh-tw is a copy of zh-cn
     if package["language"] ~= "zh-tw" then
       table.insert(voiceovers, {
@@ -505,20 +600,20 @@ end
 
 -- Get installed addon version
 function v1_addons_get_version(group_name, addon_name, addon_path, edition)
-  local version = nil
-
   if group_name == "voiceovers" then
-    version = io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version", "r")
+    local version = read_version_file(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version")
+    if version then
+      return string.format("%d.%d.%d", version.major, version.minor, version.patch)
+    end
   elseif group_name == "extra" and addon_name == "jadeite" then
-    version = io.open(addon_path .. "/.version", "r")
-  end
+    local version = io.open(addon_path .. "/.version", "r")
+    if version ~= nil then
+      version = version:read("*all")
 
-  if version ~= nil then
-    version = version:read("*all")
-
-    -- Verify that stored version number is correct
-    if split_version(version) ~= nil then
-      return version
+      -- Verify that stored version number is correct
+      if split_version(version) ~= nil then
+        return version
+      end
     end
   end
 
@@ -528,9 +623,9 @@ end
 -- Get full addon downloading info
 function v1_addons_get_download(group_name, addon_name, edition)
   if group_name == "voiceovers" then
-    local latest_info = game_api(edition)["data"]["game"]["latest"]
+    local latest_info = game_api(edition)["main"]["major"]
 
-    for _, package in pairs(latest_info["voice_packs"]) do
+    for _, package in pairs(latest_info["audio_pkgs"]) do
       if package["language"] == addon_name then
         return {
           ["version"] = latest_info["version"],
@@ -539,7 +634,7 @@ function v1_addons_get_download(group_name, addon_name, edition)
           ["download"] = {
             ["type"] = "archive",
             ["size"] = package["size"],
-            ["uri"]  = package["path"]
+            ["uri"]  = package["url"]
           }
         }
       end
@@ -575,14 +670,14 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   end
 
   if group_name == "voiceovers" then
-    local game_data = game_api(edition)["data"]["game"]
+    local game_data = game_api(edition)["main"]
 
-    local latest_info = game_data["latest"]
-    local diffs = game_data["diffs"]
+    local latest_info = game_data["major"]
+    local diffs = game_data["patches"]
 
     -- It should be impossible to have higher installed version
     -- but just in case I have to cover this case as well
-    if compare_versions(installed_version, latest_info["version"]) ~= -1 then
+    if compare_string_versions(installed_version, latest_info["version"]) ~= -1 then
       return {
         ["current_version"] = installed_version,
         ["latest_version"]  = latest_info["version"],
@@ -593,7 +688,7 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
     else
       for _, diff in pairs(diffs) do
         if diff["version"] == installed_version then
-          for _, package in pairs(diff["voice_packs"]) do
+          for _, package in pairs(diff["audio_pkgs"]) do
             if package["language"] == addon_name then
               return {
                 ["current_version"] = installed_version,
@@ -604,8 +699,8 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
 
                 ["diff"] = {
                   ["type"] = "archive",
-                  ["size"] = package["package_size"],
-                  ["uri"]  = package["path"]
+                  ["size"] = package["size"],
+                  ["uri"]  = package["url"]
                 }
               }
             end
@@ -626,7 +721,7 @@ function v1_addons_get_diff(group_name, addon_name, addon_path, edition)
   elseif group_name == "extra" and addon_name == "jadeite" then
     local jadeite_metadata = get_jadeite_metadata()
 
-    if compare_versions(installed_version, jadeite_metadata["jadeite"]["version"]) ~= -1 then
+    if compare_string_versions(installed_version, jadeite_metadata["jadeite"]["version"]) ~= -1 then
       return {
         ["current_version"] = installed_version,
         ["latest_version"]  = jadeite_metadata["jadeite"]["version"],
@@ -677,7 +772,7 @@ local function process_hdifffiles(path, edition)
   end
 
   local hdiff = get_hdiff(edition)
-  local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
+  local base_uri = game_api(edition)["main"]["major"]["res_list_url"]
 
   -- {"remoteName": "AnimeGame_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/Japanese/1001.pck"}
   for line in hdifffiles:lines() do
@@ -688,6 +783,9 @@ local function process_hdifffiles(path, edition)
     local output = path .. "/" .. file_info["remoteName"] .. ".hdiff_patched"
 
     if not apply_hdiff(hdiff, file, patch, output) then
+      if base_uri == nil or base_uri == '' then
+        error("Failed apply diff for file " .. file)
+      end
       local response = v1_network_fetch(base_uri .. "/" .. file_info["remoteName"])
 
       if not response["ok"] then
@@ -731,11 +829,10 @@ end
 
 -- Game update processing
 function v1_game_diff_transition(game_path, edition)
-  local file = io.open(game_path .. "/.version", "w+")
-  local version = v1_game_get_version(game_path, edition) or game_api(edition)["data"]["game"]["latest"]["version"]
+  local path = game_path .. "/.version"
+  local version = v1_game_get_version(game_path, edition) or game_api(edition)["main"]["major"]["version"]
 
-  file:write(version)
-  file:close()
+  write_version_file(path, version)
 end
 
 -- Game update post-processing
@@ -746,20 +843,18 @@ end
 
 -- Addon update processing
 function v1_addons_diff_transition(group_name, addon_name, addon_path, edition)
-  local file = nil
-  local version = nil
-
   if group_name == "voiceovers" then
-    version = v1_addons_get_version(group_name, addon_name, addon_path, edition) or game_api(edition)["data"]["game"]["latest"]["version"]
-    file = io.open(addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version", "w+")
+    local version = v1_addons_get_version(group_name, addon_name, addon_path, edition) or game_api(edition)["main"]["major"]["version"]
+    local path = addon_path .. "/StarRail_Data/Persistent/Audio/AudioPackage/Windows/" .. get_voiceover_folder(addon_name) .. "/.version"
+    write_version_file(path, version)
   elseif group_name == "extra" and addon_name == "jadeite" then
-    file = io.open(addon_path .. "/.version", "w+")
-    version = get_jadeite_metadata()["jadeite"]["version"]
-  end
+    local file = io.open(addon_path .. "/.version", "w+")
+    local version = get_jadeite_metadata()["jadeite"]["version"]
 
-  if file ~= nil and version ~= nil then
-    file:write(version)
-    file:close()
+    if file ~= nil and version ~= nil then
+      file:write(version)
+      file:close()
+    end
   end
 end
 
