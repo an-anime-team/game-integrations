@@ -6,10 +6,7 @@
         ]
     },
     "inputs": {
-        "hyvlib": {
-            "uri": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/hyvlib/hyvlib.lua",
-            "format": "module/v1"
-        }
+        "hyvlib": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/hyvlib/package.json"
     },
     "outputs": {
         "integration": {
