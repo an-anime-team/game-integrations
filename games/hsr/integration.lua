@@ -1,5 +1,8 @@
+local hyvlib = load("hyvlib")
+
 return {
     standard = 1,
+
     editions = {
         {
             name = "global",
@@ -9,7 +12,9 @@ return {
             }
         }
     },
+
     components = {},
+
     game = {
         get_status = function(edition: string)
             return "installed"
@@ -23,7 +28,8 @@ return {
             return {
                 status = "disabled",
                 hint = {
-                    en = "It's a test implementation not meant for real use",
+                    en = str.encode(hyvlib, "json"),
+                    -- en = "It's a test implementation not meant for real use",
                     ru = "Это тестовая реализация, не предназначенная для реального использования"
                 },
                 binary = ""
