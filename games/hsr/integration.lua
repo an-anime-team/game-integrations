@@ -1,4 +1,4 @@
-local hyvlib = load("hyvlib")
+local hyvlib = load("hyvlib").value.hyvlib
 
 return {
     standard = 1,
@@ -28,7 +28,7 @@ return {
             return {
                 status = "disabled",
                 hint = {
-                    en = str.encode(hyvlib, "json"),
+                    en = str.encode(hyvlib.api.fetch(), "json"),
                     -- en = "It's a test implementation not meant for real use",
                     ru = "Это тестовая реализация, не предназначенная для реального использования"
                 },
