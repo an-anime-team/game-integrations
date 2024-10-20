@@ -23,7 +23,15 @@
     },
     "package": {
         "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/zzz/package.json",
-        "output": "integration"
+        "output": "integration",
+        "runtime": {
+            "platform": "x86_64-windows-native",
+            "supported": [
+                {
+                    "platform": "x86_64-linux-wine64"
+                }
+            ]
+        }
     },
     "info": {
         "tags": [
