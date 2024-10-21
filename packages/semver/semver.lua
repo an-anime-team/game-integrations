@@ -17,7 +17,7 @@
 type Semver = { major: number, minor: number, patch: number }
 
 local function parse_version(version: string): Semver | nil
-    local numbers = version:gmatch("([1-9]+)%.([0-9]+)%.([0-9]+)")
+    local numbers = version:gmatch("([0-9]+)%.([0-9]+)%.([0-9]+)")
 
     for major, minor, patch in numbers do
         return {
