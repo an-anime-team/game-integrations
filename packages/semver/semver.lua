@@ -1,4 +1,4 @@
--- semver v1.0.0
+-- semver v1.0.1
 -- Copyright (C) 2024  Nikita Podvirnyi <krypt0nn@vk.com>
 -- 
 -- This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
 
 type Semver = { major: number, minor: number, patch: number }
 
-local function parse_version(version: string): Semver | nil
+local function parse_version(version: string): Semver?
     local numbers = version:gmatch("([0-9]+)%.([0-9]+)%.([0-9]+)")
 
     for major, minor, patch in numbers do
@@ -47,24 +47,32 @@ local function compare_versions(version_1: Semver, version_2: Semver): number
 end
 
 local __semver = {
-    __add = function(version_1: Semver, version_2: Semver): Semver | nil
-        version_1.major += version_2.major
-        version_1.minor += version_2.minor
-        version_1.patch += version_2.patch
+    __add = function(version_1: Semver, version_2: Semver): Semver?
+        local new_version = {
+            major = version_1.major + version_2.major,
+            minor = version_1.minor + version_2.minor,
+            patch = version_1.patch + version_2.patch
+        }
 
-        return version_1
+        setmetatable(new_version, getmetatable(version_1))
+
+        return new_version
     end,
 
-    __sub = function(version_1: Semver, version_2: Semver): Semver | nil
-        version_1.major -= version_2.major
-        version_1.minor -= version_2.minor
-        version_1.patch -= version_2.patch
+    __sub = function(version_1: Semver, version_2: Semver): Semver?
+        local new_version = {
+            major = version_1.major - version_2.major,
+            minor = version_1.minor - version_2.minor,
+            patch = version_1.patch - version_2.patch
+        }
 
-        return version_1
+        setmetatable(new_version, getmetatable(version_1))
+
+        return new_version
     end,
 
     __tostring = function(version: Semver): string
-        return version.major .. "." .. version.minor .. "." .. version.patch
+        return `{version.major}.{version.minor}.{version.patch}`
     end,
 
     __eq = function(version_1: Semver, version_2: Semver): boolean
@@ -92,8 +100,10 @@ local __semver = {
 -- print(a <= b) -- true
 -- print(a + b)  -- "3.5.1"
 -- print(b - a)  -- "1.1.1"
-return function(version: string): Semver | nil
-    local version = parse_version(version)
+return function(version: Semver | string): Semver?
+    if type(version) == "string" then
+        version = parse_version(version)
+    end
 
     if not version then
         return nil
