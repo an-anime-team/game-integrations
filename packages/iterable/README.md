@@ -39,7 +39,7 @@ local iter = import("iterable")
 -- [b] = 2
 -- [c] = 3
 for k, v in iter({ a = 1, b = 2, c = 3 }) do
-	print(`[{k}] = {v}`)
+    print(`[{k}] = {v}`)
 end
 ```
 
