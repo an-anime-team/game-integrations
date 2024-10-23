@@ -5,6 +5,10 @@
             "Nikita Podvirnyi <krypt0nn@vk.com>"
         ]
     },
+    "inputs": {
+        "semver": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/semver/semver.lua",
+        "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/iterable/iterable.lua"
+    },
     "outputs": {
         "hyvlib": {
             "uri": "hyvlib.lua",
