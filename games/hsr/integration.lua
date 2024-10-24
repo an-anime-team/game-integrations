@@ -1,5 +1,3 @@
-local hyvlib = import("hyvlib").hyvlib
-
 return {
     standard = 1,
 
@@ -25,7 +23,8 @@ return {
         end,
 
         get_launch_info = function(edition: string)
-            dbg(import("hyvlib"))
+            local hyvlib = import("hyvlib")
+
             dbg(hyvlib)
             dbg(hyvlib.hsr.global.api.get())
 
