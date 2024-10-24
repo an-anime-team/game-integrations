@@ -2,7 +2,7 @@ return {
     standard = 1,
 
     editions = function()
-        local hyvlib = import("hyvlib")
+        local hyvlib = import("hyvlib").hyvlib
 
         local editions = {}
 
@@ -30,7 +30,7 @@ return {
         end,
 
         get_launch_info = function(edition: string)
-            local hyvlib = import("hyvlib")
+            local hyvlib = import("hyvlib").hyvlib
 
             dbg(hyvlib)
             dbg(hyvlib.hsr.global.api.get())
