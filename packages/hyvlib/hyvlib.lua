@@ -14,9 +14,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-local semver = import("semver")
-local iter = import("iterable")
-
 local editions_locales = {
     global = {
         en = "Global",
@@ -134,6 +131,9 @@ local api_cache = nil
 -- hyvlib.api.get()
 -- Try to fetch the HYVse API
 local function api_get(url: string, id: string): Api?
+    local semver = import("semver")
+    local iter = import("iter")
+
     if not api_cache[url] then
         local response = net.fetch(url)
 
@@ -216,18 +216,20 @@ local function api_get(url: string, id: string): Api?
     }
 end
 
-return iter(games)
-    .map(function(game)
-        return iter(game.editions)
-            .map(function(edition)
-                return {
-                    api = {
-                        get = function()
-                            return api_get(edition.api_url, edition.game_id)
-                        end
-                    }
-                }
-            end)
-            .collect()
-    end)
-    .collect()
+local lib = {}
+
+for game_name, game in pairs(games) do
+    lib[game_name] = {}
+
+    for edition_name, edition in pairs(game.editions) do
+        lib[game_name][edition_name] = {
+            api = {
+                get = function()
+                    return api_get(edition.api_url, edition.game_id)
+                end
+            }
+        }
+    end
+end
+
+return lib
