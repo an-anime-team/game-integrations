@@ -1,17 +1,21 @@
 return {
     standard = 1,
 
-    editions = {
-        {
-            name = "global",
-            title = {
-                en = "Global",
-                ru = "Глобальная"
+    editions = function()
+        return {
+            {
+                name = "global",
+                title = {
+                    en = "Global",
+                    ru = "Глобальная"
+                }
             }
         }
-    },
+    end,
 
-    components = {},
+    components = function()
+        return {}
+    end,
 
     game = {
         get_status = function(edition: string)
