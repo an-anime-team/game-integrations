@@ -25,11 +25,15 @@ return {
         end,
 
         get_launch_info = function(edition: string)
+            dbg(import("hyvlib"))
+            dbg(hyvlib)
+            dbg(hyvlib.hsr.global.api.get())
+
             return {
                 status = "disabled",
                 hint = {
-                    en = str.encode(hyvlib.hsr.global.api.get(), "json"),
-                    -- en = "It's a test implementation not meant for real use",
+                    -- en = str.encode(hyvlib.hsr.global.api.get(), "json"),
+                    en = "It's a test implementation not meant for real use",
                     ru = "Это тестовая реализация, не предназначенная для реального использования"
                 },
                 binary = ""
