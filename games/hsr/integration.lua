@@ -2,15 +2,18 @@ return {
     standard = 1,
 
     editions = function()
-        return {
-            {
-                name = "global",
-                title = {
-                    en = "Global",
-                    ru = "Глобальная"
-                }
-            }
-        }
+        local hyvlib = import("hyvlib")
+
+        local editions = {}
+
+        for name, edition in pairs(hyvlib.hsr) do
+            table.insert(editions, {
+                name = name,
+                title = edition.title
+            })
+        end
+
+        return editions
     end,
 
     components = function()
@@ -35,7 +38,6 @@ return {
             return {
                 status = "disabled",
                 hint = {
-                    -- en = str.encode(hyvlib.hsr.global.api.get(), "json"),
                     en = "It's a test implementation not meant for real use",
                     ru = "Это тестовая реализация, не предназначенная для реального использования"
                 },

@@ -223,6 +223,8 @@ for game_name, game in pairs(games) do
 
     for edition_name, edition in pairs(game.editions) do
         lib[game_name][edition_name] = {
+            title = edition.title,
+
             api = {
                 get = function()
                     return api_get(edition.api_url, edition.game_id)
