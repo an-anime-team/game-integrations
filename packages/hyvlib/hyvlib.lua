@@ -135,7 +135,7 @@ local api_cache = nil
 -- Try to fetch the HYVse API
 local function api_get(url: string, id: string): Api?
     if not api_cache[url] then
-        local response = net.fetch(api_url)
+        local response = net.fetch(url)
 
         if not response.is_ok then
             error("API request failed: HTTP code " .. response.status)
