@@ -11,8 +11,8 @@
         "publisher": "Kuro Games",
         "images": {
             "icon": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/icon.png",
-            "poster": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/poster.jpg",
-            "background": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/background.jpg",
+            "poster": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/poster.png",
+            "background": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/background.png",
             "slides": [
                 "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/slide1.jpg",
                 "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/slide2.jpg",
