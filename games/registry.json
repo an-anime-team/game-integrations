@@ -24,6 +24,10 @@
         {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/votv/manifest.json",
             "featured": true
+        },
+        {
+            "url": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/manifest.json",
+            "featured": true
         }
     ]
 }
