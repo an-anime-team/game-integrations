@@ -1,0 +1,17 @@
+{
+    "standard": 1,
+    "package": {
+        "maintainers": [
+            "ALEZ-DEV <me@al3z.dev>"
+        ]
+    },
+    "inputs": {
+        "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/iterable/iterable.lua"
+    },
+    "outputs": {
+        "integration": {
+            "uri": "integration.luau",
+            "format": "module/v1"
+        }
+    }
+}

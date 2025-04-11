@@ -1,0 +1,35 @@
+{
+    "standard": 1,
+    "game": {
+        "title": "Punishing: Gray Raven",
+        "description": {
+            "en": "WIP implementation used for testing",
+            "ru": "Реализация пакета, используемая для тестов",
+            "fr": "WIP implémentation utilisée pour faire des tests"
+        },
+        "developer": "Kuro Games",
+        "publisher": "Kuro Games",
+        "images": {
+            "icon": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/icon.png",
+            "poster": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/poster.png",
+            "background": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/background.png",
+            "slides": [
+                "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/slide1.jpg",
+                "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/slide2.jpg",
+                "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/slide3.jpg",
+                "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/slide4.jpg",
+                "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/slide5.jpg",
+                "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/slide6.png"
+            ]
+        }
+    },
+    "package": {
+        "url": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/package.json",
+        "output": "integration",
+        "runtime": {
+            "platforms": [
+                "x86_64-linux"
+            ]
+        }
+    }
+}

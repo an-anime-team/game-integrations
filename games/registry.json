@@ -24,6 +24,10 @@
         {
             "url": "http://127.0.0.1:8080/games/votv/manifest.json",
             "featured": true
+        },
+        {
+            "url": "https://raw.githubusercontent.com/ALEZ-DEV/game-integrations/refs/heads/rewrite/games/pgr/manifest.json",
+            "featured": true
         }
     ]
 }
