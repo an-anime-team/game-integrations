@@ -45,13 +45,17 @@ local function fetch_api(): Api
   dbg("before fetching request")
 	local response = net.fetch("https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G143/4/index.json")
 
-  dbg("Got API response", response)
+  dbg("Got API response")
 
 	if not response.is_ok then
 		error("Failed to get CDN list: HTTP code " .. response.status)
 	end
 
+  dbg("Starting parsing API response")
+
 	local api = str.decode(str.from_bytes(response.body), "json")
+
+  dbg("Parsed URL")
 
 	local api: Api = {
 		version = api.default.version,
@@ -59,6 +63,8 @@ local function fetch_api(): Api
 		resources_base_path = api.default.resourcesBasePath,
 		resources = api.default.resources,
 	}
+
+  dbg("API Type :", api)
 
 	return api
 end
