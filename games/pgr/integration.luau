@@ -55,7 +55,7 @@ local function fetch_api(): Api
 
 	local api = str.decode(str.from_bytes(response.body), "json")
 
-  dbg("Parsed URL")
+  dbg("JSON successfully parsed : ", api)
 
 	local api: Api = {
 		version = api.default.version,
