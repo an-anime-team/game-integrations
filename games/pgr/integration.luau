@@ -25,6 +25,21 @@ type Resource = {
 
 local data_path = path.persist_dir("pgr")
 local game_path = path.join(data_path, "resources")
+local version_file_path = path.join(game_path, "version.json")
+
+local function get_game_version(): string?
+  if not fs.exists(version_file_path) then
+    return nil
+  end
+
+  local version_content = fs.read_file(version_file_path)
+
+  for version in version_content:gmatch("^{package_version:([0-9]*.[0-9]*.[0-9]*)}$") do
+    return version
+  end
+
+  return nil
+end
 
 local function fetch_api(): Api
 	local response = net.fetch("https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G143/4/index.json")
@@ -90,6 +105,10 @@ return {
 
 	game = {
 		get_status = function(variant: Variant)
+      if not get_game_version() then
+        return "not-installed"
+      end
+
 			return "installed"
 		end,
 
