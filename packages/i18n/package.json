@@ -1,0 +1,17 @@
+{
+    "standard": 1,
+    "package": {
+        "maintainers": [
+            "Nikita Podvirnyi <krypt0nn@vk.com>"
+        ]
+    },
+    "inputs": {
+        "locales": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/i18n/locales.toml"
+    },
+    "outputs": {
+        "i18n": {
+            "uri": "i18n.luau",
+            "format": "module/v1"
+        }
+    }
+}

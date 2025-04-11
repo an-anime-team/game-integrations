@@ -1,0 +1,39 @@
+[game]
+en = "Game"
+ru = "Игра"
+
+[game_runner]
+en = "Game runner"
+ru = "Окружение игры"
+
+[wine_version]
+en = "Wine version"
+ru = "Версия Wine"
+
+[install]
+en = "Install"
+ru = "Установить"
+
+[update]
+en = "Update"
+ru = "Обновить"
+
+[extract]
+en = "Extract"
+ru = "Распаковать"
+
+[delete]
+en = "Delete"
+ru = "Удалить"
+
+[install_game]
+en = "Install game"
+ru = "Установить игру"
+
+[downloading_progress]
+en = "Downloaded {current} GB / {total} GB"
+ru = "Скачано {current} ГБ / {total} ГБ"
+
+[extraction_progress]
+en = "Extracted {current} GB / {total} GB"
+ru = "Распаковано {current} ГБ / {total} ГБ"
