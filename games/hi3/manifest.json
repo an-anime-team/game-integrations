@@ -9,21 +9,21 @@
         "developer": "HoYoverse",
         "publisher": "COGNOSPHERE",
         "images": {
-            "icon": "http://127.0.0.1:8080/games/hi3/icon.jpg",
-            "poster": "http://127.0.0.1:8080/games/hi3/poster.jpg",
-            "background": "http://127.0.0.1:8080/games/hi3/background.jpg",
+            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/icon.jpg",
+            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/poster.jpg",
+            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/background.jpg",
             "slides": [
-                "http://127.0.0.1:8080/games/hi3/slide1.jpg",
-                "http://127.0.0.1:8080/games/hi3/slide2.jpg",
-                "http://127.0.0.1:8080/games/hi3/slide3.jpg",
-                "http://127.0.0.1:8080/games/hi3/slide4.jpg",
-                "http://127.0.0.1:8080/games/hi3/slide5.jpg",
-                "http://127.0.0.1:8080/games/hi3/slide6.jpg"
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/slide1.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/slide2.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/slide3.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/slide4.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/slide5.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/slide6.jpg"
             ]
         }
     },
     "package": {
-        "url": "http://127.0.0.1:8080/games/hi3/package.json",
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/package.json",
         "output": "integration",
         "runtime": {
             "platforms": [

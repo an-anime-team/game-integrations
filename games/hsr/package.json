@@ -6,9 +6,9 @@
         ]
     },
     "inputs": {
-        "semver": "http://127.0.0.1:8080/packages/semver/semver.lua",
-        "iterable": "http://127.0.0.1:8080/packages/iterable/iterable.lua",
-        "hyvlib": "http://127.0.0.1:8080/packages/hyvlib/package.json"
+        "semver": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/semver/semver.lua",
+        "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/iterable/iterable.lua",
+        "hyvlib": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/hyvlib/package.json"
     },
     "outputs": {
         "integration": {

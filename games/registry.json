@@ -6,27 +6,27 @@
     },
     "games": [
         {
-            "url": "http://127.0.0.1:8080/games/genshin/manifest.json",
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/genshin/manifest.json",
             "featured": true
         },
         {
-            "url": "http://127.0.0.1:8080/games/zzz/manifest.json",
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/zzz/manifest.json",
             "featured": false
         },
         {
-            "url": "http://127.0.0.1:8080/games/hsr/manifest.json",
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hsr/manifest.json",
             "featured": true
         },
         {
-            "url": "http://127.0.0.1:8080/games/hi3/manifest.json",
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/hi3/manifest.json",
             "featured": false
         },
         {
-            "url": "http://127.0.0.1:8080/games/votv/manifest.json",
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/votv/manifest.json",
             "featured": true
         },
         {
-            "url": "http://127.0.0.1:8080/games/pgr/manifest.json",
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/pgr/manifest.json",
             "featured": true
         }
     ]

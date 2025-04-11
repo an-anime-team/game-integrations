@@ -9,16 +9,16 @@
         "developer": "EternityDev (MrDrNose)",
         "publisher": "EternityDev (MrDrNose)",
         "images": {
-            "icon": "http://127.0.0.1:8080/games/votv/icon.png",
-            "poster": "http://127.0.0.1:8080/games/votv/poster.jpg",
-            "background": "http://127.0.0.1:8080/games/votv/background.jpg",
+            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/votv/icon.png",
+            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/votv/poster.jpg",
+            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/votv/background.jpg",
             "slides": [
-                "http://127.0.0.1:8080/games/votv/slide1.jpg"
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/votv/slide1.jpg"
             ]
         }
     },
     "package": {
-        "url": "http://127.0.0.1:8080/games/votv/package.json",
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/games/votv/package.json",
         "output": "integration",
         "runtime": {
             "platforms": [

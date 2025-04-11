@@ -6,8 +6,8 @@
         ]
     },
     "inputs": {
-        "iterable": "http://127.0.0.1:8080/packages/iterable/iterable.lua",
-        "components": "http://127.0.0.1:8080/packages/components/package.json"
+        "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/iterable/iterable.lua",
+        "components": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/components/package.json"
     },
     "outputs": {
         "integration": {
