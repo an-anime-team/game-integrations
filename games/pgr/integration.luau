@@ -44,6 +44,8 @@ end
 local function fetch_api(): Api
 	local response = net.fetch("https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G143/4/index.json")
 
+  dbg("Got API response", response)
+
 	if not response.is_ok then
 		error("Failed to get CDN list: HTTP code " .. response.status)
 	end
