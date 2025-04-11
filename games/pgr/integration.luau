@@ -42,6 +42,7 @@ local function get_game_version(): string?
 end
 
 local function fetch_api(): Api
+  dbg("before fetching request")
 	local response = net.fetch("https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G143/4/index.json")
 
   dbg("Got API response", response)
