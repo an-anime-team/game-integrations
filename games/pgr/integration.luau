@@ -51,6 +51,8 @@ local function get_game_version(): string?
 end
 
 local function fetch_api(): Api
+  local iter = import("iterable")
+
   dbg("before fetching request")
 	local response = net.fetch("https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G143/4/index.json")
 
@@ -63,13 +65,12 @@ local function fetch_api(): Api
   dbg("Starting parsing API response")
 
 	local api = str.decode(str.from_bytes(response.body), "json")
-  local iter = import("iterable")
 
-  dbg("JSON successfully parsed : ", iter(api))
+  dbg("JSON successfully parsed : ", api)
 
 	local api: Api = {
 		version = api.default.version,
-		cdn_url = iter(clone(api.default.cdnList)).first(),
+		cdn_url = iter(clone(api.default.cdnList)).first().url,
 		resources_base_path = api.default.resourcesBasePath,
 		resources = api.default.resources,
 	}
@@ -80,13 +81,26 @@ local function fetch_api(): Api
 end
 
 local function fetch_resources(api: Api): Resources
-	local response = net.fetch(api.cdn_url .. api.resources_path)
+  local iter = import("iterable")
+
+  dbg("Using this api to fetch the game resources : ", api)
+
+  local resources_url = api.cdn_url .. api.resources
+
+  dbg("Starting to fetch game resources -> " .. resources_url)
+
+	local response = net.fetch(resources_url)
 
 	if not response.is_ok then
 		error("Failed to get resources: HTTP code " .. response.status)
 	end
 
+  dbg("Got game resouces")
+
 	local info = str.decode(str.from_bytes(response.body), "json")
+
+  dbg("Decoded body")
+  dbg("Starting parsing body")
 
 	local resources: Resources = {
 		resource_list = iter(info.resource).map(function(segment): Resource
@@ -98,6 +112,8 @@ local function fetch_resources(api: Api): Resources
 			}
 		end).collect(),
 	}
+
+  dbg("Got resource")
 
 	return resources
 end
@@ -168,17 +184,39 @@ return {
 						perform = function(updater)
 							local api = fetch_api()
 							local resources = fetch_resources(api)
+
 							local total_size = 0
 							local current_size = 0
+
+              dbg("Calculating total download size")
 
 							for _, resource in resources.resource_list do
 								total_size = total_size + resource.download_size
 							end
 
+              dbg("Start downloading resources...")
+
 							for _, resource in resources.resource_list do
+                local destination = game_path .. resource.destination
+
+                dbg("Downloading -> " .. destination)
+                dbg("From -> " .. resource.url)
+
+                if not fs.exists(path.parent(destination)) then
+                  dbg("Parent directory not created, creating it...")
+                  fs.create_dir(path.parent(destination))
+                end
+
+                if fs.exists(destination) then
+                  dbg("file already existing, removing it")
+                  fs.remove_file(destination)
+                end
+
+                local resouce_size = 0
+
 								downloader.download(resource.url, {
-									output_file = game_path .. resource.destination,
-									continue_downloading = false,
+									output_file = destination,
+									continue_downloading = true,
 
 									progress = function(current, total, diff)
 										updater({
@@ -187,11 +225,13 @@ return {
 												total = total_size,
 
 												format = function()
-													local current = current / 1000 / 1000 / 1000
-													local total = total / 1000 / 1000 / 1000
+													local current = (current_size + current) / 1000 / 1000 / 1000
+													local total = total_size / 1000 / 1000 / 1000
 
 													current = math.floor(current * 100) / 100
 													total = math.floor(total * 100) / 100
+
+                          --dbg("Downloaded " .. current .. " GB / " .. total .. " GB")
 
 													return {
 														en = `Downloaded {current} GB / {total} GB`,
@@ -201,8 +241,12 @@ return {
 												end,
 											},
 										})
+
+                    resource_size = total
 									end,
 								})
+
+                current_size = current_size + resource_size
 							end
 						end,
 					},
