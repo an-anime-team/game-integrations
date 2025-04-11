@@ -63,8 +63,9 @@ local function fetch_api(): Api
   dbg("Starting parsing API response")
 
 	local api = str.decode(str.from_bytes(response.body), "json")
+  local iter = import("iterable")
 
-  dbg("JSON successfully parsed : ", api)
+  dbg("JSON successfully parsed : ", iter(api))
 
 	local api: Api = {
 		version = api.default.version,
