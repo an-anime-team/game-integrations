@@ -28,15 +28,24 @@ local game_path = path.join(data_path, "resources")
 local version_file_path = path.join(game_path, "version.json")
 
 local function get_game_version(): string?
+  dbg("Starting getting game version")
   if not fs.exists(version_file_path) then
+    dbg("No game version found")
     return nil
   end
 
+  dbg("Starting reading version file")
+
   local version_content = fs.read_file(version_file_path)
 
+  dbg("Starting parsing version file")
+
   for version in version_content:gmatch("^{package_version:([0-9]*.[0-9]*.[0-9]*)}$") do
+    dbg("Got game version")
     return version
   end
+
+  dbg("No game version")
 
   return nil
 end
