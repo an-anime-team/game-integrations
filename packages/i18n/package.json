@@ -6,7 +6,7 @@
         ]
     },
     "inputs": {
-        "locales": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/i18n/locales.toml"
+        "locales": "locales.toml"
     },
     "outputs": {
         "i18n": {

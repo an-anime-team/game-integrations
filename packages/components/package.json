@@ -7,7 +7,18 @@
     },
     "inputs": {
         "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/iterable/iterable.lua",
-        "wine-staging-tkg-src": "wine/wine-staging-tkg.json"
+        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/i18n/package.json",
+        "wine-staging-tkg-src": "wine/wine-staging-tkg.json",
+        "dxvk-src": "dxvk/dxvk.json",
+        "dxvk-gplasync-src": "dxvk/dxvk-gplasync.json",
+        "wine": {
+            "uri": "wine.luau",
+            "format": "module/v1"
+        },
+        "dxvk": {
+            "uri": "dxvk.luau",
+            "format": "module/v1"
+        }
     },
     "outputs": {
         "components": {

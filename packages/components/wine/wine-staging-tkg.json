@@ -3,6 +3,7 @@
         "name": "wine-10.5-staging-tkg-amd64",
         "title": "Wine-Staging-TkG 10.5",
         "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/10.5/wine-10.5-staging-tkg-amd64.tar.xz",
+        "file": "wine-10.5-staging-tkg-amd64.tar.xz",
         "features": {
             "binary": "bin/wine",
             "env": {
@@ -14,6 +15,7 @@
         "name": "wine-10.4-staging-tkg-amd64",
         "title": "Wine-Staging-TkG 10.4",
         "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/10.4/wine-10.4-staging-tkg-amd64.tar.xz",
+        "file": "wine-10.4-staging-tkg-amd64.tar.xz",
         "features": {
             "binary": "bin/wine",
             "env": {
@@ -25,6 +27,7 @@
         "name": "wine-10.3-staging-tkg-amd64",
         "title": "Wine-Staging-TkG 10.3",
         "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/10.3/wine-10.3-staging-tkg-amd64.tar.xz",
+        "file": "wine-10.3-staging-tkg-amd64.tar.xz",
         "features": {
             "binary": "bin/wine",
             "env": {
@@ -36,6 +39,7 @@
         "name": "wine-10.2-staging-tkg-amd64",
         "title": "Wine-Staging-TkG 10.2",
         "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/10.2/wine-10.2-staging-tkg-amd64.tar.xz",
+        "file": "wine-10.2-staging-tkg-amd64.tar.xz",
         "features": {
             "binary": "bin/wine",
             "env": {
@@ -47,6 +51,7 @@
         "name": "wine-10.1-staging-tkg-amd64",
         "title": "Wine-Staging-TkG 10.1",
         "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/10.1/wine-10.1-staging-tkg-amd64.tar.xz",
+        "file": "wine-10.1-staging-tkg-amd64.tar.xz",
         "features": {
             "binary": "bin/wine",
             "env": {

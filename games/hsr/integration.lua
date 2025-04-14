@@ -239,17 +239,5 @@ return {
                 binary = ""
             }
         end
-    },
-
-    settings = {
-        get_property = function(name: string)
-            return nil
-        end,
-
-        set_property = function(name: string, value: any) end,
-
-        get_layout = function(variant: Variant)
-            return {}
-        end
     }
 }

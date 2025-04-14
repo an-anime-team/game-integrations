@@ -25,6 +25,22 @@ type Version = {
     url: string
 }
 
+local data_dir_path = path.persist_dir("voices_of_the_void")
+
+local settings_file_path = path.join(data_dir_path, "settings.json")
+
+local game_dir_path     = path.join(data_dir_path, "game")
+local game_version_path = path.join(game_dir_path, ".version")
+local game_binary_path  = path.join(game_dir_path, "VotV.exe")
+
+------------------------------------------------- Imports -------------------------------------------------
+
+local function import_components()
+    return import("components").components("voices_of_the_void")
+end
+
+------------------------------------------------- Game versions -------------------------------------------------
+
 -- Direct download links are taken from here: https://archive.org/details/votv-archive
 local game_versions = {
     { version = "pa0082_0012", title = "Pre-Alpha 0.8.2b", url = "https://archive.org/download/votv-archive/pa0082_0012.7z" },
@@ -33,16 +49,42 @@ local game_versions = {
     { version = "pa07_0011",   title = "Pre-Alpha 0.7.0",  url = "https://archive.org/download/votv-archive/pa07_0011.7z" }
 }
 
-local data_path = path.persist_dir("voices_of_the_void")
-
-local game_path = path.join(data_path, "game")
-local game_version_path = path.join(game_path, ".version")
-
 local function last_game_version(): Version
     local iter = import("iterable")
 
-    return iter(clone(game_versions)).next().value
+    return iter(game_versions).cloned().first()
 end
+
+------------------------------------------------- Settings -------------------------------------------------
+
+type Settings = {
+    game_version: string
+}
+
+local function get_settings()
+    if not path.exists(settings_file_path) then
+        fs.write_file(settings_file_path, "{}")
+    end
+
+    local settings = str.decode(str.from_bytes(fs.read_file(settings_file_path)), "json")
+
+    local iter = import("iterable")
+
+    local valid_version = iter(game_versions).cloned()
+        .any(function(info) return info.version == settings.game_version end)
+
+    if not settings.game_version or not valid_version then
+        settings.game_version = last_game_version().version
+    end
+
+    return settings
+end
+
+local function set_settings(settings: Settings)
+    fs.write_file(settings_file_path, str.encode(settings, "json"))
+end
+
+------------------------------------------------- Game -------------------------------------------------
 
 local function get_game_version(): Version | nil
     if not fs.exists(game_version_path) then
@@ -53,7 +95,7 @@ local function get_game_version(): Version | nil
 
     local version = str.from_bytes(fs.read_file(game_version_path))
 
-    for _, info in iter(clone(game_versions)) do
+    for _, info in iter(game_versions).cloned() do
         if version == info.version then
             return info
         end
@@ -66,32 +108,43 @@ local function set_game_version(version: string)
     fs.write_file(game_version_path, str.to_bytes(version))
 end
 
-local function delete_game()
-    pcall(fs.remove_dir, game_path)
+local function is_game_installed(): boolean
+    local version = get_game_version()
+
+    if not version then
+        return false
+    end
+
+    local settings = get_settings()
+
+    return version.version == settings.game_version
 end
 
-local function get_components_settings()
-    return import("components").components.handle_settings("voices_of_the_void")
-end
+------------------------------------------------- Module -------------------------------------------------
 
 return {
     standard = 1,
 
     editions = function(platform: string)
+        local i18n = import("i18n").i18n
+
         return {
             {
                 name = "default",
-                title = {
-                    en = "Default",
-                    ru = "Стандартная"
-                }
+                title = i18n("default_game_edition")
             }
         }
     end,
 
     game = {
         get_status = function(variant: Variant)
-            if not get_game_version() then
+            local status = import_components().game.get_status(variant)
+
+            if status then
+                return status
+            end
+
+            if not is_game_installed() then
                 return "not-installed"
             end
 
@@ -99,47 +152,40 @@ return {
         end,
 
         get_diff = function(variant: Variant)
-            if get_game_version() then
+            local diff = import_components().game.get_diff(variant)
+
+            if diff then
+                return diff
+            end
+
+            if is_game_installed() then
                 return nil
             end
+
+            local i18n = import("i18n").i18n
 
             local info = last_game_version()
 
             local archive_path = path.join(path.temp_dir(), `votv_{info.version}.7z`)
 
             return {
-                title = {
-                    en = "Install game",
-                    ru = "Установить игру"
-                },
+                title = i18n("install_game"),
 
                 pipeline = {
                     {
-                        title = {
-                            en = "Delete",
-                            ru = "Удалить"
-                        },
+                        title = i18n("delete_old_files"),
 
-                        description = {
-                            en = "Download previous game version",
-                            ru = "Удаление предыдущей версии игры"
-                        },
+                        before = function()
+                            return fs.exists(game_dir_path)
+                        end,
 
-                        perform = function(progress)
-                            delete_game()
+                        perform = function()
+                            fs.remove_dir(game_dir_path)
                         end
                     },
 
                     {
-                        title = {
-                            en = "Download",
-                            ru = "Скачать"
-                        },
-
-                        description = {
-                            en = "Download archives with game files",
-                            ru = "Скачать архивы с файлами игры"
-                        },
+                        title = i18n("download_game_files"),
 
                         perform = function(updater)
                             downloader.download(info.url, {
@@ -156,13 +202,10 @@ return {
                                                 local current = current / 1000 / 1000 / 1000
                                                 local total = total / 1000 / 1000 / 1000
 
-                                                current = math.floor(current * 100) / 100
-                                                total = math.floor(total * 100) / 100
-
-                                                return {
-                                                    en = `Downloaded {current} GB / {total} GB`,
-                                                    ru = `Скачано {current} ГБ / {total} ГБ`
-                                                }
+                                                return i18n("downloading_progress", {
+                                                    current = math.floor(current * 100) / 100,
+                                                    total = math.floor(total * 100) / 100
+                                                })
                                             end
                                         }
                                     })
@@ -172,15 +215,7 @@ return {
                     },
 
                     {
-                        title = {
-                            en = "Extract",
-                            ru = "Распаковать"
-                        },
-
-                        description = {
-                            en = "Extract game files from archives",
-                            ru = "Распаковать файлы игры из архивов"
-                        },
+                        title = i18n("extract_game_files"),
 
                         perform = function(updater)
                             local handle = archive.open(archive_path)
@@ -195,13 +230,10 @@ return {
                                             local current = current / 1000 / 1000 / 1000
                                             local total = total / 1000 / 1000 / 1000
 
-                                            current = math.floor(current * 100) / 100
-                                            total = math.floor(total * 100) / 100
-
-                                            return {
-                                                en = `Extracted {current} GB / {total} GB`,
-                                                ru = `Распаковано {current} ГБ / {total} ГБ`
-                                            }
+                                            return i18n("extraction_progress", {
+                                                current = math.floor(current * 100) / 100,
+                                                total = math.floor(total * 100) / 100
+                                            })
                                         end
                                     }
                                 })
@@ -209,7 +241,7 @@ return {
 
                             archive.close(handle)
 
-                            fs.move(path.join(data_path, info.version, "WindowsNoEditor"), game_path)
+                            fs.move(path.join(data_path, info.version, "WindowsNoEditor"), game_dir_path)
                             fs.remove(path.join(data_path, info.version))
                             fs.remove(archive_path)
 
@@ -221,55 +253,72 @@ return {
         end,
 
         get_launch_info = function(variant: Variant)
-            return {
-                status = "disabled",
-                hint = {
-                    en = "It's a test implementation not meant for real use",
-                    ru = "Это тестовая реализация, не предназначенная для реального использования"
-                },
-                binary = ""
-            }
+            if not is_game_installed() then
+                return {
+                    status = "disabled",
+                    binary = game_binary_path
+                }
+            end
+
+            return import_components().game.wrap_launch_info({
+                status = "normal",
+                binary = game_binary_path
+            })
         end
     },
 
     settings = {
         get_property = function(name: string)
-            return get_components_settings().get_property(name)
+            local value = import_components().settings.get_property(name)
+
+            if value then
+                return value
+            end
+
+            local settings = get_settings()
+
+            return settings[name]
         end,
 
         set_property = function(name: string, value: any)
-            get_components_settings().set_property(name, value)
+            local result = import_components().settings.set_property(name, value)
+
+            if not result then
+                local settings = get_settings()
+
+                settings[name] = value
+
+                set_settings(settings)
+            end
         end,
 
         get_layout = function(variant: Variant)
             local iter = import("iterable")
+            local i18n = import("i18n").i18n
 
-            local versions_enum = {}
-
-            for _, info in iter(clone(game_versions)) do
-                versions_enum[info.version] = info.title
-            end
+            local settings = get_settings()
 
             local layout = {
                 {
-                    title = {
-                        en = "Game",
-                        ru = "Игра"
-                    },
+                    title = i18n("game"),
 
                     entries = {
                         {
-                            name = "game.version",
-
-                            title = {
-                                en = "Game version",
-                                ru = "Версия игры"
-                            },
+                            name = "game_version",
+                            title = i18n("game_version"),
 
                             entry = {
                                 format = "enum",
-                                values = versions_enum,
-                                selected = last_game_version().version
+
+                                values = iter(game_versions)
+                                    .cloned()
+                                    .fold({}, function(values, info)
+                                        values[info.version] = info.title
+
+                                        return values
+                                    end),
+
+                                selected = settings.game_version
                             }
                         }
                     }
@@ -277,7 +326,7 @@ return {
             }
 
             return iter(layout)
-                .chain(get_components_settings().get_layout())
+                .chain(import_components().settings.get_layout())
                 .collect()
         end
     }

@@ -4,5 +4,27 @@
         "en": "Anime Games Launcher Standard Authority Index",
         "ru": "Стандартный индекс полномочий Anime Games Launcher"
     },
-    "resources": {}
+    "resources": [
+        {
+            "title": "Components",
+            "description": {
+                "en": "Standard library used for wine and dxvk integration",
+                "ru": "Стандартная библиотека, используемая для интеграции Wine и DXVK"
+            },
+            "variants": [
+                {
+                    "status": "trusted",
+                    "privileges": {
+                        "process_api": true
+                    },
+                    "hashes": [
+                        "aa9ufggfffkn0",
+                        "fshf3cnnpe3fg",
+                        "kppmamc6s84qo",
+                        "ue5np614vi4ao"
+                    ]
+                }
+            ]
+        }
+    ]
 }

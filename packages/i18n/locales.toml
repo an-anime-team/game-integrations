@@ -2,17 +2,73 @@
 en = "Game"
 ru = "Игра"
 
+[default_game_edition]
+en = "Default"
+ru = "Стандартная"
+
+[game_version]
+en = "Game version"
+ru = "Версия игры"
+
 [game_runner]
 en = "Game runner"
-ru = "Окружение игры"
+ru = "Окружение запуска игры"
+
+[wine_prefix_name]
+en = "Wine prefix name"
+ru = "Название префикса Wine"
+
+[wine_prefix_name_description]
+en = "Name of the folder where the wine prefix will be installed. Games with the same prefix name will use the same prefix"
+ru = "Название папки, в которой будет установлен префикс Wine. Игры с одинаковым названием префикса будут использовать один и тот же префикс"
 
 [wine_version]
 en = "Wine version"
 ru = "Версия Wine"
 
+[available_wine_editions]
+en = "Available wine editions"
+ru = "Доступные редакции Wine"
+
+[dxvk_version]
+en = "DXVK version"
+ru = "Версия DXVK"
+
+[available_dxvk_editions]
+en = "Available DXVK editions"
+ru = "Доступные редакции DXVK"
+
+[update_game_runner]
+en = "Update game runner"
+ru = "Обновить окружение запуска игры"
+
+[update_wine_version]
+en = "Update wine version"
+ru = "Обновить версию Wine"
+
+[update_wine_prefix]
+en = "Update wine prefix"
+ru = "Обновить префикс Wine"
+
+[update_dxvk_version]
+en = "Update DXVK version"
+ru = "Обновить версию DXVK"
+
+[download]
+en = "Download"
+ru = "Загрузить"
+
+[download_game_files]
+en = "Download game files"
+ru = "Загрузить файлы игры"
+
 [install]
 en = "Install"
 ru = "Установить"
+
+[install_game]
+en = "Install game"
+ru = "Установить игру"
 
 [update]
 en = "Update"
@@ -22,17 +78,21 @@ ru = "Обновить"
 en = "Extract"
 ru = "Распаковать"
 
+[extract_game_files]
+en = "Extract game files"
+ru = "Распаковать файлы игры"
+
 [delete]
 en = "Delete"
 ru = "Удалить"
 
-[install_game]
-en = "Install game"
-ru = "Установить игру"
+[delete_old_files]
+en = "Delete old files"
+ru = "Удалить старые файлы"
 
 [downloading_progress]
 en = "Downloaded {current} GB / {total} GB"
-ru = "Скачано {current} ГБ / {total} ГБ"
+ru = "Загружено {current} ГБ / {total} ГБ"
 
 [extraction_progress]
 en = "Extracted {current} GB / {total} GB"
