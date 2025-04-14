@@ -122,6 +122,24 @@ local function delete_game_resource()
 	pcall(fs.remove_dir, game_path)
 end
 
+-- not working for now, why? idk
+local function get_file_hash(file_path): string
+    local hasher = hash.builder("md5")
+    local file_handle = fs.open(file_path)
+
+    local chunk = fs.read(file_handle.handle)
+
+    while #chunk > 0 do
+      hasher.write(chunk)
+      chunk = fs.read(file_handle.handle)
+    end
+
+    fs.close(file_handle)
+    hash.close(hasher)
+
+    return str.encode(hash.finalize(hasher), "hex")
+end
+
 return {
 	standard = 1,
 
@@ -195,19 +213,18 @@ return {
                 --end
 
                 if fs.exists(destination) then
-                  dbg("file already existing, challenging it...")
+                  --dbg("file already existing, challenging it...")
 
-                  local hasher = hash.builder("md5")
-                  local file_content = fs.read(destination)
-                  hash.write(hasher, file_content)
-                  local hash_result = str.encode(hash.finalize(hasher), "hex")
-                  dbg("Resource md5 hash -> " .. resource.md5)
-                  dbg("Md5 hash found -> " .. hash_result)
+                  --local has_result = get_file_hash(destination)
+                  --dbg("Resource md5 hash -> " .. resource.md5)
+                  --dbg("Md5 hash found -> " .. hash_result)
 
-                  if not hash_result == resource.md5 then
-                    dbg("Hashes are not the same, the file may be currupted or comprised, deleting it...")
-                    fs.remove(destination)
-                  end
+                  --if not hash_result == resource.md5 then
+                  --  dbg("Hashes are not the same, the file may be currupted or comprised, deleting it...")
+                  --  fs.remove(destination)
+                  --end
+                  dbg("file already existing, supposing it's not corrupted, skipping")
+                  continue
                 end
 
                 local resouce_size = 0
@@ -217,7 +234,6 @@ return {
 									continue_downloading = true,
 
 									progress = function(current, total, diff)
-                    local i18n = import("i18n").i18n
 
 										updater({
 											progress = {
