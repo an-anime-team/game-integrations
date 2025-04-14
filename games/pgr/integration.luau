@@ -148,38 +148,25 @@ return {
 		end,
 
 		get_diff = function(variant: Variant)
+      local i18n = import("i18n").i18n
+
 			return {
-				title = {
-					en = "Install game",
-					fr = "Installer le jeu",
-				},
+				title = i18n("install_game"),
 
 				pipeline = {
-					{
-						title = {
-							en = "Delete",
-							fr = "Supprimer",
-						},
+          {
+						title = i18n("deletet"),
 
-						description = {
-							en = "Clean the game directory",
-							fr = "Nettoyer le dossier du jeu",
-						},
+						description = i18n("delete_old_files"),
 
 						perform = function(progress)
-							delete_game_resource()
+							--delete_game_resource()
 						end,
 					},
 					{
-						title = {
-							en = "Download",
-							fr = "Téléchargement",
-						},
+						title = i18n("download"),
 
-						description = {
-							en = "Download game resources",
-							fr = "Téléchargement des resources du jeu",
-						},
+						description = i18n("download_game_file"),
 
 						perform = function(updater)
 							local api = fetch_api()
@@ -202,14 +189,25 @@ return {
                 dbg("Downloading -> " .. destination)
                 dbg("From -> " .. resource.url)
 
-                if not fs.exists(path.parent(destination)) then
-                  dbg("Parent directory not created, creating it...")
-                  fs.create_dir(path.parent(destination))
-                end
+                --if not fs.exists(path.parent(destination)) then
+                --  dbg("Parent directory not created, creating it...")
+                --  fs.create_dir(path.parent(destination))
+                --end
 
                 if fs.exists(destination) then
-                  dbg("file already existing, removing it")
-                  fs.remove_file(destination)
+                  dbg("file already existing, challenging it...")
+
+                  local hasher = hash.builder("md5")
+                  local file_content = fs.read(destination)
+                  hash.write(hasher, file_content)
+                  local hash_result = str.encode(hash.finalize(hasher), "hex")
+                  dbg("Resource md5 hash -> " .. resource.md5)
+                  dbg("Md5 hash found -> " .. hash_result)
+
+                  if not hash_result == resource.md5 then
+                    dbg("Hashes are not the same, the file may be currupted or comprised, deleting it...")
+                    fs.remove(destination)
+                  end
                 end
 
                 local resouce_size = 0
@@ -219,6 +217,8 @@ return {
 									continue_downloading = true,
 
 									progress = function(current, total, diff)
+                    local i18n = import("i18n").i18n
+
 										updater({
 											progress = {
 												current = current_size + current,
@@ -228,16 +228,12 @@ return {
 													local current = (current_size + current) / 1000 / 1000 / 1000
 													local total = total_size / 1000 / 1000 / 1000
 
-													current = math.floor(current * 100) / 100
-													total = math.floor(total * 100) / 100
-
                           --dbg("Downloaded " .. current .. " GB / " .. total .. " GB")
 
-													return {
-														en = `Downloaded {current} GB / {total} GB`,
-														ru = `Скачано {current} ГБ / {total} ГБ`,
-														fr = `Télécharger {current} GB / {total} GB`,
-													}
+													return i18n("downloading_progress", {
+                            current = math.floor(current * 100) / 100,
+													  total = math.floor(total * 100) / 100
+                          })
 												end,
 											},
 										})
