@@ -228,7 +228,8 @@ return {
                   --  dbg("Hashes are not the same, the file may be currupted or comprised, deleting it...")
                   --  fs.remove(destination)
                   --end
-                  dbg("file already existing, supposing it's not corrupted, skipping")
+                  dbg("File already existing, supposing it's not corrupted, skipping")
+                  current_size = current_size + fs.metadata(destination).length
                   continue
                 end
 
