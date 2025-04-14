@@ -23,9 +23,14 @@ type Resource = {
 	destination: string,
 }
 
-local data_path = path.persist_dir("pgr")
+local data_path = path.persist_dir("punishing_gray_raven")
 local game_path = path.join(data_path, "resources")
 local version_file_path = path.join(game_path, "version.json")
+local game_binary_path = path.join(game_path, "PGR.exe")
+
+local function import_components()
+    return import("components").components("punishing_gray_raven")
+end
 
 local function get_game_version(): string?
   dbg("Starting getting game version")
@@ -267,27 +272,31 @@ return {
 		end,
 
 		get_launch_info = function(variant: Variant)
-			return {
-				status = "disabled",
-				hint = {
-					en = "WIP implementation used for testing",
-					ru = "Это тестовая реализация, не предназначенная для реального использования",
-					ru = "WIP implémentation utilisée pour faire des tests",
-				},
-				binary = "",
-			}
+      if not get_game_version() then
+          return {
+              status = "disabled",
+              binary = game_binary_path
+          }
+      end
+
+      return import_components().game.wrap_launch_info({
+          status = "normal",
+          binary = game_binary_path
+      })
 		end,
 	},
 
 	settings = {
 		get_property = function(name: string)
-			return nil
+			return import_components.settings.get_property(name)
 		end,
 
-		set_property = function(name: string, value: any) end,
+		set_property = function(name: string, value: any)
+      local result = import_components().settings.set_property(name, value)
+    end,
 
 		get_layout = function(variant: Variant)
-			return {}
+			return import_components().settings.get_layout()
 		end,
 	},
 }
