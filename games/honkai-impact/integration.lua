@@ -374,6 +374,9 @@ end
 -- Get game integrity info
 function v1_game_get_integrity_info(game_path, edition)
   local base_uri = game_api(edition)["data"]["game"]["latest"]["decompressed_path"]
+  if base_uri == nil or base_uri == '' then
+    return {}
+  end
   local pkg_version = v1_network_fetch(base_uri .. "/pkg_version")
 
   if not pkg_version["ok"] then
