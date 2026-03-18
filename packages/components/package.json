@@ -1,5 +1,4 @@
 {
-    "format": 1,
     "inputs": {
         "import": "http://127.0.0.1:8080/packages/import/import.luau",
         "iterable": "http://127.0.0.1:8080/packages/iterable/iterable.luau",
@@ -7,7 +6,10 @@
         "wine-staging-tkg-src": "wine/wine-staging-tkg.json",
         "dxvk-src": "dxvk/dxvk.json",
         "dxvk-gplasync-src": "dxvk/dxvk-gplasync.json",
-        "wine": "wine.luau",
+        "wine": {
+            "uri": "wine.luau",
+            "hash": "fcc4uaikge8ja"
+        },
         "dxvk": "dxvk.luau"
     },
     "outputs": {
