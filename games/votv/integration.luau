@@ -71,7 +71,7 @@ local __components = nil
 local function import_settings()
     if not __settings then
         local iter = import("iterable")
-        local i18n = import("i18n").i18n
+        local i18n = import("i18n").i18n()
 
         __settings = import("settings")({
             game = "voices_of_the_void",
@@ -184,16 +184,16 @@ return function()
                     error(`invalid game version selected: {selected_game_version}`)
                 end
 
-                local i18n = import("i18n").i18n
+                local i18n = import("i18n").i18n()
 
                 local archive_path: string = path.join(path.temp_dir(), `votv_{info.version}.7z`)
 
                 return {
-                    title = i18n("install_game"),
+                    title = i18n("install_game_title"),
 
                     pipeline = {
                         {
-                            title = i18n("delete_old_files"),
+                            title = i18n("delete_unused_game_files_title"),
 
                             before = function()
                                 return fs.exists(game_dir_path)
@@ -205,7 +205,7 @@ return function()
                         },
 
                         {
-                            title = i18n("download_game_files"),
+                            title = i18n("download_game_files_title"),
 
                             perform = function(updater)
                                 local downloader_handle = downloader.create()
@@ -224,7 +224,7 @@ return function()
                                                 local current = current / 1000 / 1000 / 1000
                                                 local total = total / 1000 / 1000 / 1000
 
-                                                return i18n("downloading_progress", {
+                                                return i18n("downloading_progress_gb", {
                                                     current = math.floor(current * 100) / 100,
                                                     total = math.floor(total * 100) / 100
                                                 })
@@ -239,7 +239,7 @@ return function()
                         },
 
                         {
-                            title = i18n("extract_game_files"),
+                            title = i18n("extract_game_files_title"),
 
                             perform = function(updater)
                                 local handle: number = archive.open(archive_path, "7z")
@@ -253,7 +253,7 @@ return function()
                                             local current = current / 1000 / 1000 / 1000
                                             local total = total / 1000 / 1000 / 1000
 
-                                            return i18n("extraction_progress", {
+                                            return i18n("extracting_progress_gb", {
                                                 current = math.floor(current * 100) / 100,
                                                 total = math.floor(total * 100) / 100
                                             })
