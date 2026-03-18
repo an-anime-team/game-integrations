@@ -3,7 +3,7 @@
     "games": [
         {
             "url": "http://127.0.0.1:8080/games/genshin/manifest.json",
-            "featured": true
+            "featured": false
         },
         {
             "url": "http://127.0.0.1:8080/games/zzz/manifest.json",
@@ -11,7 +11,7 @@
         },
         {
             "url": "http://127.0.0.1:8080/games/hsr/manifest.json",
-            "featured": true
+            "featured": false
         },
         {
             "url": "http://127.0.0.1:8080/games/hi3/manifest.json",
