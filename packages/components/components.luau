@@ -194,7 +194,7 @@ return function(options: Options)
         local curr_platform_arch = get_arch_from_platform(variant.platform) or error(`unsupported architecture: {variant.platform}`)
 
         local iter = import("iterable")
-        local i18n = import("i18n").i18n
+        local i18n = import("i18n").i18n()
 
         local wine = import_wine()
         local dxvk = import_dxvk()
@@ -236,11 +236,11 @@ return function(options: Options)
         local dxvk_download_output: string = path.join(path.temp_dir(), selected_dxvk.file)
 
         return {
-            title = i18n("update_game_runner"),
+            title = i18n("update_game_runner_title"),
 
             pipeline = {
                 {
-                    title = i18n("update_wine_version"),
+                    title = i18n("download_wine_title"),
 
                     before = function() return should_update_wine end,
 
@@ -273,7 +273,7 @@ return function(options: Options)
                 },
 
                 {
-                    title = i18n("update_wine_version"),
+                    title = i18n("extract_wine_title"),
 
                     before = function() return should_update_wine end,
 
@@ -306,7 +306,7 @@ return function(options: Options)
                 },
 
                 {
-                    title = i18n("update_wine_prefix"),
+                    title = i18n("create_wine_prefix_title"),
 
                     before = function() return should_update_prefix end,
 
@@ -318,7 +318,7 @@ return function(options: Options)
                 },
 
                 {
-                    title = i18n("update_dxvk_version"),
+                    title = i18n("download_dxvk_title"),
 
                     before = function() return should_update_dxvk end,
 
@@ -351,7 +351,7 @@ return function(options: Options)
                 },
 
                 {
-                    title = i18n("update_dxvk_version"),
+                    title = i18n("extract_dxvk_title"),
 
                     before = function() return should_update_dxvk end,
 
@@ -384,7 +384,7 @@ return function(options: Options)
                 },
 
                 {
-                    title = i18n("update_dxvk_version"),
+                    title = i18n("apply_dxvk_title"),
 
                     before = function() return should_update_dxvk end,
 
@@ -426,7 +426,7 @@ return function(options: Options)
 
             get_layout = function(): any
                 local iter = import("iterable")
-                local i18n = import("i18n").i18n
+                local i18n = import("i18n").i18n()
 
                 local wine = import_wine()
                 local dxvk = import_dxvk()
@@ -435,13 +435,13 @@ return function(options: Options)
 
                 return {
                     {
-                        title = i18n("game_runner"),
+                        title = i18n("game_runner_title"),
 
                         entries = {
                             {
                                 name = "wine.prefix",
 
-                                title = i18n("wine_prefix_name"),
+                                title = i18n("wine_prefix_name_title"),
                                 description = i18n("wine_prefix_name_description"),
 
                                 entry = {
@@ -452,7 +452,7 @@ return function(options: Options)
 
                             {
                                 name = "wine.selected",
-                                title = i18n("wine_version"),
+                                title = i18n("wine_version_title"),
 
                                 entry = {
                                     format = "enum",
@@ -484,7 +484,7 @@ return function(options: Options)
 
                             {
                                 name = "dxvk.selected",
-                                title = i18n("dxvk_version"),
+                                title = i18n("dxvk_version_title"),
 
                                 entry = {
                                     format = "enum",
@@ -515,7 +515,7 @@ return function(options: Options)
                             },
 
                             {
-                                title = i18n("available_wine_editions"),
+                                title = i18n("available_wine_editions_title"),
 
                                 entry = {
                                     format = "expandable",
@@ -539,7 +539,7 @@ return function(options: Options)
                             },
 
                             {
-                                title = i18n("available_dxvk_editions"),
+                                title = i18n("available_dxvk_editions_title"),
 
                                 entry = {
                                     format = "expandable",
