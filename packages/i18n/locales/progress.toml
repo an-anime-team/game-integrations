@@ -1,0 +1,69 @@
+# ------------------------ Download ------------------------
+
+[downloading_progress]
+en = "Downloading {progress}"
+ru = "Загрузка {progress}"
+
+[downloading_progress_mb]
+en = "Downloading {current} MB / {total} MB"
+ru = "Загрузка {current} МБ / {total} МБ"
+
+[downloading_progress_gb]
+en = "Downloading {current} GB / {total} GB"
+ru = "Загрузка {current} ГБ / {total} ГБ"
+
+# ------------------------ Extract ------------------------
+
+[extracting_progress]
+en = "Extracting {progress}"
+ru = "Распаковка {progress}"
+
+[extracting_progress_mb]
+en = "Extracting {current} MB / {total} MB"
+ru = "Распаковка {current} МБ / {total} МБ"
+
+[extracting_progress_gb]
+en = "Extracting {current} GB / {total} GB"
+ru = "Распаковка {current} ГБ / {total} ГБ"
+
+# ------------------------ Process ------------------------
+
+[processing_progress]
+en = "Processing {progress}"
+ru = "Обработка {progress}"
+
+[processing_progress_mb]
+en = "Processing {current} MB / {total} MB"
+ru = "Обработка {current} МБ / {total} МБ"
+
+[processing_progress_gb]
+en = "Processing {current} GB / {total} GB"
+ru = "Обработка {current} ГБ / {total} ГБ"
+
+# ------------------------ Repair ------------------------
+
+[repairing_progress]
+en = "Repairing {progress}"
+ru = "Исправление {progress}"
+
+[repairing_progress_mb]
+en = "Repairing {current} MB / {total} MB"
+ru = "Исправление {current} МБ / {total} МБ"
+
+[repairing_progress_gb]
+en = "Repairing {current} GB / {total} GB"
+ru = "Исправление {current} ГБ / {total} ГБ"
+
+# ------------------------ Delete ------------------------
+
+[deleting_progress]
+en = "Deleting {progress}"
+ru = "Удаление {progress}"
+
+[deleting_progress_mb]
+en = "Deleting {current} MB / {total} MB"
+ru = "Удаление {current} МБ / {total} МБ"
+
+[deleting_progress_gb]
+en = "Deleting {current} GB / {total} GB"
+ru = "Удаление {current} ГБ / {total} ГБ"

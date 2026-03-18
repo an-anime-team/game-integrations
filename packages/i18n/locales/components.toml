@@ -1,0 +1,67 @@
+# ------------------------ Game runner ------------------------
+
+[game_runner_title]
+en = "Game runner"
+ru = "Окружение запуска игры"
+
+[update_game_runner_title]
+en = "Update game runner"
+ru = "Обновить окружение запуска игры"
+
+# ------------------------ Wine ------------------------
+
+[wine_version_title]
+en = "Wine version"
+ru = "Версия Wine"
+
+[available_wine_editions_title]
+en = "Available wine editions"
+ru = "Доступные редакции Wine"
+
+[download_wine_title]
+en = "Download wine"
+ru = "Загрузить Wine"
+
+[extract_wine_title]
+en = "Extract wine"
+ru = "Распаковать Wine"
+
+# ------------------------ Wine prefix ------------------------
+
+[wine_prefix_title]
+en = "Wine prefix"
+ru = "Префикс Wine"
+
+[wine_prefix_name_title]
+en = "Wine prefix name"
+ru = "Название префикса Wine"
+
+[wine_prefix_name_description]
+en = "Name of the folder where the wine prefix will be installed. Games with the same prefix name will use the same prefix"
+ru = "Название папки, в которой будет установлен префикс Wine. Игры с одинаковым названием префикса будут использовать один и тот же префикс"
+
+[available_dxvk_editions_title]
+en = "Available DXVK editions"
+ru = "Доступные редакции DXVK"
+
+[create_wine_prefix_title]
+en = "Create wine prefix"
+ru = "Создать префикс Wine"
+
+# ------------------------ DXVK ------------------------
+
+[dxvk_version_title]
+en = "DXVK version"
+ru = "Версия DXVK"
+
+[download_dxvk_title]
+en = "Download DXVK"
+ru = "Загрузить DXVK"
+
+[extract_dxvk_title]
+en = "Extract DXVK"
+ru = "Распаковать DXVK"
+
+[apply_dxvk_title]
+en = "Apply DXVK"
+ru = "Применить DXVK"

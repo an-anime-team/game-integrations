@@ -1,0 +1,73 @@
+# ------------------------ Game ------------------------
+
+[game]
+en = "Game"
+ru = "Игра"
+
+[game_version]
+en = "Game version"
+ru = "Версия игры"
+
+[install_game_title]
+en = "Install game"
+ru = "Установить игру"
+
+[download_game_files_title]
+en = "Download game files"
+ru = "Загрузить файлы игры"
+
+[download_missing_game_files_title]
+en = "Download missing game files"
+ru = "Загрузить отсутствующие файлы игры"
+
+[extract_game_files_title]
+en = "Extract game files"
+ru = "Распаковать файлы игры"
+
+[process_game_files_title]
+en = "Process game files"
+ru = "Обработать файлы игры"
+
+[repair_game_files_title]
+en = "Repair game files"
+ru = "Исправить файлы игры"
+
+[delete_game_files_title]
+en = "Delete game files"
+ru = "Удалить файлы игры"
+
+[delete_unused_game_files_title]
+en = "Delete unused game files"
+ru = "Удалить неиспользуемые файлы игры"
+
+# ------------------------ Editions ------------------------
+
+[global_game_edition_title]
+en = "Global"
+ru = "Глобальная"
+zh-cn = "国际"
+
+[china_game_edition_title]
+en = "China"
+ru = "Китай"
+zh-cn = "中国大陆"
+
+[taiwan_game_edition_title]
+en = "TW/HK/MO"
+ru = "Тайвань/Гонконг/Макао"
+zh-cn = "台湾/香港/澳门"
+
+[japan_game_edition_title]
+en = "Japan"
+ru = "Япония"
+zh-cn = "日本"
+
+[korea_game_edition_title]
+en = "Korea"
+ru = "Корея"
+zh-cn = "韩国"
+
+[sea_game_edition_title]
+en = "Southeast Asia"
+ru = "Юго-восточная Азия"
+zh-cn = "东南亚"

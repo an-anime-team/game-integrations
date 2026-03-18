@@ -1,0 +1,27 @@
+[download]
+en = "Download"
+ru = "Загрузить"
+
+[install]
+en = "Install"
+ru = "Установить"
+
+[update]
+en = "Update"
+ru = "Обновить"
+
+[extract]
+en = "Extract"
+ru = "Распаковать"
+
+[process]
+en = "Process"
+ru = "Обработать"
+
+[repair]
+en = "Repair"
+ru = "Исправить"
+
+[delete]
+en = "Delete"
+ru = "Удалить"

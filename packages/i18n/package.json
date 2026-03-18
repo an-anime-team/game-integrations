@@ -1,7 +1,9 @@
 {
-    "format": 1,
     "inputs": {
-        "locales": "locales.toml"
+        "interface": "locales/interface.toml",
+        "progress": "locales/progress.toml",
+        "game": "locales/game.toml",
+        "components": "locales/components.toml"
     },
     "outputs": {
         "i18n": "i18n.luau"
