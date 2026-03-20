@@ -1,6 +1,6 @@
 [
     {
-        "name": "spritz-wine-cachyos-wow64-10.0-7-x86_64",
+        "name": "spritz-wine-cachyos-wow64-10.0-7",
         "title": "Spritz-Wine-CachyOS 10.0-7",
         "url": "https://github.com/NelloKudo/Wine-Builds/releases/download/wine-cachyos-aagl-v10.0-7/spritz-wine-cachyos-wow64-10.0-7-x86_64.tar.xz",
         "file": "spritz-wine-cachyos-wow64-10.0-7-x86_64.tar.xz",
@@ -9,7 +9,7 @@
         }
     },
     {
-        "name": "spritz-wine-cachyos-wow64-10.0-6-x86_64",
+        "name": "spritz-wine-cachyos-wow64-10.0-6",
         "title": "Spritz-Wine-CachyOS 10.0-6",
         "url": "https://github.com/NelloKudo/Wine-Builds/releases/download/wine-cachyos-aagl-v10.0-6/spritz-wine-cachyos-wow64-10.0-6-x86_64.tar.xz",
         "file": "spritz-wine-cachyos-wow64-10.0-6-x86_64.tar.xz",
@@ -18,7 +18,7 @@
         }
     },
     {
-        "name": "spritz-wine-cachyos-wow64-10.0-5-x86_64",
+        "name": "spritz-wine-cachyos-wow64-10.0-5",
         "title": "Spritz-Wine-CachyOS 10.0-5",
         "url": "https://github.com/NelloKudo/Wine-Builds/releases/download/wine-cachyos-aagl-v10.0-5/spritz-wine-cachyos-wow64-10.0-5-x86_64.tar.xz",
         "file": "spritz-wine-cachyos-wow64-10.0-5-x86_64.tar.xz",
@@ -27,7 +27,7 @@
         }
     },
     {
-        "name": "spritz-wine-cachyos-wow64-10.0-4-x86_64",
+        "name": "spritz-wine-cachyos-wow64-10.0-4",
         "title": "Spritz-Wine-CachyOS 10.0-4",
         "url": "https://github.com/NelloKudo/Wine-Builds/releases/download/wine-cachyos-aagl-v10.0-4/spritz-wine-cachyos-wow64-10.0-4-x86_64.tar.xz",
         "file": "spritz-wine-cachyos-wow64-10.0-4-x86_64.tar.xz",
