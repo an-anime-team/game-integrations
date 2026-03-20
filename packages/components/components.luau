@@ -309,7 +309,7 @@ return function(options: Options)
                                     local current = current / 1000 / 1000
                                     local total = total / 1000 / 1000
 
-                                    return i18n("extraction_progress_mb", {
+                                    return i18n("extracting_progress_mb", {
                                         current = math.floor(current * 100) / 100,
                                         total = math.floor(total * 100) / 100
                                     })
@@ -387,7 +387,7 @@ return function(options: Options)
                                     local current = current / 1000 / 1000
                                     local total = total / 1000 / 1000
 
-                                    return i18n("extraction_progress_mb", {
+                                    return i18n("extracting_progress_mb", {
                                         current = math.floor(current * 100) / 100,
                                         total = math.floor(total * 100) / 100
                                     })
