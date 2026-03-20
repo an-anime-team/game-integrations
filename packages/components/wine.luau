@@ -1,4 +1,4 @@
--- components/wine v0.1.2
+-- components/wine v0.1.3
 -- Copyright (C) 2025 - 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -48,11 +48,7 @@ return function(imports)
         if not wine_versions_cache then
             wine_versions_cache = {}
 
-            local groups = {
-                { name = "wine_staging_tkg", title = "Wine-Staging-TkG", src = imports.wine_staging_tkg }
-            }
-
-            for _, group in groups do
+            for _, group in imports do
                 table.insert(wine_versions_cache, {
                     name = group.name,
                     title = group.title,

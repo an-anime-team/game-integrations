@@ -1,4 +1,4 @@
--- components v0.1.2
+-- components v0.1.3
 -- Copyright (C) 2025 - 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -78,7 +78,16 @@ local __import_dxvk = nil
 local function import_wine()
     if not __import_wine then
         __import_wine = {
-            wine_staging_tkg = fs.read_file(import("wine-staging-tkg-src")):await()
+            {
+                name = "wine_staging_tkg",
+                title = "Wine-Staging-TkG",
+                src = fs.read_file(import("wine-staging-tkg-src")):await()
+            },
+            {
+                name = "spritz_wine_cachyos",
+                title = "Spritz-Wine-CachyOS",
+                src = fs.read_file(import("spritz-wine-cachyos-src")):await()
+            }
         }
     end
 
@@ -88,8 +97,16 @@ end
 local function import_dxvk()
     if not __import_dxvk then
         __import_dxvk = {
-            dxvk = fs.read_file(import("dxvk-src")):await(),
-            dxvk_gplasync = fs.read_file(import("dxvk-gplasync-src")):await()
+            {
+                name = "dxvk",
+                title = "DXVK",
+                src = fs.read_file(import("dxvk-src")):await()
+            },
+            {
+                name = "dxvk_gplasync",
+                title = "dxvk-gplasync",
+                src = fs.read_file(import("dxvk-gplasync-src")):await()
+            }
         }
     end
 
@@ -168,7 +185,8 @@ return function(options: Options)
                 prefix = filter_wine_prefix_name(options.settings.get_property("wine.prefix")),
                 selected = validate_wine_version(options.settings.get_property("wine.selected")),
                 groups = {
-                    wine_staging_tkg = default(options.settings.get_property("wine.groups.wine_staging_tkg"), true)
+                    wine_staging_tkg = default(options.settings.get_property("wine.groups.wine_staging_tkg"), true),
+                    spritz_wine_cachyos = default(options.settings.get_property("wine.groups.spritz_wine_cachyos"), true)
                 }
             },
             dxvk = {

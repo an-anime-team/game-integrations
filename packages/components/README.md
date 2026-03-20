@@ -1,4 +1,4 @@
-# Components v0.1.1
+# Components
 
 Library to manage wine and dxvk within game integration modules. Provides all
 the necessary functions to download wine, create prefix, and so on, as well as

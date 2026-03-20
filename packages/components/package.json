@@ -4,11 +4,12 @@
         "iterable": "http://127.0.0.1:8080/packages/iterable/iterable.luau",
         "i18n": "http://127.0.0.1:8080/packages/i18n/package.json",
         "wine-staging-tkg-src": "wine/wine-staging-tkg.json",
+        "spritz-wine-cachyos-src": "wine/spritz-wine-cachyos.json",
         "dxvk-src": "dxvk/dxvk.json",
         "dxvk-gplasync-src": "dxvk/dxvk-gplasync.json",
         "wine": {
             "uri": "wine.luau",
-            "hash": "fcc4uaikge8ja"
+            "hash": "i56s4ooq2iomi"
         },
         "dxvk": "dxvk.luau"
     },
