@@ -1,5 +1,65 @@
 [
     {
+        "name": "wine-11.4-staging-tkg-amd64",
+        "title": "Wine-Staging-TkG 11.4",
+        "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/11.4/wine-11.4-staging-tkg-amd64.tar.xz",
+        "file": "wine-11.4-staging-tkg-amd64.tar.xz",
+        "features": {
+            "binary": "bin/wine",
+            "env": {
+                "WINEARCH": "wow64"
+            }
+        }
+    },
+    {
+        "name": "wine-11.3-staging-tkg-amd64",
+        "title": "Wine-Staging-TkG 11.3",
+        "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/11.3/wine-11.3-staging-tkg-amd64.tar.xz",
+        "file": "wine-11.3-staging-tkg-amd64.tar.xz",
+        "features": {
+            "binary": "bin/wine",
+            "env": {
+                "WINEARCH": "wow64"
+            }
+        }
+    },
+    {
+        "name": "wine-11.2-staging-tkg-amd64",
+        "title": "Wine-Staging-TkG 11.2",
+        "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/11.2/wine-11.2-staging-tkg-amd64.tar.xz",
+        "file": "wine-11.2-staging-tkg-amd64.tar.xz",
+        "features": {
+            "binary": "bin/wine",
+            "env": {
+                "WINEARCH": "wow64"
+            }
+        }
+    },
+    {
+        "name": "wine-11.1-staging-tkg-amd64",
+        "title": "Wine-Staging-TkG 11.1",
+        "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/11.1/wine-11.1-staging-tkg-amd64.tar.xz",
+        "file": "wine-11.4-staging-tkg-amd64.tar.xz",
+        "features": {
+            "binary": "bin/wine",
+            "env": {
+                "WINEARCH": "wow64"
+            }
+        }
+    },
+    {
+        "name": "wine-11.0-staging-tkg-amd64",
+        "title": "Wine-Staging-TkG 11.0",
+        "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/11.0/wine-11.0-staging-tkg-amd64.tar.xz",
+        "file": "wine-11.0-staging-tkg-amd64.tar.xz",
+        "features": {
+            "binary": "bin/wine",
+            "env": {
+                "WINEARCH": "wow64"
+            }
+        }
+    },
+    {
         "name": "wine-10.5-staging-tkg-amd64",
         "title": "Wine-Staging-TkG 10.5",
         "url": "https://github.com/Kron4ek/Wine-Builds/releases/download/10.5/wine-10.5-staging-tkg-amd64.tar.xz",
