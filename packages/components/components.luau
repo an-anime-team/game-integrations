@@ -319,7 +319,7 @@ return function(options: Options)
 
                         archive.close(handle)
 
-                        fs.remove(wine_download_output)
+                        fs.remove(wine_download_output):await()
                     end
                 },
 
