@@ -1,4 +1,4 @@
--- components v0.1.3
+-- components v0.1.4
 -- Copyright (C) 2025 - 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -98,14 +98,14 @@ local function import_dxvk()
     if not __import_dxvk then
         __import_dxvk = {
             {
-                name = "dxvk",
-                title = "DXVK",
-                src = fs.read_file(import("dxvk-src")):await()
-            },
-            {
                 name = "dxvk_gplasync",
                 title = "dxvk-gplasync",
                 src = fs.read_file(import("dxvk-gplasync-src")):await()
+            },
+            {
+                name = "dxvk",
+                title = "DXVK",
+                src = fs.read_file(import("dxvk-src")):await()
             }
         }
     end
