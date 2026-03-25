@@ -25,10 +25,13 @@ reviewed and must meet certain criteria.
    work. I.e., if you need to use process API - you must make a sub-package
    with minimal requried functionality. This sub-package must be designed to
    handle permissions and paths checks to avoid potential security issues.
-6. Your game integrations can't pirate game files.
-7. Your game integrations can't provide cheats or other unfair game
+6. Your game integrations must use localizable string format for user interfaces
+   and accept strings translations from the community. You should use the
+   standard `i18n` package and its own translations if possible.
+7. Your game integrations can't pirate game files.
+8. Your game integrations can't provide cheats or other unfair game
    modifications for online games.
-8. You must be ready to cooperate with other developers and expect that your
+9. You must be ready to cooperate with other developers and expect that your
    code will be actively reviewed by both the team and other community members.
 
 If you don't meet some of these criteria - you can make your own games
