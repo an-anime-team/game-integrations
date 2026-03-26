@@ -1,0 +1,31 @@
+{
+    "format": "1",
+    "maintainers": [
+        {
+            "en": "NelloKudo <marshnelloosu@gmail.com>"
+        }
+    ],
+    "game": {
+        "title": "GODDESS OF VICTORY: NIKKE",
+        "description": {
+            "en": "\"NIKKE\"— warriors forged to reclaim a shattered world. In the aftermath of a devastating invasion, humanity has retreated underground, leaving the surface overrun by ruthless alien forces. The NIKKE, artificially created soldiers, are humanity's last hope. As their commander, you'll lead these battle-hardened warriors to the surface, uncovering ancient secrets, forgotten technologies, and the mysteries of the world that was lost. Every mission brings you closer to discovering the truth behind the invaders and the NIKKE themselves. Will you rise to reclaim the Earth and unlock the power that lies within these warriors?"
+        },
+        "developer": "Shift Up",
+        "publisher": "Level Infinite",
+        "images": {
+            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/icon.jpg",
+            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/poster.jpg",
+            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/background.jpg",
+            "slides": [
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/slide1.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/slide2.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/slide3.png",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/slide4.jpg"
+            ]
+        }
+    },
+    "package": {
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/package.json",
+        "output": "integration"
+    }
+}

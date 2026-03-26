@@ -1,0 +1,13 @@
+{
+    "format": "1",
+    "inputs": {
+        "import": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/import/import.luau",
+        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/package.json",
+        "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/settings/settings.luau",
+        "locales": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/locales.toml",
+        "umu_launcher": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/umu-launcher.luau"
+    },
+    "outputs": {
+        "integration": "integration.luau"
+    }
+}
