@@ -2,6 +2,10 @@
     "format": 1,
     "games": [
         {
+            "url": "http://127.0.0.1:8080/games/votv/manifest.json",
+            "featured": true
+        },
+        {
             "url": "http://127.0.0.1:8080/games/genshin/manifest.json",
             "featured": false
         },
@@ -18,12 +22,12 @@
             "featured": false
         },
         {
-            "url": "http://127.0.0.1:8080/games/votv/manifest.json",
-            "featured": true
+            "url": "http://127.0.0.1:8080/games/wuwa/manifest.json",
+            "featured": false
         },
         {
-            "url": "http://127.0.0.1:8080/games/wuwa/manifest.json",
-            "featured": true
+            "url": "http://127.0.0.1:8080/games/nikke/manifest.json",
+            "featured": false
         }
     ]
 }
