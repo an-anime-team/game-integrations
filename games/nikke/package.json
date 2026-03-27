@@ -2,10 +2,12 @@
     "format": "1",
     "inputs": {
         "import": "http://127.0.0.1:8080/packages/import/import.luau",
+        "iterable": "http://127.0.0.1:8080/packages/iterable/iterable.luau",
         "i18n": "http://127.0.0.1:8080/packages/i18n/package.json",
         "settings": "http://127.0.0.1:8080/packages/settings/settings.luau",
         "umu_launcher": "http://127.0.0.1:8080/packages/umu-launcher/umu-launcher.luau",
-        "locales": "locales.toml"
+        "locales": "locales.toml",
+        "dwproton-src": "dwproton.json"
     },
     "outputs": {
         "integration": "integration.luau"

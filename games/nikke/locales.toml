@@ -21,9 +21,6 @@ en = "Prefix name"
 [settings_proton_title]
 en = "Proton runner"
 
-[settings_proton_description]
-en = "runners are read from the proton folder; add a custom one there and reopen settings"
-
 # ---- Pipeline: umu-launcher ----
 
 [install_umu_title]
@@ -38,22 +35,13 @@ en = "Extract umu-launcher"
 # ---- Pipeline: Proton ----
 
 [install_proton_title]
-en = "Install Proton (latest dwproton)"
-
-[fetch_proton_release_title]
-en = "Fetch latest Proton release"
-
-[checking_proton_release]
-en = "Checking for latest dwproton release..."
-
-[found_proton_release]
-en = "Found release: {tag}"
+en = "Install proton"
 
 [download_proton_title]
-en = "Download Proton"
+en = "Download proton"
 
 [extract_proton_title]
-en = "Extract Proton"
+en = "Extract proton"
 
 # ---- Pipeline: NIKKE Installer ----
 
@@ -112,4 +100,3 @@ en = "Open Integration Folder"
 
 [tool_open_folder_description]
 en = "Open the NIKKE integration folder in your file manager"
-

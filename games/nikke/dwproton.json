@@ -1,0 +1,20 @@
+[
+    {
+        "name": "dwproton-10.0-22",
+        "title": "dwproton 10.0-22",
+        "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-10.0-22/dwproton-10.0-22-x86_64.tar.xz",
+        "path": "dwproton-10.0-22-x86_64"
+    },
+    {
+        "name": "dwproton-10.0-21",
+        "title": "dwproton 10.0-21",
+        "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-10.0-21/dwproton-10.0-21-x86_64.tar.xz",
+        "path": "dwproton-10.0-21-x86_64"
+    },
+    {
+        "name": "dwproton-10.0-20",
+        "title": "dwproton 10.0-20",
+        "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-10.0-20/dwproton-10.0-20-x86_64.tar.xz",
+        "path": "dwproton-10.0-20-x86_64"
+    }
+]
