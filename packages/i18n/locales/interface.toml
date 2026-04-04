@@ -1,27 +1,34 @@
 [download]
 en = "Download"
+it = "Scarica"
 ru = "Загрузить"
 
 [install]
 en = "Install"
+it = "Installa"
 ru = "Установить"
 
 [update]
 en = "Update"
+it = "Aggiorna"
 ru = "Обновить"
 
 [extract]
 en = "Extract"
+it = "Estrai"
 ru = "Распаковать"
 
 [process]
 en = "Process"
+it = "Elabora"
 ru = "Обработать"
 
 [repair]
 en = "Repair"
+it = "Ripara"
 ru = "Исправить"
 
 [delete]
 en = "Delete"
+it = "Elimina"
 ru = "Удалить"

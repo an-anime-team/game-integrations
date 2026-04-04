@@ -2,66 +2,81 @@
 
 [game_runner_title]
 en = "Game runner"
+it = "Runtime di gioco"
 ru = "Окружение запуска игры"
 
 [update_game_runner_title]
 en = "Update game runner"
+it = "Aggiorna il runtime di gioco"
 ru = "Обновить окружение запуска игры"
 
 # ------------------------ Wine ------------------------
 
 [wine_version_title]
 en = "Wine version"
+it = "Versione di Wine"
 ru = "Версия Wine"
 
 [available_wine_editions_title]
 en = "Available wine editions"
+it = "Edizioni di Wine disponibili"
 ru = "Доступные редакции Wine"
 
 [download_wine_title]
 en = "Download wine"
+it = "Scarica Wine"
 ru = "Загрузить Wine"
 
 [extract_wine_title]
 en = "Extract wine"
+it = "Estrai Wine"
 ru = "Распаковать Wine"
 
 # ------------------------ Wine prefix ------------------------
 
 [wine_prefix_title]
 en = "Wine prefix"
+it = "Prefisso Wine"
 ru = "Префикс Wine"
 
 [wine_prefix_name_title]
 en = "Wine prefix name"
+it = "Nome del prefisso Wine"
 ru = "Название префикса Wine"
 
 [wine_prefix_name_description]
 en = "Name of the folder where the wine prefix will be installed. Games with the same prefix name will use the same prefix"
+it = "Nome della cartella in cui verrà installato il prefisso Wine. I giochi con lo stesso nome del prefisso useranno lo stesso prefisso"
 ru = "Название папки, в которой будет установлен префикс Wine. Игры с одинаковым названием префикса будут использовать один и тот же префикс"
 
 [available_dxvk_editions_title]
 en = "Available DXVK editions"
+it = "Edizioni di DXVK disponibili"
 ru = "Доступные редакции DXVK"
 
 [create_wine_prefix_title]
 en = "Create wine prefix"
+it = "Crea prefisso Wine"
 ru = "Создать префикс Wine"
 
 # ------------------------ DXVK ------------------------
 
 [dxvk_version_title]
 en = "DXVK version"
+it = "Versione di DXVK"
 ru = "Версия DXVK"
 
 [download_dxvk_title]
 en = "Download DXVK"
+it = "Scarica DXVK"
 ru = "Загрузить DXVK"
 
 [extract_dxvk_title]
 en = "Extract DXVK"
+it = "Estrai DXVK"
 ru = "Распаковать DXVK"
 
 [apply_dxvk_title]
 en = "Apply DXVK"
+it = "Applica DXVK"
 ru = "Применить DXVK"
