@@ -12,14 +12,11 @@ en = "Command wrapper"
 [settings_runner_title]
 en = "Runner Settings"
 
-[settings_gameid_title]
-en = "Game ID"
-
-[settings_prefix_title]
-en = "Prefix name"
-
 [settings_proton_title]
 en = "Proton runner"
+
+[settings_proton_description]
+en = "Select the Proton build to use for running NIKKE"
 
 # ---- Pipeline: umu-launcher ----
 
