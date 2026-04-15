@@ -532,7 +532,7 @@ local function get_game_installer_pipeline(
                 end
             },
             {
-                title       = i18n("run_installer_title"),
+                title = i18n("run_installer_title"),
                 description = i18n("installer_running"),
                 perform = function()
                     local umu = import_umu()
