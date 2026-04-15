@@ -1,4 +1,4 @@
--- umu-launcher v0.1.0
+-- umu-launcher v0.1.1
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --                    NelloKudo <marshnelloosu@gmail.com>
 --
@@ -25,6 +25,12 @@ type LaunchInfo = {
     args: { string },
     env: { [string]: string }
 }
+
+type VerifyResult =
+    | "success"
+    | "invalid_hash"
+    | "missing_python3_binary"
+    | "missing_bwrap_binary"
 
 local umu_info = {
     url = "https://github.com/Open-Wine-Components/umu-launcher/releases/download/1.4.0/umu-launcher-1.4.0-zipapp.tar",
@@ -142,8 +148,23 @@ return function(umu_binary: string)
             end,
 
             -- Verify installed umu-launcher binary hash.
-            verify = function(): boolean
-                return verify_umu_binary(umu_binary)
+            verify = function(): (boolean, VerifyResult)
+                -- verify the umu-launcher's binary hash
+                if not verify_umu_binary(umu_binary) then
+                    return false, "invalid_hash"
+                end
+
+                -- python3 binary is required to run umu-launcher
+                if not system.find("python3") then
+                    return false, "missing_python3_binary"
+                end
+
+                -- bwrap binary is required to run umu-launcher
+                if not system.find("bwrap") then
+                    return false, "missing_bwrap_binary"
+                end
+
+                return true, "success"
             end,
 
             -- Wrap binary launch info to use umu-launcher binary.
