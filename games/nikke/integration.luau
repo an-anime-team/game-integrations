@@ -74,44 +74,38 @@ end
 
 ------------------------------------------------- game detection -------------------------------------------------
 
--- local function get_prefix_path(settings): string
---     local prefix_name = settings.get_property("runner.prefix") or "nikke"
+local function get_prefix_path(): string
+    return path.join(proton_prefix_path, "nikke")
+end
 
---     return path.join(prefix_dir_path, prefix_name)
--- end
+local function is_game_installed(settings): boolean
+    local nikke_launcher = path.join(get_prefix_path(), "pfx", "drive_c", "NIKKE", "Launcher", "nikke_launcher.exe")
 
--- local function get_gameid(settings): string
---     return settings.get_property("runner.gameid") or "umu-nikke"
--- end
-
--- local function is_game_installed(settings): boolean
---     local nikke_launcher = path.join(get_prefix_path(settings), "pfx", "drive_c", "NIKKE", "Launcher", "nikke_launcher.exe")
-
---     return fs.exists(nikke_launcher)
--- end
+    return fs.exists(nikke_launcher)
+end
 
 ------------------------------------------------- installer version discovery -------------------------------------------------
 
 -- fetches the js bundle and extracts the miniloader download url
--- local function get_installer_info(): ({url: string, filename: string}?, string?)
---     local resp = http.fetch(NIKKE_ASSETS_JS, { method = "get" }):await()
+local function get_installer_info(): ({url: string, filename: string}?, string?)
+    local resp = http.fetch(NIKKE_ASSETS_JS, { method = "get" }):await()
 
---     if not resp.is_ok then
---         return nil, "Failed to fetch assets JS: HTTP " .. tostring(resp.status)
---     end
+    if not resp.is_ok then
+        return nil, "Failed to fetch assets JS: HTTP " .. tostring(resp.status)
+    end
 
---     local body = str.from_bytes(resp.body)
+    local body = str.from_bytes(resp.body)
 
---     local loader_path = string.match(body, '"(/nikkeminiloader[^"]+%.exe)"')
---     if not loader_path then
---         return nil, "Could not extract miniloader path from JS bundle"
---     end
+    local loader_path = string.match(body, '"(/nikkeminiloader[^"]+%.exe)"')
+    if not loader_path then
+        return nil, "Could not extract miniloader path from JS bundle"
+    end
 
---     local filename = string.match(loader_path, "/([^/]+)$") or loader_path
---     local url = NIKKE_SITE_BASE .. "/" .. loader_path:gsub("^/+", "")
+    local filename = string.match(loader_path, "/([^/]+)$") or loader_path
+    local url = NIKKE_SITE_BASE .. "/" .. loader_path:gsub("^/+", "")
 
---     return { url = url, filename = filename }, nil
--- end
+    return { url = url, filename = filename }, nil
+end
 
 ------------------------------------------------- progress / speed helpers -------------------------------------------------
 
@@ -143,91 +137,91 @@ end
 
 -- writes a bash script that retries the launch when nikke_launcher never appears.
 -- invoked via /bin/bash so no chmod needed (process is not available in get_launch_info).
--- local function create_launch_wrapper(prefix_path: string, proton_name: string): string
---     local wrapper_path    = path.join(data_dir_path, "nikke-launch-wrapper.sh")
---     local wineserver_path = path.join(proton_dir_path, proton_name, "files", "bin", "wineserver")
---     local wineprefix      = path.join(prefix_path, "pfx")
+local function create_launch_wrapper(prefix_path: string, proton_name: string): string
+    local wrapper_path    = path.join(data_dir_path, "nikke-launch-wrapper.sh")
+    local wineserver_path = path.join(proton_builds_path, proton_name, "files", "bin", "wineserver")
+    local wineprefix      = path.join(prefix_path, "pfx")
 
---     local script = string.format(
---         "MAX_RETRIES=%d\n"
---         .. "WAIT_SECONDS=%d\n"
---         .. "WINEPREFIX_PATH=%q\n"
---         .. "WINESERVER=%q\n"
---         .. "\n"
---         .. "for attempt in $(seq 1 \"$MAX_RETRIES\"); do\n"
---         .. '    "$@" &\n'
---         .. "    GAME_PID=$!\n"
---         .. '    sleep "$WAIT_SECONDS"\n'
---         .. "    if ps aux | grep -q '[--]ProductName=nikke_launcher'; then\n"
---         .. '        wait "$GAME_PID"\n'
---         .. "        exit $?\n"
---         .. "    else\n"
---         .. '        echo "[nikke-wrapper] attempt $attempt: nikke_launcher not detected, retrying..."\n'
---         .. '        WINEPREFIX="$WINEPREFIX_PATH" "$WINESERVER" -k 2>/dev/null\n'
---         .. '        kill "$GAME_PID" 2>/dev/null\n'
---         .. "        sleep 3\n"
---         .. "    fi\n"
---         .. "done\n"
---         .. 'echo "[nikke-wrapper] all $MAX_RETRIES attempts exhausted"\n'
---         .. "exit 1\n",
---         LAUNCH_MAX_RETRIES,
---         LAUNCH_WAIT_SECONDS,
---         wineprefix,
---         wineserver_path
---     )
+    local script = string.format(
+        "MAX_RETRIES=%d\n"
+        .. "WAIT_SECONDS=%d\n"
+        .. "WINEPREFIX_PATH=%q\n"
+        .. "WINESERVER=%q\n"
+        .. "\n"
+        .. "for attempt in $(seq 1 \"$MAX_RETRIES\"); do\n"
+        .. '    "$@" &\n'
+        .. "    GAME_PID=$!\n"
+        .. '    sleep "$WAIT_SECONDS"\n'
+        .. "    if ps aux | grep -q '[--]ProductName=nikke_launcher'; then\n"
+        .. '        wait "$GAME_PID"\n'
+        .. "        exit $?\n"
+        .. "    else\n"
+        .. '        echo "[nikke-wrapper] attempt $attempt: nikke_launcher not detected, retrying..."\n'
+        .. '        WINEPREFIX="$WINEPREFIX_PATH" "$WINESERVER" -k 2>/dev/null\n'
+        .. '        kill "$GAME_PID" 2>/dev/null\n'
+        .. "        sleep 3\n"
+        .. "    fi\n"
+        .. "done\n"
+        .. 'echo "[nikke-wrapper] all $MAX_RETRIES attempts exhausted"\n'
+        .. "exit 1\n",
+        LAUNCH_MAX_RETRIES,
+        LAUNCH_WAIT_SECONDS,
+        wineprefix,
+        wineserver_path
+    )
 
---     fs.write_file(wrapper_path, str.to_bytes(script)):await()
+    fs.write_file(wrapper_path, str.to_bytes(script)):await()
 
---     return wrapper_path
--- end
+    return wrapper_path
+end
 
 ------------------------------------------------- command wrapper -------------------------------------------------
 
--- local function parse_command_wrapper(wrapper: string, command: string, args: {string}, env: {[string]: string}?): (string, {string}, {[string]: string})
---     if not wrapper or wrapper == "" then
---         return command, args, env or {}
---     end
+local function parse_command_wrapper(wrapper: string, command: string, args: {string}, env: {[string]: string}?): (string, {string}, {[string]: string})
+    if not wrapper or wrapper == "" then
+        return command, args, env or {}
+    end
 
---     local parts = {}
---     for part in string.gmatch(wrapper, "%S+") do
---         table.insert(parts, part)
---     end
+    local parts = {}
+    for part in string.gmatch(wrapper, "%S+") do
+        table.insert(parts, part)
+    end
 
---     local new_command = command
---     local new_args    = clone(args)
---     local new_env     = env and clone(env) or {}
---     local has_wrapper_command = false
---     local wrapper_parts = {}
+    local new_command = command
+    local new_args    = clone(args)
+    local new_env     = env and clone(env) or {}
+    local has_wrapper_command = false
+    local wrapper_parts = {}
 
---     for _, part in ipairs(parts) do
---         if part == "%command%" then
---             -- placeholder
---         elseif string.match(part, "^[A-Z_][A-Z0-9_]*=") then
---             local key, value = string.match(part, "^([^=]+)=(.*)$")
---             if key and value then
---                 new_env[key] = value
---             end
---         else
---             has_wrapper_command = true
---             table.insert(wrapper_parts, part)
---         end
---     end
+    for _, part in ipairs(parts) do
+        if part == "%command%" then
+            -- placeholder
+        elseif string.match(part, "^[A-Z_][A-Z0-9_]*=") then
+            local key, value = string.match(part, "^([^=]+)=(.*)$")
+            if key and value then
+                new_env[key] = value
+            end
+        else
+            has_wrapper_command = true
+            table.insert(wrapper_parts, part)
+        end
+    end
 
---     if has_wrapper_command then
---         new_command = wrapper_parts[1]
---         local final_args = {}
---         for i = 2, #wrapper_parts do
---             table.insert(final_args, wrapper_parts[i])
---         end
---         table.insert(final_args, command)
---         for _, arg in ipairs(args) do
---             table.insert(final_args, arg)
---         end
---         new_args = final_args
---     end
+    if has_wrapper_command then
+        new_command = wrapper_parts[1]
+        local final_args = {}
+        for i = 2, #wrapper_parts do
+            table.insert(final_args, wrapper_parts[i])
+        end
+        table.insert(final_args, command)
+        for _, arg in ipairs(args) do
+            table.insert(final_args, arg)
+        end
+        new_args = final_args
+    end
 
---     return new_command, new_args, new_env
--- end
+    return new_command, new_args, new_env
+end
 
 ------------------------------------------------- settings -------------------------------------------------
 
@@ -266,20 +260,6 @@ local function import_settings(refresh: boolean?)
                 proton = {
                     title = i18n("settings_runner_title"),
                     entries = {
-                        umu_game_id = {
-                            title = i18n("settings_gameid_title"),
-                            entry = {
-                                format = "text",
-                                default = "umu-nikke"
-                            }
-                        },
-                        prefix_name = {
-                            title = i18n("settings_prefix_title"),
-                            entry = {
-                                format = "text",
-                                default = "nikke"
-                            }
-                        },
                         build_name = {
                             title = i18n("settings_proton_title"),
                             description = i18n("settings_proton_description"),
@@ -444,112 +424,121 @@ end
 
 -- downloads the official NIKKE mini-installer and places it at a known path
 -- inside the prefix so the user can run it manually once.
--- local function build_installer_pipeline(settings)
---     local installer_info_cache = nil
+local function build_installer_pipeline(settings)
+    local installer_info_cache = nil
 
---     return {
---         title = i18n("download_nikke_installer_title"),
---         pipeline = {
---             {
---                 title = i18n("fetch_installer_url_title"),
---                 perform = function(updater)
---                     updater({
---                         current = 0, total = 0,
---                         format = function() return i18n("fetching_installer_version") end
---                     })
+    return {
+        title = i18n("download_nikke_installer_title"),
+        pipeline = {
+            {
+                title = i18n("fetch_installer_url_title"),
+                perform = function(updater)
+                    updater({
+                        current = 0, total = 0,
+                        format = function() return i18n("fetching_installer_version") end
+                    })
 
---                     local info, err = get_installer_info()
---                     if err or not info then
---                         error("Failed to get installer info: " .. (err or "unknown"))
---                     end
+                    local info, err = get_installer_info()
+                    if err or not info then
+                        error("Failed to get installer info: " .. (err or "unknown"))
+                    end
 
---                     installer_info_cache = info
+                    installer_info_cache = info
 
---                     updater({
---                         current = 1, total = 1,
---                         format = function() return i18n("found_installer", { filename = info.filename }) end
---                     })
---                 end
---             },
---             {
---                 title = i18n("download_installer_title"),
---                 perform = function(updater)
---                     local prefix_path = get_prefix_path(settings)
---                     if not fs.exists(prefix_path) then
---                         fs.create_dir(prefix_path):await()
---                     end
+                    updater({
+                        current = 1, total = 1,
+                        format = function() return i18n("found_installer", { filename = info.filename }) end
+                    })
+                end
+            },
+            {
+                title = i18n("download_installer_title"),
+                perform = function(updater)
+                    local prefix_path = get_prefix_path()
+                    if not fs.exists(prefix_path) then
+                        fs.create_dir(prefix_path):await()
+                    end
 
---                     local dest = path.join(path.temp_dir(), installer_info_cache.filename)
---                     local downloader_handle = downloader.create()
+                    local dest = path.join(path.temp_dir(), installer_info_cache.filename)
+                    local downloader_handle = downloader.create()
 
---                     local task_handle = downloader.download(downloader_handle, {
---                         url = installer_info_cache.url,
---                         output_file = dest,
---                         continue_download = true,
---                         on_update = function(current: number, total: number)
---                             updater({
---                                 current = current, total = total,
---                                 format = function()
---                                     return i18n("downloading_progress_mb", {
---                                         current = string.format("%.2f", current / 1024 / 1024),
---                                         total   = string.format("%.2f", total   / 1024 / 1024)
---                                     })
---                                 end
---                             })
---                         end
---                     })
---                     downloader.wait(task_handle)
---                     downloader.close(downloader_handle)
+                    local task_handle = downloader.download(downloader_handle, {
+                        url = installer_info_cache.url,
+                        output_file = dest,
+                        continue_download = true,
+                        on_update = function(current: number, total: number)
+                            updater({
+                                current = current, total = total,
+                                format = function()
+                                    return i18n("downloading_progress_mb", {
+                                        current = string.format("%.2f", current / 1024 / 1024),
+                                        total   = string.format("%.2f", total   / 1024 / 1024)
+                                    })
+                                end
+                            })
+                        end
+                    })
+                    downloader.wait(task_handle)
+                    downloader.close(downloader_handle)
 
---                     installer_info_cache.wine_path = dest
---                 end
---             },
---             {
---                 title = i18n("prepare_prefix_title"),
---                 perform = function(updater)
---                     updater({
---                         current = 0, total = 0,
---                         format = function() return i18n("initialising_prefix") end
---                     })
+                    installer_info_cache.wine_path = dest
+                end
+            },
+            {
+                title = i18n("prepare_prefix_title"),
+                perform = function(updater)
+                    updater({
+                        current = 0, total = 0,
+                        format = function() return i18n("initialising_prefix") end
+                    })
 
---                     local prefix_path = get_prefix_path(settings)
---                     if not fs.exists(prefix_path) then
---                         fs.create_dir(prefix_path):await()
---                     end
+                    local prefix_path = get_prefix_path()
+                    if not fs.exists(prefix_path) then
+                        fs.create_dir(prefix_path):await()
+                    end
 
---                     local proton_path = path.join(proton_dir_path, get_proton_name(settings))
---                     local wine_env = {
---                         PROTONPATH        = proton_path,
---                         WINEPREFIX        = path.join(prefix_path, "pfx"),
---                         GAMEID            = get_gameid(settings),
---                         WINEDEBUG         = "",
---                         PROTON_USE_WOW64  = "1"
---                     }
+                    local proton_name = get_selected_proton_build_name()
+                    local proton_path = path.join(proton_builds_path, proton_name)
+                    local wine_env = {
+                        PROTONPATH        = proton_path,
+                        WINEPREFIX        = path.join(prefix_path, "pfx"),
+                        GAMEID            = "umu-nikke",
+                        WINEDEBUG         = "",
+                        PROTON_USE_WOW64  = "1"
+                    }
 
---                     local umu = import_umu()
---                     if not umu.prefix.create(proton_path, prefix_path) then
---                         error("Failed to initialize prefix with umu-launcher")
---                     end
+                    local umu = import_umu()
+                    if not umu.prefix.create(proton_path, prefix_path) then
+                        error("Failed to initialize prefix with umu-launcher")
+                    end
 
---                     installer_info_cache.wine_env  = wine_env
+                    installer_info_cache.wine_env = wine_env
 
---                     updater({
---                         current = 1, total = 1,
---                         format = function() return i18n("prefix_ready") end
---                     })
---                 end
---             },
---             {
---                 title       = i18n("run_installer_title"),
---                 description = i18n("installer_running"),
---                 perform = function()
---                     local umu = import_umu()
---                     umu.umu.run_installer(installer_info_cache.wine_path, installer_info_cache.wine_env)
---                 end
---             }
---         }
---     }
--- end
+                    updater({
+                        current = 1, total = 1,
+                        format = function() return i18n("prefix_ready") end
+                    })
+                end
+            },
+            {
+                title       = i18n("run_installer_title"),
+                description = i18n("installer_running"),
+                perform = function()
+                    local umu = import_umu()
+
+                    local info = umu.umu.wrap({
+                        binary = installer_info_cache.wine_path,
+                        args   = {},
+                        env    = installer_info_cache.wine_env
+                    })
+
+                    local handle = process.open(info.binary, info.args, info.env)
+                    process.wait(handle)
+                end
+            }
+        }
+    }
+end
 
 ------------------------------------------------- module -------------------------------------------------
 
@@ -557,74 +546,65 @@ return function()
     return {
         game = {
             get_launch_info = function(variant: Variant)
-                return nil
+                local umu_launcher = import_umu()
 
-                -- if not is_umu_installed() then
-                --     return nil
-                -- end
+                if not umu_launcher.umu.verify() then
+                    return nil
+                end
 
-                -- if not is_umu_verified() then
-                --     return nil
-                -- end
+                local settings = import_settings()
+                local selected_proton_build = get_selected_proton_build_name()
 
-                -- local settings = import_settings()
+                if not selected_proton_build or not check_proton_build_installed(selected_proton_build) then
+                    return nil
+                end
 
-                -- if not is_proton_installed(settings) then
-                --     return nil
-                -- end
+                if not is_game_installed(settings) then
+                    return nil
+                end
 
-                -- local prefix_path = get_prefix_path(settings)
+                local prefix_path    = get_prefix_path()
+                local nikke_launcher = path.join(prefix_path, "pfx", "drive_c", "NIKKE", "Launcher", "nikke_launcher.exe")
+                local proton_path    = path.join(proton_builds_path, selected_proton_build)
 
-                -- if not is_game_installed(settings) then
-                --     return nil
-                -- end
+                -- retry wrapper: kill wineserver + relaunch if nikke_launcher never appears
+                local wrapper_path = create_launch_wrapper(prefix_path, selected_proton_build)
 
-                -- local nikke_launcher = path.join(prefix_path, "pfx", "drive_c", "NIKKE", "Launcher", "nikke_launcher.exe")
-                -- local proton_path    = path.join(proton_dir_path, get_proton_name(settings))
+                local launch_info = {
+                    binary = "/usr/bin/env",
+                    args   = { "bash", wrapper_path, umu_binary_path, nikke_launcher },
+                    env    = {
+                        PROTONPATH       = proton_path,
+                        WINEPREFIX       = path.join(prefix_path, "pfx"),
+                        GAMEID           = "umu-nikke",
+                        WINEDEBUG        = "",
+                        PROTON_USE_WOW64 = "1"
+                    }
+                }
 
-                -- -- retry wrapper: kill wineserver + relaunch if nikke_launcher never appears
-                -- local wrapper_path = create_launch_wrapper(prefix_path, get_proton_name(settings))
+                local current_binary = launch_info.binary
+                local current_args   = launch_info.args or {}
+                local current_env    = launch_info.env  or {}
 
-                -- local launch_info = {
-                --     binary = "/usr/bin/env",
-                --     args   = { "bash", wrapper_path, umu_binary_path, nikke_launcher },
-                --     env    = {
-                --         PROTONPATH       = proton_path,
-                --         WINEPREFIX       = path.join(prefix_path, "pfx"),
-                --         GAMEID           = get_gameid(settings),
-                --         WINEDEBUG        = "",
-                --         PROTON_USE_WOW64 = "1"
-                --     }
-                -- }
+                local command_wrapper = settings.get_property("launcher.command_wrapper")
+                if command_wrapper and command_wrapper ~= "" then
+                    current_binary, current_args, current_env = parse_command_wrapper(
+                        command_wrapper,
+                        current_binary,
+                        current_args,
+                        current_env
+                    )
+                end
 
-                -- local current_binary = launch_info.binary
-                -- local current_args   = launch_info.args or {}
-                -- local current_env    = launch_info.env  or {}
+                if settings.get_property("launcher.mangohud") then
+                    current_env["MANGOHUD"] = "1"
+                end
 
-                -- local command_wrapper = settings.get_property("launcher.command_wrapper")
-                -- if command_wrapper and command_wrapper ~= "" then
-                --     current_binary, current_args, current_env = parse_command_wrapper(
-                --         command_wrapper,
-                --         current_binary,
-                --         current_args,
-                --         current_env
-                --     )
-                -- end
+                launch_info.binary = current_binary
+                launch_info.args   = current_args
+                launch_info.env    = current_env
 
-                -- if settings.get_property("launcher.mangohud") then
-                --     current_binary, current_args, current_env = parse_command_wrapper(
-                --         "mangohud %command%",
-                --         current_binary,
-                --         current_args,
-                --         current_env
-                --     )
-                -- end
-
-                -- launch_info.binary = current_binary
-                -- launch_info.args   = current_args
-                -- launch_info.env    = current_env
-
-                -- return launch_info
+                return launch_info
             end,
 
             get_actions_pipeline = function(variant: Variant)
@@ -658,9 +638,11 @@ return function()
                     return get_install_proton_build_pipeline()
                 end
 
-                -- if not is_game_installed(settings) then
-                --     return build_installer_pipeline(settings)
-                -- end
+                local settings = import_settings()
+
+                if not is_game_installed(settings) then
+                    return build_installer_pipeline(settings)
+                end
 
                 return nil
             end
@@ -684,65 +666,6 @@ return function()
 
                 return settings.get_layout(variant)
             end
-        },
-
-        -- tools = {
-        --     get_buttons = function(variant: Variant)
-        --         local settings    = import_settings()
-
-        --         if not is_umu_installed() or not is_proton_installed(settings) then
-        --             return {}
-        --         end
-
-        --         local proton_path = path.join(proton_dir_path, get_proton_name(settings))
-        --         local prefix_path = get_prefix_path(settings)
-
-        --         local wine_env = {
-        --             PROTONPATH          = proton_path,
-        --             WINEPREFIX          = path.join(prefix_path, "pfx"),
-        --             GAMEID              = get_gameid(settings),
-        --             WINEDEBUG           = "",
-        --             PROTON_USE_WOW64    = "1"
-        --         }
-
-        --         return {
-        --             {
-        --                 title       = i18n("tool_winecfg_title"),
-        --                 description = i18n("tool_winecfg_description"),
-        --                 callback    = function()
-        --                     local umu = import_umu()
-        --                     umu.tools.open_winecfg(wine_env)
-        --                 end
-        --             },
-
-        --             {
-        --                 title       = i18n("tool_wineconsole_title"),
-        --                 description = i18n("tool_wineconsole_description"),
-        --                 callback    = function()
-        --                     local umu = import_umu()
-        --                     umu.tools.open_wineconsole(wine_env)
-        --                 end
-        --             },
-
-        --             {
-        --                 title       = i18n("tool_kill_wineserver_title"),
-        --                 description = i18n("tool_kill_wineserver_description"),
-        --                 callback    = function()
-        --                     local umu = import_umu()
-        --                     umu.prefix.kill_wineserver(proton_path, prefix_path)
-        --                 end
-        --             },
-
-        --             {
-        --                 title       = i18n("tool_open_folder_title"),
-        --                 description = i18n("tool_open_folder_description"),
-        --                 callback    = function()
-        --                     local umu = import_umu()
-        --                     umu.tools.open_folder(data_dir_path)
-        --                 end
-        --             }
-        --         }
-        --     end
-        -- }
+        }
     }
 end
