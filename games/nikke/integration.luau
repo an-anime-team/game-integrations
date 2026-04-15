@@ -625,8 +625,20 @@ return function()
             get_actions_pipeline = function(variant: Variant): any
                 local umu_launcher = import_umu()
 
-                if not umu_launcher.umu.verify() then
-                    return get_install_umu_pipeline()
+                local umu_status, umu_reason = umu_launcher.umu.verify()
+
+                if not umu_status then
+                    if umu_reason == "invalid_hash" then
+                        return get_install_umu_pipeline()
+                    elseif umu_reason == "missing_python3_binary" then
+                        portal.toast({ message = "umu-launcher requires python3 to run the game" })
+                    elseif umu_reason == "missing_bwrap_binary" then
+                        portal.toast({ message = "umu-launcher requires bwrap to run the game" })
+                    else
+                        portal.toast({ message = "umu-launcher returned invalid status" })
+                    end
+
+                    return nil
                 end
 
                 -- Read selected proton build name
