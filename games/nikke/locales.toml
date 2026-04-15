@@ -60,12 +60,6 @@ en = "Download installer"
 [prepare_prefix_title]
 en = "Prepare Wine prefix"
 
-[initialising_prefix]
-en = "Initialising Wine prefix..."
-
-[prefix_ready]
-en = "Prefix ready"
-
 [run_installer_title]
 en = "Run installer"
 
