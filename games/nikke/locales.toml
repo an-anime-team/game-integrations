@@ -2,69 +2,77 @@
 
 [settings_launcher_title]
 en = "Launcher"
+ru = "Лаунчер"
 
 [settings_mangohud_title]
 en = "Enable MangoHud"
+ru = "Включить MangoHUD"
 
 [settings_command_wrapper_title]
 en = "Command wrapper"
+ru = "Команда запуска"
 
 [settings_runner_title]
 en = "Runner Settings"
+ru = "Настройки Proton"
 
 [settings_proton_title]
 en = "Proton runner"
+ru = "Версия Proton"
 
 [settings_proton_description]
 en = "Select the Proton build to use for running NIKKE"
+ru = "Выберите сборку Proton, которая будет использоваться для запуска NIKKE"
 
 # ---- Pipeline: umu-launcher ----
 
 [install_umu_title]
 en = "Install umu-launcher"
+ru = "Установка umu-launcher"
 
 [download_umu_title]
 en = "Download umu-launcher"
+ru = "Загрузка umu-launcher"
 
 [extract_umu_title]
 en = "Extract umu-launcher"
+ru = "Распаковка umu-launcher"
 
 # ---- Pipeline: Proton ----
 
 [install_proton_title]
 en = "Install proton"
+ru = "Установка Proton"
 
 [download_proton_title]
 en = "Download proton"
+ru = "Загрузка Proton"
 
 [extract_proton_title]
 en = "Extract proton"
+ru = "Распаковка Proton"
 
 # ---- Pipeline: NIKKE Installer ----
 
 [download_nikke_installer_title]
 en = "Download NIKKE Installer"
-
-[fetch_installer_url_title]
-en = "Fetch installer URL"
-
-[fetching_installer_version]
-en = "Fetching latest installer version..."
-
-[found_installer]
-en = "Found installer: {filename}"
+ru = "Установка игры"
 
 [download_installer_title]
 en = "Download installer"
+ru = "Загрузка установщика"
 
 [prepare_prefix_title]
 en = "Prepare Wine prefix"
+ru = "Подготовка префикса Wine"
 
 [run_installer_title]
 en = "Run installer"
+ru = "Запуск установщика"
 
 [installer_running]
-en = "Installer is running — complete the setup, then close it (do not press Launch)"
+en = "Finish game installation via the running installer, then close it without launching the game"
+ru = "Завершите установку игры через запущенный установщик, затем закройте его не нажимая кнопку запуска игры"
 
 # ---- Tools ----
 
