@@ -24,6 +24,20 @@ ru = "Версия Proton"
 en = "Select the Proton build to use for running NIKKE"
 ru = "Выберите сборку Proton, которая будет использоваться для запуска NIKKE"
 
+# ---- Errors ----
+
+[umu_launcher_missing_python3]
+en = "umu-launcher requires python3 to run the game"
+ru = "umu-launcher требует python3 для запуска игры"
+
+[umu_launcher_missing_bwrap]
+en = "umu-launcher requires bwrap to run the game"
+ru = "umu-launcher требует bwrap для запуска игры"
+
+[umu_launcher_invalid_status]
+en = "umu-launcher returned invalid status"
+ru = "umu-launcher вернул неизвестный статус"
+
 # ---- Pipeline: umu-launcher ----
 
 [install_umu_title]

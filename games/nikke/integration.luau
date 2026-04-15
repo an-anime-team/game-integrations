@@ -631,11 +631,11 @@ return function()
                     if umu_reason == "invalid_hash" then
                         return get_install_umu_pipeline()
                     elseif umu_reason == "missing_python3_binary" then
-                        portal.toast({ message = "umu-launcher requires python3 to run the game" })
+                        portal.toast({ message = i18n("umu_launcher_missing_python3") })
                     elseif umu_reason == "missing_bwrap_binary" then
-                        portal.toast({ message = "umu-launcher requires bwrap to run the game" })
+                        portal.toast({ message = i18n("umu_launcher_missing_bwrap") })
                     else
-                        portal.toast({ message = "umu-launcher returned invalid status" })
+                        portal.toast({ message = i18n("umu_launcher_invalid_status") })
                     end
 
                     return nil
