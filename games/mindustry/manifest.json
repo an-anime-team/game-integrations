@@ -1,0 +1,33 @@
+{
+    "format": 1,
+    "maintainers": [
+        "Dylan Donnell <greenicedtea@tutanota.com>"
+    ],
+    "game": {
+        "title": "Mindustry",
+        "description": {
+            "en": "A sandbox tower-defense game. Create elaborate supply chains of conveyor belts to feed ammo into your turrets, produce materials to use for building, and defend your structures from waves of enemies.",
+            "ru": "Песочница в жанре tower-defense. Создавайте сложные цепочки поставок из конвейерных лент, чтобы подавать боеприпасы в турели, добывать ресурсы для строительства и защищать свои сооружения от волн врагов."
+        },
+        "developer": "Anuken",
+        "publisher": "Anuken",
+        "images": {
+            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/icon.png",
+            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/poster.jpg",
+            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/background.jpg",
+            "slides": [
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/slide1.png",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/slide2.png",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/slide3.png",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/slide4.png",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/slide5.png",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/slide6.png",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/slide7.png"
+            ]
+        }
+    },
+    "package": {
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/package.json",
+        "output": "integration"
+    }
+}
