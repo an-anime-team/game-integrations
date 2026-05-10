@@ -16,13 +16,12 @@
             "poster": "http://127.0.0.1:8080/games/mindustry/poster.jpg",
             "background": "http://127.0.0.1:8080/games/mindustry/background.jpg",
             "slides": [
-                "http://127.0.0.1:8080/games/mindustry/slide1.png",
-                "http://127.0.0.1:8080/games/mindustry/slide2.png",
-                "http://127.0.0.1:8080/games/mindustry/slide3.png",
-                "http://127.0.0.1:8080/games/mindustry/slide4.png",
-                "http://127.0.0.1:8080/games/mindustry/slide5.png",
-                "http://127.0.0.1:8080/games/mindustry/slide6.png",
-                "http://127.0.0.1:8080/games/mindustry/slide7.png"
+                "http://127.0.0.1:8080/games/mindustry/slide1.jpg",
+                "http://127.0.0.1:8080/games/mindustry/slide2.jpg",
+                "http://127.0.0.1:8080/games/mindustry/slide3.jpg",
+                "http://127.0.0.1:8080/games/mindustry/slide4.jpg",
+                "http://127.0.0.1:8080/games/mindustry/slide5.jpg",
+                "http://127.0.0.1:8080/games/mindustry/slide6.jpg"
             ]
         }
     },
