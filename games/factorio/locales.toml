@@ -1,0 +1,31 @@
+[username]
+en = "Username"
+it = "Nome utente"
+
+[token]
+en = "Token"
+it = "Token"
+
+[credentials_group]
+en = "factorio.com Credentials"
+it = "Credenziali factorio.com"
+
+[credentials_description]
+en = "Your factorio.com username and token are required to download the game. You can find your token in your profile on factorio.com."
+it = "Il tuo nome utente e il tuo token di factorio.com sono richiesti per scaricare il gioco. Puoi trovare il tuo token nel tuo profilo su factorio.com."
+
+[missing_credentials]
+en = "Please provide your Factorio.com username and token in the settings."
+it = "Per favore, inserisci il tuo nome utente e il tuo token di Factorio.com nelle impostazioni."
+
+[standard_edition]
+en = "Standard"
+it = "Standard"
+
+[space_age_edition]
+en = "Space Age"
+it = "Space Age"
+
+[download_factorio]
+en = "Download Factorio"
+it = "Scarica Factorio"
