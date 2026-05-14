@@ -1,0 +1,145 @@
+# ---- Editions ----
+
+[global_game_edition]
+en = "Global"
+ru = "Глобальная"
+
+[bilibili_game_edition]
+en = "China (Bilibili)"
+ru = "Китай (Bilibili)"
+
+[china_game_edition]
+en = "China"
+ru = "Китай"
+
+# ---- Settings ----
+
+[settings_launcher_title]
+en = "Launcher"
+ru = "Лаунчер"
+
+[settings_mangohud_title]
+en = "Enable MangoHud"
+ru = "Включить MangoHUD"
+
+[settings_command_wrapper_title]
+en = "Command wrapper"
+ru = "Команда запуска"
+
+[settings_runner_title]
+en = "Runner Settings"
+ru = "Настройки Proton"
+
+[settings_proton_title]
+en = "Proton runner"
+ru = "Версия Proton"
+
+[settings_proton_description]
+en = "Select the Proton build to use for running Neverness to Everness"
+ru = "Выберите сборку Proton, которая будет использоваться для запуска Neverness to Everness"
+
+# ---- Errors ----
+
+[umu_launcher_missing_python3]
+en = "umu-launcher requires python3 to run the game"
+ru = "umu-launcher требует python3 для запуска игры"
+
+[umu_launcher_missing_bwrap]
+en = "umu-launcher requires bwrap to run the game"
+ru = "umu-launcher требует bwrap для запуска игры"
+
+[umu_launcher_invalid_status]
+en = "umu-launcher returned invalid status"
+ru = "umu-launcher вернул неизвестный статус"
+
+[umu_invalid_hash]
+en = "umu-launcher needs to be installed. Click to install"
+ru = "umu-launcher требует установки. Нажмите для установки"
+
+[proton_not_installed]
+en = "Proton needs to be installed. Click to install"
+ru = "Proton требует установки. Нажмите для установки"
+
+[game_not_installed]
+en = "Game is not installed. Click to install"
+ru = "Игра не установлена. Нажмите для установки"
+
+[install_game]
+en = "Install Neverness to Everness"
+ru = "Установить Neverness to Everness"
+
+# ---- Pipeline: umu-launcher ----
+
+[install_umu_title]
+en = "Install umu-launcher"
+ru = "Установка umu-launcher"
+
+[download_umu_title]
+en = "Download umu-launcher"
+ru = "Загрузка umu-launcher"
+
+[extract_umu_title]
+en = "Extract umu-launcher"
+ru = "Распаковка umu-launcher"
+
+# ---- Pipeline: Proton ----
+
+[install_proton_title]
+en = "Install proton"
+ru = "Установка Proton"
+
+[download_proton_title]
+en = "Download proton"
+ru = "Загрузка Proton"
+
+[extract_proton_title]
+en = "Extract proton"
+ru = "Распаковка Proton"
+
+# ---- Pipeline: NTE Installer ----
+
+[download_nte_installer_title]
+en = "Download Neverness to Everness Installer"
+ru = "Установка игры"
+
+[download_installer_title]
+en = "Download installer"
+ru = "Загрузка установщика"
+
+[prepare_prefix_title]
+en = "Prepare Wine prefix"
+ru = "Подготовка префикса Wine"
+
+[run_installer_title]
+en = "Run installer"
+ru = "Запуск установщика"
+
+[installer_running]
+en = "Finish game installation via the running installer, then close it without launching the game"
+ru = "Завершите установку игры через запущенный установщик, затем закройте его не нажимая кнопку запуска игры"
+
+# ---- Tools ----
+
+[tool_winecfg_title]
+en = "Wine Configuration"
+
+[tool_winecfg_description]
+en = "Open winecfg to adjust Wine settings for Neverness to Everness"
+
+[tool_wineconsole_title]
+en = "Wine Console"
+
+[tool_wineconsole_description]
+en = "Open an interactive Wine console inside the prefix"
+
+[tool_kill_wineserver_title]
+en = "Kill Wineserver"
+
+[tool_kill_wineserver_description]
+en = "Send wineserver -k to immediately stop all Wine processes in the prefix"
+
+[tool_open_folder_title]
+en = "Open Integration Folder"
+
+[tool_open_folder_description]
+en = "Open the Neverness to Everness integration folder in your file manager"

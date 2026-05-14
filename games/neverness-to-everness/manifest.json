@@ -1,0 +1,34 @@
+{
+    "standard": 1,
+    "maintainers": [
+        "Dylan Donnell <greenicedtea@tutanota.com>"
+    ],
+    "game": {
+        "title": "Neverness to Everness",
+        "description": "Neverness to Everness is an open-world urban fantasy RPG where reality and the supernatural collide. In a near-future city besieged by otherworldly anomalies, you play as an Awakener with the power to traverse between dimensions. Explore a sprawling metropolis, uncover dark secrets, and forge bonds with a cast of unique characters. The line between the ordinary and the extraordinary blurs as you fight to protect the world from a mysterious force known only as the \"Abyss.\"",
+        "developer": "Hotta Studio",
+        "publisher": "Perfect World Entertainment",
+        "tags": [
+            "gambling",
+            "payments",
+            "anti-cheat"
+        ],
+        "images": {
+            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/neverness-to-everness/icon.jpg",
+            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/neverness-to-everness/poster.jpg",
+            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/neverness-to-everness/background.jpg",
+            "slides": [
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/neverness-to-everness/slide1.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/neverness-to-everness/slide2.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/neverness-to-everness/slide3.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/neverness-to-everness/slide4.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/neverness-to-everness/slide5.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/neverness-to-everness/slide6.jpg"
+            ]
+        }
+    },
+    "package": {
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/neverness-to-everness/package.json",
+        "output": "integration"
+    }
+}
