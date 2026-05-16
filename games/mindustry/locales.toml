@@ -1,0 +1,45 @@
+# Game launch info
+
+[nixos_steam_run_required]
+en = "steam-run is required to run the game on NixOS"
+ru = "Для запуска игры на NixOS требуется steam-run"
+
+# Actions pipeline
+
+[install_jre]
+en = "Install JRE"
+ru = "Установить JRE"
+
+[install_game]
+en = "Install game"
+ru = "Установить игру"
+
+[delete_old_jre]
+en = "Delete old Java Runtime Environment"
+ru = "Удалить старый Java Runtime Environment"
+
+[download_jre]
+en = "Download Java Runtime Environment"
+ru = "Загрузить Java Runtime Environment"
+
+[extract_jre]
+en = "Extract Java Runtime Environment"
+ru = "Распаковать Java Runtime Environment"
+
+[delete_old_game]
+en = "Delete old game files"
+ru = "Удалить старые файлы игры"
+
+[download_game]
+en = "Download game"
+ru = "Загрузить игру"
+
+# Components
+
+[version]
+en = "Version"
+ru = "Версия"
+
+[version_outdated]
+en = "Currently installed version is outdated"
+ru = "Текущая установленная версия устарела"
