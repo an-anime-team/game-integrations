@@ -1,4 +1,4 @@
--- Mindustry integration v0.0.0
+-- Mindustry integration v1.0.0
 -- Copyright (C) 2026  Dylan Donnell <greenicedtea@tutanota.com>,
 --                     Nikita Podvirnyi <krypt0nn@vk.com>
 --
