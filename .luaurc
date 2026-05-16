@@ -3,6 +3,7 @@
     "globals": [
         "Bytes",
         "Promise",
+        "Protobuf",
 
         "versions",
 
@@ -23,6 +24,7 @@
         "hash",
         "compression",
         "sqlite",
+        "protobuf",
         "torrent",
         "portal",
         "process"
