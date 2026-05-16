@@ -21,66 +21,140 @@ function import(...)
     return (load("import").value)(...)
 end
 
-type Variant = {
+type GameVariant = {
     platform: string,
     edition: string
 }
 
-type Version = {
-    version: string,
-    title: string,
-    url: string
-}
-
 local data_dir_path: string = path.persist_dir("mindustry")
-
-local game_dir_path: string = path.join(data_dir_path, "game")
-local game_version_path: string = path.join(game_dir_path, ".version")
-local game_jar_path: string = path.join(game_dir_path, "Mindustry.jar")
 
 local jre_dir_path: string = path.join(data_dir_path, "jre")
 local jre_binary_path: string = path.join(jre_dir_path, "bin", "java")
+local jre_version_path: string = path.join(data_dir_path, ".version")
 
-local jre_url: string = "https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jre/hotspot/normal/eclipse"
+local game_dir_path: string = path.join(data_dir_path, "game")
+local game_jar_path: string = path.join(game_dir_path, "Mindustry.jar")
+local game_version_path: string = path.join(game_dir_path, ".version")
 
-------------------------------------------------- Game versions -------------------------------------------------
+----------------------------- Imports -----------------------------
 
-local function list_versions()
-    return {
-        { version = "157.4", title = "v157.4", url = "https://github.com/Anuken/Mindustry/releases/download/v157.4/Mindustry.jar" },
-        { version = "157.3", title = "v157.3", url = "https://github.com/Anuken/Mindustry/releases/download/v157.3/Mindustry.jar" },
-        { version = "157.2", title = "v157.2", url = "https://github.com/Anuken/Mindustry/releases/download/v157.2/Mindustry.jar" },
-        { version = "157.1", title = "v157.1", url = "https://github.com/Anuken/Mindustry/releases/download/v157.1/Mindustry.jar" },
-        { version = "157",   title = "v157",   url = "https://github.com/Anuken/Mindustry/releases/download/v157/Mindustry.jar"   },
-        { version = "156.2", title = "v156.2", url = "https://github.com/Anuken/Mindustry/releases/download/v156.2/Mindustry.jar" },
-        { version = "156.1", title = "v156.1", url = "https://github.com/Anuken/Mindustry/releases/download/v156.1/Mindustry.jar" },
-        { version = "156",   title = "v156",   url = "https://github.com/Anuken/Mindustry/releases/download/v156/Mindustry.jar"   },
-        { version = "155.4", title = "v155.4", url = "https://github.com/Anuken/Mindustry/releases/download/v155.4/Mindustry.jar" },
-        { version = "155.3", title = "v155.3", url = "https://github.com/Anuken/Mindustry/releases/download/v155.3/Mindustry.jar" },
-    }
+__i18n = nil
+
+local function i18n(...)
+    if not __i18n then
+        local locales = import("locales-src")
+
+        locales = fs.read_file(locales):await()
+        locales = str.decode("toml", str.from_bytes(locales))
+
+        __i18n = import("i18n").i18n(locales)
+    end
+
+    return (__i18n)(...)
 end
 
-local function last_version(): Version
-    local iter = import("iterable")
+----------------------------- JRE and game info -----------------------------
 
-    return iter(list_versions()).first()
+local __versions = nil
+
+type RemoteJreInfo = {
+    title: string,
+    version: string,
+    name: string,
+    hash: string,
+    url: string
+}
+
+-- Read JRE info from the integration's versions.json file
+local function get_remote_jre_info(): JreInfo
+    if not __versions then
+        local versions_src = import("versions-src")
+
+        __versions = fs.read_file(versions_src):await()
+        __versions = str.decode("json", str.from_bytes(__versions))
+    end
+
+    if not __versions or not __versions["jre"] then
+        error("JRE version info is missing")
+    end
+
+    return clone(__versions["jre"])
 end
 
-local function get_version_info(version: string): Version?
-    local iter = import("iterable")
+-- Read currently installed JRE version, or nil if JRE is not installed
+local function get_current_jre_version(): string | nil
+    if not fs.exists(jre_version_path) then
+        return nil
+    end
 
-    return iter(list_versions())
-        .find(function(info) return info.version == version end)
+    local version = fs.read_file(jre_version_path):await()
+
+    return str.from_bytes(version)
 end
 
-------------------------------------------------- Settings -------------------------------------------------
+-- Write version string to the JRE version file
+local function set_current_jre_version(version: string)
+    if not fs.exists(jre_dir_path) then
+        fs.create_dir(jre_dir_path):await()
+    end
+
+    fs.write_file(jre_version_path, version):await()
+end
+
+type RemoteGameInfo = {
+    version: string,
+    hash: string,
+    url: string
+}
+
+-- Read game versions info from the integration's versions.json file
+local function list_remote_game_versions(): { RemoteGameInfo }
+    if not __versions then
+        local versions_src = import("versions-src")
+
+        __versions = fs.read_file(versions_src):await()
+        __versions = str.decode("json", str.from_bytes(__versions))
+    end
+
+    if not __versions or not __versions["game"] then
+        error("game versions info is missing")
+    end
+
+    return clone(__versions["game"])
+end
+
+-- Get information about the latest available game version
+local function get_latest_game_version_info(): RemoteGameInfo
+    return list_remote_game_versions()[1]
+end
+
+-- Read currently installed game version, or nil if game is not installed
+local function get_current_game_version(): string | nil
+    if not fs.exists(game_version_path) then
+        return nil
+    end
+
+    local version = fs.read_file(game_version_path):await()
+
+    return str.from_bytes(version)
+end
+
+-- Write version string to the game version file
+local function set_current_game_version(version: string)
+    if not fs.exists(game_dir_path) then
+        fs.create_dir(game_dir_path):await()
+    end
+
+    fs.write_file(game_version_path, version):await()
+end
+
+----------------------------- Settings -----------------------------
 
 local __settings = nil
 
 local function import_settings()
     if not __settings then
         local iter = import("iterable")
-        local i18n = import("i18n").i18n()
 
         __settings = import("settings")({
             game = "mindustry",
@@ -93,14 +167,14 @@ local function import_settings()
                             entry = {
                                 format = "enum",
 
-                                values = iter(list_versions())
+                                values = iter(list_remote_game_versions())
                                     .fold({}, function(values, info)
-                                        values[info.version] = info.title
+                                        values[info.version] = info.version
 
                                         return values
                                     end),
 
-                                default = last_version().version
+                                default = get_latest_game_version_info().version
                             }
                         }
                     }
@@ -112,28 +186,11 @@ local function import_settings()
     return __settings
 end
 
-------------------------------------------------- JRE -------------------------------------------------
+----------------------------- Game version info -----------------------------
 
-local function is_jre_installed(): boolean
-    return fs.exists(jre_binary_path)
-end
-
-------------------------------------------------- Game state -------------------------------------------------
-
-local function get_game_version(): string?
-    if not fs.exists(game_version_path) then
-        return nil
-    end
-
-    return str.from_bytes(fs.read_file(game_version_path):await())
-end
-
-local function set_game_version(version: string)
-    fs.write_file(game_version_path, str.to_bytes(version)):await()
-end
-
-local function is_game_installed(): boolean
-    local version = get_game_version()
+-- Return true if the game is installed and its version matches selected one
+local function is_latest_game_version_installed(): boolean
+    local version = get_current_game_version()
 
     if not version then
         return false
@@ -144,55 +201,135 @@ local function is_game_installed(): boolean
     return version == settings.get_property("game.version")
 end
 
-------------------------------------------------- Module -------------------------------------------------
+-- Return information about the selected game version, or nil if it's not found
+local function get_selected_game_version_info(): RemoteGameInfo | nil
+    local settings = import_settings()
+
+    local selected_game_version = settings.get_property("game.version")
+
+    if not selected_game_version then
+        return get_latest_game_version_info()
+    end
+
+    local iter = import("iterable")
+
+    return iter(list_remote_game_versions())
+        .find(function(game) return game.version == selected_game_version end)
+end
+
+----------------------------- File checksum -----------------------------
+
+-- Calculate hash of a file with the given path
+local function calc_file_hash(path: string): string
+    local file_hash = hash.digitize_file("seahash", path):await()
+
+    return str.encode("hex", file_hash)
+end
+
+----------------------------- Module -----------------------------
 
 return function()
+    local __is_nixos = path.exists("/etc/NIXOS")
+    local __has_steam_run = nil
+
+    if __is_nixos then
+        __has_steam_run = system.find("steam-run") ~= nil
+    end
+
     return {
         game = {
-            get_launch_info = function(variant: Variant)
-                if not is_game_installed() or not is_jre_installed() then
+            get_launch_info = function(variant: GameVariant)
+                if not get_current_jre_version()
+                    or not is_latest_game_version_installed()
+                then
                     return nil
                 end
 
-                return {
-                    binary = jre_binary_path,
-                    args = { "-jar", game_jar_path }
-                }
+                -- Normal systems
+                if not __is_nixos then
+                    return {
+                        binary = jre_binary_path,
+                        args = { "-jar", game_jar_path }
+                    }
+
+                -- Mental disorder
+                --
+                -- NixOS can't load some libraries which are extracted from the
+                -- Mindustry's jar file, so we have to wrap it with steam-run
+                -- which somehow fixes the problem
+                else
+                    if not __has_steam_run then
+                        portal.toast({
+                            message = i18n("nixos_steam_run_required")
+                        })
+
+                        return nil
+                    end
+
+                    return {
+                        binary = "steam-run",
+                        args = { jre_binary_path, "-jar", game_jar_path }
+                    }
+                end
             end,
 
-            get_actions_pipeline = function(variant: Variant)
-                local settings = import_settings()
+            get_actions_pipeline = function(variant: GameVariant)
+                -- Store update info in these variables
+                local jre_update_info: RemoteJreInfo | nil = nil
+                local game_update_info: RemoteGameInfo | nil = nil
 
-                if is_game_installed() and is_jre_installed() then
+                -- Load remote JRE info and compare it with the currently
+                -- installed one
+                local jre_info = get_remote_jre_info()
+
+                if get_current_jre_version() ~= jre_info.version then
+                    jre_update_info = jre_info
+                end
+
+                -- Load selected game info and compare it with the currently
+                -- installed one
+                local game_info = get_selected_game_version_info()
+                    or get_latest_game_version_info()
+
+                if get_current_game_version() ~= game_info.version then
+                    game_update_info = game_info
+                end
+
+                -- Skip actions pipeline completely if neither needs an update
+                if not jre_update_info and not game_update_info then
                     return nil
                 end
 
-                local selected_version = settings.get_property("game.version")
-
-                local info = get_version_info(selected_version)
-
-                if not info then
-                    error(`invalid game version selected: {selected_version}`)
-                end
-
-                local i18n = import("i18n").i18n()
-
+                -- Otherwise prepare a pipeline
                 local pipeline = {}
 
-                if not is_jre_installed() then
-                    local jre_archive_path: string = path.join(path.temp_dir(), "mindustry_jre.tar.gz")
-                    local jre_staging_path: string = path.join(data_dir_path, ".jre_staging")
+                -- Update JRE
+                if jre_update_info then
+                    local jre_temp_archive_path: string = path.join(path.temp_dir(), `mindustry-{jre_update_info.name}.tar.gz`)
+                    local jre_temp_extract_path: string = path.join(path.temp_dir(), `mindustry-{jre_update_info.name}`)
 
                     table.insert(pipeline, {
-                        title = "Install Java Runtime",
+                        title = i18n("delete_old_jre"),
+
+                        before = function()
+                            return fs.exists(jre_dir_path)
+                        end,
+
+                        perform = function()
+                            fs.remove_dir(jre_dir_path):await()
+                        end
+                    })
+
+                    table.insert(pipeline, {
+                        title = i18n("download_jre"),
 
                         perform = function(updater)
                             local downloader_handle = downloader.create()
 
                             local task_handle = downloader.download(downloader_handle, {
-                                url = jre_url,
-                                output_file = jre_archive_path,
-                                continue_download = true,
+                                url = jre_update_info.url,
+                                output_file = jre_temp_archive_path,
+                                continue_download = false,
 
                                 on_update = function(current: number, total: number)
                                     updater({
@@ -200,12 +337,9 @@ return function()
                                         total = total,
 
                                         format = function()
-                                            local current = current / 1000 / 1000
-                                            local total = total / 1000 / 1000
-
                                             return i18n("downloading_progress_mb", {
-                                                current = math.floor(current * 100) / 100,
-                                                total = math.floor(total * 100) / 100
+                                                current = string.format("%.2f", current / 1024 / 1024),
+                                                total = string.format("%.2f", total / 1024 / 1024)
                                             })
                                         end
                                     })
@@ -215,98 +349,133 @@ return function()
                             downloader.wait(task_handle)
                             downloader.close(downloader_handle)
 
-                            if not fs.exists(jre_staging_path) then
-                                fs.create_dir(jre_staging_path):await()
+                            local jre_archive_hash = calc_file_hash(jre_temp_archive_path)
+
+                            if jre_archive_hash ~= jre_update_info.hash then
+                                fs.remove(jre_temp_archive_path):await()
+
+                                print(`{jre_update_info.name} hash: {jre_archive_hash}`)
+
+                                error("downloaded JRE archive has invalid hash")
+                            end
+                        end
+                    })
+
+                    table.insert(pipeline, {
+                        title = i18n("extract_jre"),
+
+                        perform = function(updater)
+                            if fs.exists(jre_temp_extract_path) then
+                                fs.remove_dir(jre_temp_extract_path):await()
                             end
 
-                            local handle: number = archive.open(jre_archive_path)
+                            fs.create_dir(jre_temp_extract_path):await()
 
-                            archive.extract(handle, jre_staging_path, function(current: number, total: number)
-                                updater({
-                                    current = current,
-                                    total = total,
+                            local archive_handle = archive.open(jre_temp_archive_path)
 
-                                    format = function()
-                                        local current = current / 1000 / 1000
-                                        local total = total / 1000 / 1000
+                            archive.extract(
+                                archive_handle,
+                                jre_temp_extract_path,
+                                function(current: number, total: number)
+                                    updater({
+                                        current = current,
+                                        total = total,
 
-                                        return i18n("extracting_progress_mb", {
-                                            current = math.floor(current * 100) / 100,
-                                            total = math.floor(total * 100) / 100
-                                        })
-                                    end
-                                })
-                            end)
-
-                            archive.close(handle)
-
-                            for _, entry in fs.read_dir(jre_staging_path):await() do
-                                if entry.type == "directory" then
-                                    fs.move(entry.path, jre_dir_path):await()
-                                    break
+                                        format = function()
+                                            return i18n("extracting_progress_mb", {
+                                                current = string.format("%.2f", current / 1024 / 1024),
+                                                total = string.format("%.2f", total / 1024 / 1024)
+                                            })
+                                        end
+                                    })
                                 end
-                            end
+                            )
 
-                            fs.remove_dir(jre_staging_path):await()
-                            fs.remove(jre_archive_path):await()
+                            archive.close(archive_handle)
+
+                            fs.move(path.join(jre_temp_extract_path, jre_update_info.name), jre_dir_path):await()
+
+                            fs.remove(jre_temp_archive_path):await()
+                            fs.remove(jre_temp_extract_path):await()
+
+                            set_current_jre_version(jre_update_info.version)
                         end
                     })
                 end
 
-                table.insert(pipeline, {
-                    title = i18n("delete_unused_game_files_title"),
+                -- Update game
+                if game_update_info then
+                    table.insert(pipeline, {
+                        title = i18n("delete_old_game"),
 
-                    before = function()
-                        return fs.exists(game_dir_path)
-                    end,
+                        before = function()
+                            return fs.exists(game_dir_path)
+                        end,
 
-                    perform = function()
-                        fs.remove_dir(game_dir_path):await()
-                    end
-                })
-
-                table.insert(pipeline, {
-                    title = i18n("download_game_files_title"),
-
-                    perform = function(updater)
-                        if not fs.exists(game_dir_path) then
-                            fs.create_dir(game_dir_path):await()
+                        perform = function()
+                            fs.remove_dir(game_dir_path):await()
                         end
+                    })
 
-                        local downloader_handle = downloader.create()
+                    table.insert(pipeline, {
+                        title = i18n("download_game"),
 
-                        local task_handle = downloader.download(downloader_handle, {
-                            url = info.url,
-                            output_file = game_jar_path,
-                            continue_download = true,
-
-                            on_update = function(current: number, total: number)
-                                updater({
-                                    current = current,
-                                    total = total,
-
-                                    format = function()
-                                        local current = current / 1000 / 1000
-                                        local total = total / 1000 / 1000
-
-                                        return i18n("downloading_progress_mb", {
-                                            current = math.floor(current * 100) / 100,
-                                            total = math.floor(total * 100) / 100
-                                        })
-                                    end
-                                })
+                        perform = function(updater)
+                            if not fs.exists(game_dir_path) then
+                                fs.create_dir(game_dir_path):await()
                             end
-                        })
 
-                        downloader.wait(task_handle)
-                        downloader.close(downloader_handle)
+                            local downloader_handle = downloader.create()
 
-                        set_game_version(info.version)
-                    end
-                })
+                            local task_handle = downloader.download(downloader_handle, {
+                                url = game_update_info.url,
+                                output_file = game_jar_path,
+                                continue_download = false,
+
+                                on_update = function(current: number, total: number)
+                                    updater({
+                                        current = current,
+                                        total = total,
+
+                                        format = function()
+                                            return i18n("downloading_progress_mb", {
+                                                current = string.format("%.2f", current / 1024 / 1024),
+                                                total = string.format("%.2f", total / 1024 / 1024)
+                                            })
+                                        end
+                                    })
+                                end
+                            })
+
+                            downloader.wait(task_handle)
+                            downloader.close(downloader_handle)
+
+                            local game_jar_hash = calc_file_hash(game_jar_path)
+
+                            if game_jar_hash ~= game_update_info.hash then
+                                fs.remove(game_jar_path):await()
+
+                                print(`Mindustry {game_update_info.version} hash: {game_jar_hash}`)
+
+                                error("downloaded game has invalid hash")
+                            end
+
+                            set_current_game_version(game_update_info.version)
+                        end
+                    })
+                end
+
+                -- Change title depending on the pipeline content
+                local pipeline_title = i18n("install")
+
+                if jre_update_info and not game_update_info then
+                    pipeline_title = i18n("install_jre")
+                elseif game_update_info and not jre_update_info then
+                    pipeline_title = i18n("install_game")
+                end
 
                 return {
-                    title = i18n("install_game_title"),
+                    title = pipeline_title,
                     pipeline = pipeline
                 }
             end,
@@ -314,21 +483,63 @@ return function()
 
         components = {
             get_layout = function()
-                local i18n = import("i18n").i18n()
+                -- Prepare JRE component info
+                local jre_component = {
+                    name = "jre",
+                    title = "Java Runtime Environment",
+                    locked = true
+                }
+
+                local current_jre_version = get_current_jre_version()
+
+                if current_jre_version then
+                    local jre_version_record = {
+                        title = i18n("version"),
+                        value = current_jre_version,
+                        status = "success"
+                    }
+
+                    if get_remote_jre_info().version ~= current_jre_version then
+                        jre_version_record.status = "warning"
+                        jre_version_record.description = i18n("version_outdated")
+                    end
+
+                    jre_component.values = {
+                        jre_version_record
+                    }
+                end
+
+                -- Prepare game component info
+                local game_component = {
+                    name = "game",
+                    title = i18n("game"),
+                    locked = true
+                }
+
+                local current_game_version = get_current_game_version()
+
+                if current_game_version then
+                    local game_version_record = {
+                        title = i18n("version"),
+                        value = current_game_version,
+                        status = "success"
+                    }
+
+                    if get_latest_game_version_info().version ~= current_game_version then
+                        game_version_record.status = "warning"
+                        game_version_record.description = i18n("version_outdated")
+                    end
+
+                    game_component.values = {
+                        game_version_record
+                    }
+                end
 
                 return {
                     {
                         entries = {
-                            {
-                                name = "game",
-                                title = i18n("game"),
-                                locked = true
-                            },
-                            {
-                                name = "jre",
-                                title = "Java Runtime Environment",
-                                locked = true
-                            }
+                            jre_component,
+                            game_component
                         }
                     }
                 }
@@ -337,7 +548,7 @@ return function()
             get_enabled = function() return true end,
             set_enabled = function() end,
 
-            uninstall = function(variant: Variant, component: string)
+            uninstall = function(variant: GameVariant, component: string)
                 if component == "game" then
                     fs.remove_dir(game_dir_path):await()
                 elseif component == "jre" then
@@ -347,6 +558,12 @@ return function()
         },
 
         settings = {
+            get_layout = function(variant: GameVariant)
+                local settings = import_settings()
+
+                return settings.get_layout(variant)
+            end,
+
             get_property = function(name: string): any
                 local settings = import_settings()
 
@@ -357,12 +574,6 @@ return function()
                 local settings = import_settings()
 
                 settings.set_property(name, value)
-            end,
-
-            get_layout = function(variant: Variant)
-                local settings = import_settings()
-
-                return settings.get_layout(variant)
             end
         }
     }

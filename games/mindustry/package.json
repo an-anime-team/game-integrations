@@ -4,7 +4,9 @@
         "import": "http://127.0.0.1:8080/packages/import/import.luau",
         "iterable": "http://127.0.0.1:8080/packages/iterable/iterable.luau",
         "i18n": "http://127.0.0.1:8080/packages/i18n/package.json",
-        "settings": "http://127.0.0.1:8080/packages/settings/settings.luau"
+        "settings": "http://127.0.0.1:8080/packages/settings/settings.luau",
+        "locales-src": "locales.toml",
+        "versions-src": "versions.json"
     },
     "outputs": {
         "integration": "integration.luau"
