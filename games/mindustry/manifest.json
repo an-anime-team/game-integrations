@@ -1,7 +1,11 @@
 {
     "format": 1,
     "maintainers": [
-        "Dylan Donnell <greenicedtea@tutanota.com>"
+        "Dylan Donnell <greenicedtea@tutanota.com>",
+        {
+            "en": "Nikita Podvirnyi <krypt0nn@vk.com>",
+            "ru": "Никита Подвирный <krypt0nn@vk.com>"
+        }
     ],
     "game": {
         "title": "Mindustry",
