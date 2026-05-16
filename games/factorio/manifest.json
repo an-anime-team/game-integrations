@@ -6,7 +6,8 @@
     "game": {
         "title": "Factorio",
         "description": {
-            "en": "Factorio is a game in which you build and maintain factories.",
+            "en": "Factorio is a game where you mine resources, research technologies, automate production, and fight enemies.",
+            "ru": "Factorio - это игра, в которой вы добываете ресурсы, исследуете технологии, автоматизируете производство и сражаетесь с врагами.",
             "it": "Factorio è un gioco dove costruisci e mantieni fabbriche."
         },
         "developer": "Wube Software",
