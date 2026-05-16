@@ -1,5 +1,6 @@
 -- Mindustry integration v0.0.0
--- Copyright (C) 2026  Dylan Donnell <greenicedtea@tutanota.com>
+-- Copyright (C) 2026  Dylan Donnell <greenicedtea@tutanota.com>,
+--                     Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -309,6 +310,40 @@ return function()
                     pipeline = pipeline
                 }
             end,
+        },
+
+        components = {
+            get_layout = function()
+                local i18n = import("i18n").i18n()
+
+                return {
+                    {
+                        entries = {
+                            {
+                                name = "game",
+                                title = i18n("game"),
+                                locked = true
+                            },
+                            {
+                                name = "jre",
+                                title = "Java Runtime Environment",
+                                locked = true
+                            }
+                        }
+                    }
+                }
+            end,
+
+            get_enabled = function() return true end,
+            set_enabled = function() end,
+
+            uninstall = function(variant: Variant, component: string)
+                if component == "game" then
+                    fs.remove_dir(game_dir_path):await()
+                elseif component == "jre" then
+                    fs.remove_dir(jre_dir_path):await()
+                end
+            end
         },
 
         settings = {
