@@ -5,7 +5,10 @@
     ],
     "game": {
         "title": "Neverness to Everness [local]",
-        "description": "Neverness to Everness is an open-world urban fantasy RPG where reality and the supernatural collide. In a near-future city besieged by otherworldly anomalies, you play as an Awakener with the power to traverse between dimensions. Explore a sprawling metropolis, uncover dark secrets, and forge bonds with a cast of unique characters. The line between the ordinary and the extraordinary blurs as you fight to protect the world from a mysterious force known only as the \"Abyss.\"",
+        "description": {
+            "en": "Neverness to Everness is an open-world urban fantasy RPG where reality and the supernatural collide. In a near-future city besieged by otherworldly anomalies, you play as an Awakener with the power to traverse between dimensions. Explore a sprawling metropolis, uncover dark secrets, and forge bonds with a cast of unique characters. The line between the ordinary and the extraordinary blurs as you fight to protect the world from a mysterious force known only as the \"Abyss.\"",
+            "ru": "Neverness to Everness - это городская фэнтезийная RPG с открытым миром, в которой сталкиваются реальность и сверхъестественное. В городе ближайшего будущего, осажденном потусторонними аномалиями, вы играете за Пробужденного, обладающего способностью перемещаться между измерениями. Исследуйте огромный мегаполис, раскрывайте мрачные тайны и устанавливайте связи с уникальными персонажами. Грань между обычным и необычным стирается, когда вы сражаетесь, чтобы защитить мир от таинственной силы, известной только как \"Бездна\"."
+        },
         "developer": "Hotta Studio",
         "publisher": "Perfect World Entertainment",
         "tags": [
