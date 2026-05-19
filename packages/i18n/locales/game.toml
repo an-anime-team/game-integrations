@@ -13,10 +13,12 @@ it = "Versione del gioco"
 [game_not_installed_title]
 en = "Game is not installed"
 ru = "Игра не установлена"
+it = "Il gioco non è installato"
 
 [game_outdated_title]
 en = "Game is outdated"
 ru = "Игра устарела"
+it = "Il gioco non è aggiornato"
 
 [install_game_title]
 en = "Install game"
@@ -26,10 +28,12 @@ it = "Installa il gioco"
 [update_game_title]
 en = "Update game"
 ru = "Обновить игру"
+it = "Aggiorna il gioco"
 
 [delete_game_title]
 en = "Delete game"
 ru = "Удалить игру"
+it = "Elimina il gioco"
 
 [download_game_files_title]
 en = "Download game files"
@@ -64,6 +68,7 @@ it = "Elimina i file di gioco"
 [delete_old_game_files_title]
 en = "Delete old game files"
 ru = "Удалить старые файлы игры"
+it = "Elimina i vecchi file di gioco"
 
 [delete_unused_game_files_title]
 en = "Delete unused game files"
