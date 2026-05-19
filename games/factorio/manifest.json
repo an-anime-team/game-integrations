@@ -17,11 +17,12 @@
             "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/poster.jpg",
             "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/background.jpg",
             "slides": [
-                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/background.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/slide1.jpg",
                 "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/slide2.jpg",
                 "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/slide3.jpg",
                 "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/slide4.jpg",
-                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/slide5.jpg"
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/slide5.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/slide6.jpg"
             ]
         }
     },
