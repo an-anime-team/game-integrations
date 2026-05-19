@@ -10,6 +10,14 @@ en = "Game version"
 ru = "Версия игры"
 it = "Versione del gioco"
 
+[game_not_installed_title]
+en = "Game is not installed"
+ru = "Игра не установлена"
+
+[game_outdated_title]
+en = "Game is outdated"
+ru = "Игра устарела"
+
 [install_game_title]
 en = "Install game"
 ru = "Установить игру"
