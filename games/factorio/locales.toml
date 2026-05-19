@@ -1,31 +1,63 @@
-[username]
-en = "Username"
-it = "Nome utente"
+# Game editions
 
-[token]
-en = "Token"
-it = "Token"
-
-[credentials_group]
-en = "factorio.com Credentials"
-it = "Credenziali factorio.com"
-
-[credentials_description]
-en = "Your factorio.com username and token are required to download the game. You can find your token in your profile on factorio.com."
-it = "Il tuo nome utente e il tuo token di factorio.com sono richiesti per scaricare il gioco. Puoi trovare il tuo token nel tuo profilo su factorio.com."
-
-[missing_credentials]
-en = "Please provide your Factorio.com username and token in the settings."
-it = "Per favore, inserisci il tuo nome utente e il tuo token di Factorio.com nelle impostazioni."
-
-[standard_edition]
+[edition_standard_title]
 en = "Standard"
 it = "Standard"
+ru = "Стандартная"
 
-[space_age_edition]
+[edition_space_age_title]
 en = "Space Age"
 it = "Space Age"
+ru = "Космическая эра"
 
-[download_factorio]
-en = "Download Factorio"
-it = "Scarica Factorio"
+# Game launch info
+
+[nixos_steam_run_required]
+en = "steam-run is required to run the game on NixOS"
+ru = "Для запуска игры на NixOS требуется steam-run"
+
+# Settings
+
+[game_account_credentials_title]
+en = "Account credentials"
+ru = "Доступ к аккаунту"
+
+[game_account_credentials_description]
+en = "You need to enter your account credentials in order to install and launch the game"
+ru = "Вы должны ввести информацию для доступа к вашему аккаунту для установки и запуска игры"
+
+[game_account_credentials_username_title]
+en = "Account username"
+ru = "Имя пользователя"
+
+[game_account_credentials_token_title]
+en = "Account token"
+ru = "Токен доступа"
+
+[game_account_credentials_token_description]
+en = "You can get your account token at https://factorio.com/profile"
+ru = "Вы можете получить токен доступа к аккаунту на сайте: https://factorio.com/profile"
+
+# Components
+
+[component_edition_standard_title]
+en = "Standard game"
+ru = "Стандартная игра"
+
+[component_edition_space_age_title]
+en = "Space Age game"
+ru = "Космическая эра"
+
+# Credentials required message
+
+[credentials_required_message]
+en = "Account credentials are required to install and launch the game"
+ru = "Для установки и запуска игры требуется информация для доступа к аккаунту"
+
+[credentials_username_required_message]
+en = "Account username is required to install and launch the game"
+ru = "Для установки и запуска игры требуется имя пользователя от аккаунта"
+
+[credentials_token_required_message]
+en = "Account token is required to install and launch the game"
+ru = "Для установки и запуска игры требуется токен доступа к аккаунту"
