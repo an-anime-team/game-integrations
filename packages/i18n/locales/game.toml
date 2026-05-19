@@ -53,6 +53,10 @@ en = "Delete game files"
 ru = "Удалить файлы игры"
 it = "Elimina i file di gioco"
 
+[delete_old_game_files_title]
+en = "Delete old game files"
+ru = "Удалить старые файлы игры"
+
 [delete_unused_game_files_title]
 en = "Delete unused game files"
 ru = "Удалить неиспользуемые файлы игры"
