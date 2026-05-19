@@ -12,6 +12,10 @@
         {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/manifest.json",
             "featured": true
+        },
+        {
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/manifest.json",
+            "featured": true
         }
     ]
 }
