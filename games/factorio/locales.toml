@@ -14,50 +14,61 @@ ru = "Космическая эра"
 
 [nixos_steam_run_required]
 en = "steam-run is required to run the game on NixOS"
+it = "È richiesto steam-run per avviare il gioco su NixOS"
 ru = "Для запуска игры на NixOS требуется steam-run"
 
 # Settings
 
 [game_account_credentials_title]
 en = "Account credentials"
+it = "Credenziali dell'account"
 ru = "Доступ к аккаунту"
 
 [game_account_credentials_description]
 en = "You need to enter your account credentials in order to install and launch the game"
+it = "È necessario inserire le credenziali dell'account per installare e avviare il gioco"
 ru = "Вы должны ввести информацию для доступа к вашему аккаунту для установки и запуска игры"
 
 [game_account_credentials_username_title]
 en = "Account username"
+it = "Nome utente dell'account"
 ru = "Имя пользователя"
 
 [game_account_credentials_token_title]
 en = "Account token"
+it = "Token dell'account"
 ru = "Токен доступа"
 
 [game_account_credentials_token_description]
 en = "You can get your account token at https://factorio.com/profile"
+it = "Puoi ottenere il token del tuo account su https://factorio.com/profile"
 ru = "Вы можете получить токен доступа к аккаунту на сайте: https://factorio.com/profile"
 
 # Components
 
 [component_edition_standard_title]
 en = "Standard game"
+it = "Gioco standard"
 ru = "Стандартная игра"
 
 [component_edition_space_age_title]
 en = "Space Age game"
+it = "Gioco Space Age"
 ru = "Космическая эра"
 
 # Credentials required message
 
 [credentials_required_message]
 en = "Account credentials are required to install and launch the game"
+it = "Le credenziali dell'account sono richieste per installare e avviare il gioco"
 ru = "Для установки и запуска игры требуется информация для доступа к аккаунту"
 
 [credentials_username_required_message]
 en = "Account username is required to install and launch the game"
+it = "Il nome utente dell'account è richiesto per installare e avviare il gioco"
 ru = "Для установки и запуска игры требуется имя пользователя от аккаунта"
 
 [credentials_token_required_message]
 en = "Account token is required to install and launch the game"
+it = "Il token dell'account è richiesto per installare e avviare il gioco"
 ru = "Для установки и запуска игры требуется токен доступа к аккаунту"
