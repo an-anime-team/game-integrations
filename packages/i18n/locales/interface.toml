@@ -32,3 +32,7 @@ it = "Ripara"
 en = "Delete"
 ru = "Удалить"
 it = "Elimina"
+
+[version]
+en = "Version"
+ru = "Версия"
