@@ -15,6 +15,14 @@ en = "Install game"
 ru = "Установить игру"
 it = "Installa il gioco"
 
+[update_game_title]
+en = "Update game"
+ru = "Обновить игру"
+
+[delete_game_title]
+en = "Delete game"
+ru = "Удалить игру"
+
 [download_game_files_title]
 en = "Download game files"
 ru = "Загрузить файлы игры"
