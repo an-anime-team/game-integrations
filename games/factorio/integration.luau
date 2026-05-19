@@ -1,4 +1,4 @@
--- Factorio integration v0.0.0
+-- Factorio integration v1.0.0
 -- Copyright (C) 2026  mrkyss <mkryss@dawn.wine>
 --                     Nikita Podvirnyi <krypt0nn@vk.com>
 --
