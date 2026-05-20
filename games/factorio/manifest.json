@@ -12,7 +12,8 @@
         "description": {
             "en": "Factorio is a game where you mine resources, research technologies, automate production, and fight enemies.\n\nFactorio is a paid game, so you have to buy the license from official game website here: https://www.factorio.com",
             "ru": "Factorio - это игра, в которой вы добываете ресурсы, исследуете технологии, автоматизируете производство и сражаетесь с врагами.\n\nFactorio - это платная игра, так что вы должны приобрести лицензию на официальном сайте игры: https://www.factorio.com",
-            "it": "Factorio è un gioco dove costruisci e mantieni fabbriche.\n\nFactorio è un gioco a pagamento, quindi devi acquistare la licenza dal sito ufficiale del gioco: https://www.factorio.com"
+            "it": "Factorio è un gioco dove costruisci e mantieni fabbriche.\n\nFactorio è un gioco a pagamento, quindi devi acquistare la licenza dal sito ufficiale del gioco: https://www.factorio.com",
+            "es": "Factorio es un juego en el que extraes recursos, investigas tecnologías, automatizas la producción y luchas contra enemigos.\n\nFactorio es un juego de pago, por lo que debes adquirir una licencia desde el sitio web oficial del juego: https://www.factorio.com"
         },
         "developer": "Wube Software",
         "publisher": "Wube Software",
@@ -32,7 +33,8 @@
         "agreement": {
             "en": "Factorio is a paid game. In order to play it you have to buy a license from its developers. This integration only allows you to install the game files using official API, and to launch the game with your credentials which are available on the official game website.\n\nFactorio terms of service: https://www.factorio.com/terms-of-service",
             "ru": "Factorio - это платная игра. Чтобы играть в неё вы должны приобрести лицензию у разработчиков. Эта интеграция позволяет вам скачать файлы игры через официальный API, а также запустить игру с данными вашей учётной записи, которые доступны на официальном сайте игры.\n\nУсловия пользования Factorio: https://www.factorio.com/terms-of-service",
-            "it": "Factorio è un gioco a pagamento. Per poterlo giocare, devi acquistare una licenza dai suoi sviluppatori. Questa integrazione ti permette solo di installare i file del gioco utilizzando l'API ufficiale e di avviare il gioco con le tue credenziali disponibili sul sito ufficiale del gioco.\n\nTermini di servizio di Factorio: https://www.factorio.com/terms-of-service"
+            "it": "Factorio è un gioco a pagamento. Per poterlo giocare, devi acquistare una licenza dai suoi sviluppatori. Questa integrazione ti permette solo di installare i file del gioco utilizzando l'API ufficiale e di avviare il gioco con le tue credenziali disponibili sul sito ufficiale del gioco.\n\nTermini di servizio di Factorio: https://www.factorio.com/terms-of-service",
+            "es": "Factorio es un juego de pago. Para poder jugarlo, debes adquirir una licencia de sus desarrolladores. Esta integración solo te permite instalar los archivos del juego utilizando la API oficial y ejecutar el juego con las credenciales de tu cuenta, disponibles en el sitio web oficial del juego.\n\nTérminos de servicio de Factorio: https://www.factorio.com/terms-of-service"
         }
     },
     "package": {
