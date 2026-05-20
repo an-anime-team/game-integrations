@@ -4,76 +4,91 @@
 en = "Game"
 ru = "Игра"
 it = "Gioco"
+es = "Juego"
 
 [game_version]
 en = "Game version"
 ru = "Версия игры"
 it = "Versione del gioco"
+es = "Versión del juego"
 
 [game_not_installed_title]
 en = "Game is not installed"
 ru = "Игра не установлена"
 it = "Il gioco non è installato"
+es = "El juego no está instalado"
 
 [game_outdated_title]
 en = "Game is outdated"
 ru = "Игра устарела"
 it = "Il gioco non è aggiornato"
+es = "El juego está desactualizado"
 
 [install_game_title]
 en = "Install game"
 ru = "Установить игру"
 it = "Installa il gioco"
+es = "Instalar el juego"
 
 [update_game_title]
 en = "Update game"
 ru = "Обновить игру"
 it = "Aggiorna il gioco"
+es = "Actualizar el juego"
 
 [delete_game_title]
 en = "Delete game"
 ru = "Удалить игру"
 it = "Elimina il gioco"
+es = "Eliminar el juego"
 
 [download_game_files_title]
 en = "Download game files"
 ru = "Загрузить файлы игры"
 it = "Scarica i file di gioco"
+es = "Descargar los archivos del juego"
 
 [download_missing_game_files_title]
 en = "Download missing game files"
 ru = "Загрузить отсутствующие файлы игры"
 it = "Scarica i file di gioco mancanti"
+es = "Descargar los archivos faltantes del juego"
 
 [extract_game_files_title]
 en = "Extract game files"
 ru = "Распаковать файлы игры"
 it = "Estrai i file di gioco"
+es = "Extraer los archivos del juego"
 
 [process_game_files_title]
 en = "Process game files"
 ru = "Обработать файлы игры"
 it = "Elabora i file di gioco"
+es = "Procesar los archivos del juego"
 
 [repair_game_files_title]
 en = "Repair game files"
 ru = "Исправить файлы игры"
 it = "Ripara i file di gioco"
+es = "Reparar los archivos del juego"
 
 [delete_game_files_title]
 en = "Delete game files"
 ru = "Удалить файлы игры"
 it = "Elimina i file di gioco"
+es = "Eliminar los archivos del juego"
 
 [delete_old_game_files_title]
 en = "Delete old game files"
 ru = "Удалить старые файлы игры"
 it = "Elimina i vecchi file di gioco"
+es = "Eliminar los archivos antiguos del juego"
 
 [delete_unused_game_files_title]
 en = "Delete unused game files"
 ru = "Удалить неиспользуемые файлы игры"
 it = "Elimina i file di gioco inutilizzati"
+es = "Eliminar los archivos no usados del juego"
 
 # ------------------------ Editions ------------------------
 
@@ -82,33 +97,39 @@ en = "Global"
 ru = "Глобальная"
 zh-cn = "国际"
 it = "Globale"
+es = "Global"
 
 [china_game_edition_title]
 en = "China"
 ru = "Китай"
 zh-cn = "中国大陆"
 it = "Cina"
+es = "China"
 
 [taiwan_game_edition_title]
 en = "TW/HK/MO"
 ru = "Тайвань/Гонконг/Макао"
 zh-cn = "台湾/香港/澳门"
 it = "TW/HK/MO"
+es = "TW/HK/MO"
 
 [japan_game_edition_title]
 en = "Japan"
 ru = "Япония"
 zh-cn = "日本"
 it = "Giappone"
+es = "Japón"
 
 [korea_game_edition_title]
 en = "Korea"
 ru = "Корея"
 zh-cn = "韩国"
 it = "Corea"
+es = "Corea"
 
 [sea_game_edition_title]
 en = "Southeast Asia"
 ru = "Юго-восточная Азия"
 zh-cn = "东南亚"
 it = "Sud-est asiatico"
+es = "Sureste asiático"

@@ -4,16 +4,19 @@
 en = "Downloading {progress}"
 ru = "Загрузка {progress}"
 it = "Scaricamento {progress}"
+es = "Descargando {progress}"
 
 [downloading_progress_mb]
 en = "Downloading {current} MB / {total} MB"
 ru = "Загрузка {current} МБ / {total} МБ"
 it = "Scaricamento {current} MB / {total} MB"
+es = "Descargando {current} MB / {total} MB"
 
 [downloading_progress_gb]
 en = "Downloading {current} GB / {total} GB"
 ru = "Загрузка {current} ГБ / {total} ГБ"
 it = "Scaricamento {current} GB / {total} GB"
+es = "Descargando {current} GB / {total} GB"
 
 # ------------------------ Extract ------------------------
 
@@ -21,16 +24,19 @@ it = "Scaricamento {current} GB / {total} GB"
 en = "Extracting {progress}"
 ru = "Распаковка {progress}"
 it = "Estrazione {progress}"
+es = "Extrayendo {progress}"
 
 [extracting_progress_mb]
 en = "Extracting {current} MB / {total} MB"
 ru = "Распаковка {current} МБ / {total} МБ"
 it = "Estrazione {current} MB / {total} MB"
+es = "Extrayendo {current} MB / {total} MB"
 
 [extracting_progress_gb]
 en = "Extracting {current} GB / {total} GB"
 ru = "Распаковка {current} ГБ / {total} ГБ"
 it = "Estrazione {current} GB / {total} GB"
+es = "Extrayendo {current} GB / {total} GB"
 
 # ------------------------ Process ------------------------
 
@@ -38,16 +44,19 @@ it = "Estrazione {current} GB / {total} GB"
 en = "Processing {progress}"
 ru = "Обработка {progress}"
 it = "Elaborazione {progress}"
+es = "Procesando {progress}"
 
 [processing_progress_mb]
 en = "Processing {current} MB / {total} MB"
 ru = "Обработка {current} МБ / {total} МБ"
 it = "Elaborazione {current} MB / {total} MB"
+es = "Procesando {current} MB / {total} MB"
 
 [processing_progress_gb]
 en = "Processing {current} GB / {total} GB"
 ru = "Обработка {current} ГБ / {total} ГБ"
 it = "Elaborazione {current} GB / {total} GB"
+es = "Procesando {current} GB / {total} GB"
 
 # ------------------------ Repair ------------------------
 
@@ -55,16 +64,19 @@ it = "Elaborazione {current} GB / {total} GB"
 en = "Repairing {progress}"
 ru = "Исправление {progress}"
 it = "Riparazione {progress}"
+es = "Reparando {progress}"
 
 [repairing_progress_mb]
 en = "Repairing {current} MB / {total} MB"
 ru = "Исправление {current} МБ / {total} МБ"
 it = "Riparazione {current} MB / {total} MB"
+es = "Reparando {current} MB / {total} MB"
 
 [repairing_progress_gb]
 en = "Repairing {current} GB / {total} GB"
 ru = "Исправление {current} ГБ / {total} ГБ"
 it = "Riparazione {current} GB / {total} GB"
+es = "Reparando {current} GB / {total} GB"
 
 # ------------------------ Delete ------------------------
 
@@ -72,13 +84,16 @@ it = "Riparazione {current} GB / {total} GB"
 en = "Deleting {progress}"
 ru = "Удаление {progress}"
 it = "Eliminazione {progress}"
+es = "Eliminando {progress}"
 
 [deleting_progress_mb]
 en = "Deleting {current} MB / {total} MB"
 ru = "Удаление {current} МБ / {total} МБ"
 it = "Eliminazione {current} MB / {total} MB"
+es = "Eliminando {current} MB / {total} MB"
 
 [deleting_progress_gb]
 en = "Deleting {current} GB / {total} GB"
 ru = "Удаление {current} ГБ / {total} ГБ"
 it = "Eliminazione {current} GB / {total} GB"
+es = "Eliminando {current} GB / {total} GB"
