@@ -4,11 +4,13 @@
 en = "Game runner"
 ru = "Окружение запуска игры"
 it = "Runtime di gioco"
+es = "Entorno de ejecución del juego"
 
 [update_game_runner_title]
 en = "Update game runner"
 ru = "Обновить окружение запуска игры"
 it = "Aggiorna il runtime di gioco"
+es = "Actualizar el entorno de ejecución del juego"
 
 # ------------------------ Wine ------------------------
 
@@ -16,21 +18,25 @@ it = "Aggiorna il runtime di gioco"
 en = "Wine version"
 ru = "Версия Wine"
 it = "Versione di Wine"
+es = "Versión de Wine"
 
 [available_wine_editions_title]
 en = "Available wine editions"
 ru = "Доступные редакции Wine"
 it = "Edizioni di Wine disponibili"
+es = "Ediciones de Wine disponibles"
 
 [download_wine_title]
 en = "Download wine"
 ru = "Загрузить Wine"
 it = "Scarica Wine"
+es = "Descargar Wine"
 
 [extract_wine_title]
 en = "Extract wine"
 ru = "Распаковать Wine"
 it = "Estrai Wine"
+es = "Extraer Wine"
 
 # ------------------------ Wine prefix ------------------------
 
@@ -38,26 +44,31 @@ it = "Estrai Wine"
 en = "Wine prefix"
 ru = "Префикс Wine"
 it = "Prefisso Wine"
+es = "Prefijo de Wine"
 
 [wine_prefix_name_title]
 en = "Wine prefix name"
 ru = "Название префикса Wine"
 it = "Nome del prefisso Wine"
+es = "Nombre del prefijo de Wine"
 
 [wine_prefix_name_description]
 en = "Name of the folder where the wine prefix will be installed. Games with the same prefix name will use the same prefix"
 ru = "Название папки, в которой будет установлен префикс Wine. Игры с одинаковым названием префикса будут использовать один и тот же префикс"
 it = "Nome della cartella in cui verrà installato il prefisso Wine. I giochi con lo stesso nome del prefisso useranno lo stesso prefisso"
+es = "Nombre de la carpeta donde el prefijo de wine se instalará. Los juegos con el mismo nombre de prefijo usarán el mismo prefijo"
 
 [available_dxvk_editions_title]
 en = "Available DXVK editions"
 ru = "Доступные редакции DXVK"
 it = "Edizioni di DXVK disponibili"
+es = "Ediciones de DXVK disponibles"
 
 [create_wine_prefix_title]
 en = "Create wine prefix"
 ru = "Создать префикс Wine"
 it = "Crea prefisso Wine"
+es = "Crear prefijo de Wine"
 
 # ------------------------ DXVK ------------------------
 
@@ -65,18 +76,22 @@ it = "Crea prefisso Wine"
 en = "DXVK version"
 ru = "Версия DXVK"
 it = "Versione di DXVK"
+es = "Versión de DXVK"
 
 [download_dxvk_title]
 en = "Download DXVK"
 ru = "Загрузить DXVK"
 it = "Scarica DXVK"
+es = "Descargar DXVK"
 
 [extract_dxvk_title]
 en = "Extract DXVK"
 ru = "Распаковать DXVK"
 it = "Estrai DXVK"
+es = "Extraer DXVK"
 
 [apply_dxvk_title]
 en = "Apply DXVK"
 ru = "Применить DXVK"
 it = "Applica DXVK"
+es = "Aplicar DXVK"
