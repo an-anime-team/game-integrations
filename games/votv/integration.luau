@@ -1,4 +1,4 @@
--- VotV integration v0.1.0
+-- VotV integration v0.2.0
 -- Copyright (C) 2025 - 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ function import(...)
     return (load("import").value)(...)
 end
 
-type Variant = {
+type GameVariant = {
     platform: string,
     edition: string
 }
@@ -37,7 +37,7 @@ local game_dir_path: string     = path.join(data_dir_path, "game")
 local game_version_path: string = path.join(game_dir_path, ".version")
 local game_binary_path: string  = path.join(game_dir_path, "VotV.exe")
 
-------------------------------------------------- Game versions -------------------------------------------------
+----------------------------- Game versions -----------------------------
 
 -- Direct download links are taken from here: https://archive.org/details/votv-archive
 local function list_game_versions()
@@ -63,15 +63,23 @@ local function get_game_version_info(version: string): Version?
         .find(function(info) return info.version == version end)
 end
 
-------------------------------------------------- Imports -------------------------------------------------
+----------------------------- Imports -----------------------------
 
+local __i18n = nil
 local __settings = nil
 local __components = nil
+
+local function i18n(...)
+    if not __i18n then
+        __i18n = import("i18n").i18n()
+    end
+
+    return (__i18n)(...)
+end
 
 local function import_settings()
     if not __settings then
         local iter = import("iterable")
-        local i18n = import("i18n").i18n()
 
         __settings = import("settings")({
             game = "voices_of_the_void",
@@ -119,7 +127,7 @@ local function import_components()
     return __components
 end
 
-------------------------------------------------- Game -------------------------------------------------
+----------------------------- Game -----------------------------
 
 local function get_game_version(): string?
     if not fs.exists(game_version_path) then
@@ -145,12 +153,12 @@ local function is_game_installed(): boolean
     return version == settings.get_property("game.version")
 end
 
-------------------------------------------------- Module -------------------------------------------------
+----------------------------- Module -----------------------------
 
 return function()
     return {
         game = {
-            get_launch_info = function(variant: Variant)
+            get_launch_info = function(variant: GameVariant)
                 if not is_game_installed() then
                     return nil
                 end
@@ -162,7 +170,7 @@ return function()
                 })
             end,
 
-            get_actions_pipeline = function(variant: Variant)
+            get_actions_pipeline = function(variant: GameVariant)
                 local settings = import_settings()
                 local components = import_components()
 
@@ -183,8 +191,6 @@ return function()
                 if not info then
                     error(`invalid game version selected: {selected_game_version}`)
                 end
-
-                local i18n = import("i18n").i18n()
 
                 local archive_path: string = path.join(path.temp_dir(), `votv_{info.version}.7z`)
 
@@ -276,7 +282,49 @@ return function()
             end,
         },
 
+        components = {
+            get_layout = function()
+                return {
+                    {
+                        entries = {
+                            {
+                                name = "game",
+                                title = i18n("game"),
+                                locked = true,
+                                values = {
+                                    {
+                                        title = i18n("version"),
+                                        value = get_game_version() or i18n("game_not_installed_title")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            end,
+
+            get_enabled = function() return true end,
+            set_enabled = function() end,
+
+            uninstall = function(variant: GameVariant, component: string)
+                if component == "game" then
+                    fs.remove_dir(data_dir_path):await()
+                end
+            end
+        },
+
         settings = {
+            get_layout = function(variant: GameVariant)
+                local iter = import("iterable")
+
+                local settings = import_settings()
+                local components = import_components()
+
+                return iter(settings.get_layout(variant))
+                    .chain(components.settings.get_layout())
+                    .collect()
+            end,
+
             get_property = function(name: string): any
                 local settings = import_settings()
 
@@ -287,17 +335,6 @@ return function()
                 local settings = import_settings()
 
                 settings.set_property(name, value)
-            end,
-
-            get_layout = function(variant: Variant)
-                local iter = import("iterable")
-
-                local settings = import_settings()
-                local components = import_components()
-
-                return iter(settings.get_layout(variant))
-                    .chain(components.settings.get_layout())
-                    .collect()
             end
         }
     }
