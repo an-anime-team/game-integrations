@@ -1,4 +1,4 @@
--- Factorio integration v1.0.0
+-- Factorio integration v1.0.1
 -- Copyright (C) 2026  mrkyss <mkryss@dawn.wine>
 --                     Nikita Podvirnyi <krypt0nn@vk.com>
 --
@@ -15,8 +15,23 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function import(...)
-    return (load("import").value)(...)
+if not import then
+    -- polyfill: old agl-runtime versions don't have `import` function
+    function import(name: string)
+        local resource = load(name)
+
+        if resource.format ~= "package" then
+            return resource.value
+        end
+
+        local outputs = {}
+
+        for name, value in pairs(resource.value) do
+            outputs[name] = value.value
+        end
+
+        return outputs
+    end
 end
 
 type GameEdition = "standard" | "space_age"

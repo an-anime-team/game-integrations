@@ -14,8 +14,23 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function import(...)
-    return (load("import").value)(...)
+if not import then
+    -- polyfill: old agl-runtime versions don't have `import` function
+    function import(name: string)
+        local resource = load(name)
+
+        if resource.format ~= "package" then
+            return resource.value
+        end
+
+        local outputs = {}
+
+        for name, value in pairs(resource.value) do
+            outputs[name] = value.value
+        end
+
+        return outputs
+    end
 end
 
 type Variant = {
