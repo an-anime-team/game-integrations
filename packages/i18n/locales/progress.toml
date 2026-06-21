@@ -6,6 +6,11 @@ ru = "Загрузка {progress}"
 it = "Scaricamento {progress}"
 es = "Descargando {progress}"
 
+[downloading_progress_kb]
+en = "Downloading {current} KB / {total} KB"
+ru = "Загрузка {current} КБ / {total} КБ"
+it = "Scaricamento {current} KB / {total} KB"
+
 [downloading_progress_mb]
 en = "Downloading {current} MB / {total} MB"
 ru = "Загрузка {current} МБ / {total} МБ"
@@ -25,6 +30,11 @@ en = "Extracting {progress}"
 ru = "Распаковка {progress}"
 it = "Estrazione {progress}"
 es = "Extrayendo {progress}"
+
+[extracting_progress_kb]
+en = "Extracting {current} KB / {total} KB"
+ru = "Распаковка {current} КБ / {total} КБ"
+it = "Estrazione {current} KB / {total} KB"
 
 [extracting_progress_mb]
 en = "Extracting {current} MB / {total} MB"
@@ -46,6 +56,11 @@ ru = "Обработка {progress}"
 it = "Elaborazione {progress}"
 es = "Procesando {progress}"
 
+[processing_progress_kb]
+en = "Processing {current} KB / {total} KB"
+ru = "Обработка {current} КБ / {total} КБ"
+it = "Elaborazione {current} KB / {total} KB"
+
 [processing_progress_mb]
 en = "Processing {current} MB / {total} MB"
 ru = "Обработка {current} МБ / {total} МБ"
@@ -66,6 +81,11 @@ ru = "Исправление {progress}"
 it = "Riparazione {progress}"
 es = "Reparando {progress}"
 
+[repairing_progress_kb]
+en = "Repairing {current} KB / {total} KB"
+ru = "Исправление {current} КБ / {total} КБ"
+it = "Riparazione {current} KB / {total} KB"
+
 [repairing_progress_mb]
 en = "Repairing {current} MB / {total} MB"
 ru = "Исправление {current} МБ / {total} МБ"
@@ -85,6 +105,11 @@ en = "Deleting {progress}"
 ru = "Удаление {progress}"
 it = "Eliminazione {progress}"
 es = "Eliminando {progress}"
+
+[deleting_progress_kb]
+en = "Deleting {current} KB / {total} KB"
+ru = "Удаление {current} КБ / {total} КБ"
+it = "Eliminazione {current} KB / {total} KB"
 
 [deleting_progress_mb]
 en = "Deleting {current} MB / {total} MB"
