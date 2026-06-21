@@ -3,6 +3,30 @@
 A simple function to import other modules or packages using standard `load`
 function.
 
+Since latest agl-runtime versions add `import` function, it's highly recommended
+to use the following polyfill instead:
+
+```luau
+if not import then
+    -- polyfill: old agl-runtime versions don't have `import` function
+    function import(name: string)
+        local resource = load(name)
+
+        if resource.format ~= "package" then
+            return resource.value
+        end
+
+        local outputs = {}
+
+        for name, value in pairs(resource.value) do
+            outputs[name] = value.value
+        end
+
+        return outputs
+    end
+end
+```
+
 ## Integration
 
 Add `import` luau module to your integration package inputs:

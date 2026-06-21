@@ -1,4 +1,4 @@
--- VotV integration v0.2.0
+-- VotV integration v0.2.1
 -- Copyright (C) 2025 - 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,23 @@
 
 --!nocheck
 
-function import(...)
-    return (load("import").value)(...)
+if not import then
+    -- polyfill: old agl-runtime versions don't have `import` function
+    function import(name: string)
+        local resource = load(name)
+
+        if resource.format ~= "package" then
+            return resource.value
+        end
+
+        local outputs = {}
+
+        for name, value in pairs(resource.value) do
+            outputs[name] = value.value
+        end
+
+        return outputs
+    end
 end
 
 type GameVariant = {

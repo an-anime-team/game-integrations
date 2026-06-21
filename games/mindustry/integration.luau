@@ -1,4 +1,4 @@
--- Mindustry integration v1.0.1
+-- Mindustry integration v1.0.2
 -- Copyright (C) 2026  Dylan Donnell <greenicedtea@tutanota.com>,
 --                     Nikita Podvirnyi <krypt0nn@vk.com>
 --
@@ -17,8 +17,23 @@
 
 --!nocheck
 
-function import(...)
-    return (load("import").value)(...)
+if not import then
+    -- polyfill: old agl-runtime versions don't have `import` function
+    function import(name: string)
+        local resource = load(name)
+
+        if resource.format ~= "package" then
+            return resource.value
+        end
+
+        local outputs = {}
+
+        for name, value in pairs(resource.value) do
+            outputs[name] = value.value
+        end
+
+        return outputs
+    end
 end
 
 type GameVariant = {

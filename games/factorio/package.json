@@ -1,7 +1,6 @@
 {
-    "version": 1,
+    "format": 1,
     "inputs": {
-        "import": "http://127.0.0.1:8080/packages/import/import.luau",
         "i18n": "http://127.0.0.1:8080/packages/i18n/package.json",
         "settings": "http://127.0.0.1:8080/packages/settings/settings.luau",
         "locales": "locales.toml"
