@@ -38,10 +38,10 @@ Import the package in your integration module:
 
 ```lua
 -- Import the i18n library
-local i18n = load("i18n").value.i18n()
+local i18n = load("i18n").value.i18n.value()
 
 -- Import the i18n library with custom translations
-local i18n = load("i18n").value.i18n(
+local i18n = load("i18n").value.i18n.value(
     -- imported locale files
     load("my_locales_1").value,
     load("my_locales_2").value
