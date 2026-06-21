@@ -1,5 +1,11 @@
 {
     "format": 1,
+    "inputs": {
+        "iterable": "http://127.0.0.1:8080/packages/iterable/iterable.luau",
+        "settings": "http://127.0.0.1:8080/packages/settings/settings.luau",
+        "lua-proton": "http://127.0.0.1:8080/packages/lua-proton/package.json",
+        "locales-src": "locales.toml"
+    },
     "outputs": {
         "integration": "integration.luau"
     }
