@@ -1,4 +1,4 @@
--- GODDESS OF VICTORY: NIKKE integration v0.1.0
+-- GODDESS OF VICTORY: NIKKE integration v0.2.0
 -- Copyright (C) 2026 NelloKudo <marshnelloosu@gmail.com>
 --                    Nikita Podvirnyi <krypt0nn@vk.com>
 --
@@ -15,11 +15,26 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function import(...)
-    return (load("import").value)(...)
+if not import then
+    -- polyfill: old agl-runtime versions don't have `import` function
+    function import(name: string)
+        local resource = load(name)
+
+        if resource.format ~= "package" then
+            return resource.value
+        end
+
+        local outputs = {}
+
+        for name, value in pairs(resource.value) do
+            outputs[name] = value.value
+        end
+
+        return outputs
+    end
 end
 
-type Variant = {
+type GameVariant = {
     platform: string,
     edition: string
 }
@@ -31,7 +46,7 @@ type ProtonBuildInfo = {
     path: string
 }
 
-------------------------------------------------- constants -------------------------------------------------
+----------------------------- constants -----------------------------
 
 local NIKKE_SITE_BASE = "https://nikke-en.com"
 local NIKKE_ASSETS_JS = `{NIKKE_SITE_BASE}/assets/aix-18872c9c.js`
@@ -40,7 +55,7 @@ local NIKKE_ASSETS_JS = `{NIKKE_SITE_BASE}/assets/aix-18872c9c.js`
 local LAUNCH_MAX_RETRIES  = 10
 local LAUNCH_WAIT_SECONDS = 8
 
-------------------------------------------------- paths -------------------------------------------------
+----------------------------- paths -----------------------------
 
 local data_dir_path: string = path.persist_dir("goddess_of_victory_nikke")
 
@@ -48,7 +63,7 @@ local umu_binary_path: string = path.join(data_dir_path, "umu-run")
 local proton_builds_path: string = path.join(data_dir_path, "proton")
 local proton_prefix_path: string = path.join(data_dir_path, "prefix")
 
-------------------------------------------------- imports -------------------------------------------------
+----------------------------- imports -----------------------------
 
 local __i18n = nil
 local __umu = nil
@@ -74,7 +89,7 @@ local function import_umu()
     return __umu
 end
 
-------------------------------------------------- component management -------------------------------------------------
+----------------------------- component management -----------------------------
 
 local __proton_builds = nil
 
@@ -98,7 +113,7 @@ local function check_proton_build_installed(name: string): boolean
     return fs.exists(path.join(proton_builds_path, name, "files", "bin", "wine64"))
 end
 
-------------------------------------------------- game detection -------------------------------------------------
+----------------------------- game detection -----------------------------
 
 local function get_prefix_path(): string
     return path.join(proton_prefix_path, "nikke")
@@ -110,7 +125,7 @@ local function is_game_installed(): boolean
     return fs.exists(nikke_launcher)
 end
 
-------------------------------------------------- game installer -------------------------------------------------
+----------------------------- game installer -----------------------------
 
 -- Fetch the JS bundle and extracts the miniloader download url
 local function get_installer_info(): { url: string, filename: string }
@@ -134,7 +149,7 @@ local function get_installer_info(): { url: string, filename: string }
     }
 end
 
-------------------------------------------------- launch wrapper -------------------------------------------------
+----------------------------- launch wrapper -----------------------------
 
 -- Writes a bash script that retries the launch when nikke_launcher never
 -- appears.
@@ -176,7 +191,7 @@ local function create_launch_wrapper(prefix_path: string, proton_name: string): 
     return wrapper_path
 end
 
-------------------------------------------------- command wrapper -------------------------------------------------
+----------------------------- command wrapper -----------------------------
 
 local function parse_command_wrapper(
     wrapper: string,
@@ -245,7 +260,7 @@ local function parse_command_wrapper(
     }
 end
 
-------------------------------------------------- settings -------------------------------------------------
+----------------------------- settings -----------------------------
 
 local __settings = nil
 
@@ -309,7 +324,7 @@ local function set_selected_proton_build_name(name: string)
     import_settings().set_property("proton.build_name", name)
 end
 
-------------------------------------------------- pipelines -------------------------------------------------
+----------------------------- pipelines -----------------------------
 
 type PipelineUpdater = ({ current: number, total: number, format: (() -> string) | nil }) -> ()
 
@@ -556,13 +571,13 @@ local function get_game_installer_pipeline(
     }
 end
 
-------------------------------------------------- module -------------------------------------------------
+----------------------------- module -----------------------------
 
 return function()
     return {
         game = {
             get_launch_info = function(
-                variant: Variant
+                variant: GameVariant
             ): { binary: string, args: { string }, env: { [string]: string } }?
                 local umu_launcher = import_umu()
 
@@ -622,7 +637,7 @@ return function()
                 return launch_info
             end,
 
-            get_actions_pipeline = function(variant: Variant): any
+            get_actions_pipeline = function(variant: GameVariant): any
                 local umu_launcher = import_umu()
 
                 local umu_status, umu_reason = umu_launcher.umu.verify()
@@ -685,7 +700,38 @@ return function()
             end
         },
 
+        components = {
+            get_layout = function()
+                return {
+                    {
+                        entries = {
+                            {
+                                name = "launcher",
+                                title = i18n("settings_launcher_title"),
+                                locked = true
+                            }
+                        }
+                    }
+                }
+            end,
+
+            get_enabled = function() return true end,
+            set_enabled = function() end,
+
+            uninstall = function(variant: GameVariant, component: string)
+                if component == "launcher" then
+                    fs.remove_dir(data_dir_path):await()
+                end
+            end
+        },
+
         settings = {
+            get_layout = function(variant: GameVariant)
+                local settings = import_settings(true)
+
+                return settings.get_layout(variant)
+            end,
+
             get_property = function(name: string): any
                 local settings = import_settings()
 
@@ -696,12 +742,6 @@ return function()
                 local settings = import_settings()
 
                 settings.set_property(name, value)
-            end,
-
-            get_layout = function(variant: Variant)
-                local settings = import_settings(true)
-
-                return settings.get_layout(variant)
             end
         }
     }
