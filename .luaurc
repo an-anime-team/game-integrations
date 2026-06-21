@@ -8,6 +8,7 @@
         "versions",
 
         "load",
+        "import",
         "clone",
         "dbg",
         "sleep",
