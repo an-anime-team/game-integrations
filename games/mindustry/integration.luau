@@ -1,4 +1,4 @@
--- Mindustry integration v1.0.0
+-- Mindustry integration v1.0.1
 -- Copyright (C) 2026  Dylan Donnell <greenicedtea@tutanota.com>,
 --                     Nikita Podvirnyi <krypt0nn@vk.com>
 --
@@ -38,7 +38,7 @@ local game_version_path: string = path.join(game_dir_path, ".version")
 
 ----------------------------- Imports -----------------------------
 
-__i18n = nil
+local __i18n = nil
 
 local function i18n(...)
     if not __i18n then
