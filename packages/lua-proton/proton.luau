@@ -84,6 +84,12 @@ type ProtonVersionsGroup = {
     versions: {ProtonVersion}
 }
 
+type GameLaunchInfo = {
+    binary: string,
+    args: {string}?,
+    env: { [string]: string }?
+}
+
 local __versions = {}
 
 -- Register proton versions group and all the stored version in the library.
@@ -550,11 +556,47 @@ return function(options: Options?)
                         pipeline = actions
                     }
                 end
-            end
+            end,
 
-            -- wrap_launch_info = function(launch_info)
-            --     return launch_info
-            -- end
+            -- Wrap given game launch info, or return nil if proton/umu-launcher
+            -- is not available.
+            wrap_launch_info = function(launch_info: GameLaunchInfo): GameLaunchInfo?
+                local selected_proton_version_name = settings_get_property("proton_version_name")
+
+                if not selected_proton_version_name
+                    or not proton_version_is_downloaded(selected_proton_version_name)
+                then
+                    return nil
+                end
+
+                local proton_version_path: string = path.join(
+                    PROTON_VERSIONS_DIR,
+                    selected_proton_version_name
+                )
+
+                local proton_prefix_dir_path: string = path.join(
+                    PROTON_PREFIXES_DIR,
+
+                    if options and options.prefix and options.prefix.name
+                        then options.prefix.name
+                    elseif options and options.umu_launcher and options.umu_launcher.game_id
+                        then options.umu_launcher.game_id
+                    else "common"
+                )
+
+                local umu_env = launch_info.env or {}
+
+                umu_env["PROTONPATH"] = proton_version_path
+                umu_env["WINEPREFIX"] = path.join(proton_prefix_dir_path, "pfx")
+
+                if options and options.umu_launcher and options.umu_launcher.game_id then
+                    umu_env["GAMEID"] = options.umu_launcher.game_id
+                end
+
+                launch_info.env = umu_env
+
+                return umu_launcher.umu.wrap(launch_info)
+            end
         },
 
         settings = {
