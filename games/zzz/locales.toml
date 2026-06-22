@@ -1,0 +1,57 @@
+# ----------------------------- components -----------------------------
+
+[sophon_tools_components_title]
+en = "Game downloader"
+ru = "Загрузчик игры"
+
+[sophon_tools_cache_title]
+en = "Downloader cache"
+ru = "Кеш загрузчика"
+
+[sophon_tools_cache_description]
+en = "Disable the checkbox and press 'Apply changes' button to clear the downloader cache"
+ru = "Выключите переключатель и нажмите на кнопку 'Применить изменения' для очистки кеша загрузчика"
+
+[sophon_tools_cache_size_title]
+en = "Cache size"
+ru = "Размер кеша"
+
+# ----------------------------- settings -----------------------------
+
+[sophon_tools_settings_title]
+en = "Game downloader"
+ru = "Загрузчик игры"
+
+[sophon_tools_use_memory_buffer_title]
+en = "Use memory buffer"
+ru = "Использовать системную память как буфер"
+
+[sophon_tools_use_memory_buffer_description]
+en = "Store downloaded chunks in memory instead of writing them to disk"
+ru = "Использовать системную память для хранения загруженных данных вместо того, чтобы записывать их на диск"
+
+[sophon_tools_memory_buffer_size_title]
+en = "Memory buffer size (megabytes)"
+ru = "Размер буфера (в мегабайтах)"
+
+[sophon_tools_memory_buffer_size_description]
+en = "Maximal size of chunks data which can be stored in system memory"
+ru = "Максимальный размер загруженных данных, которые можно хранить в системной памяти"
+
+[sophon_tools_threads_num_title]
+en = "Downloader threads"
+ru = "Количество потоков загрузки"
+
+[sophon_tools_threads_num_description]
+en = "Maximal amount of streams that can be used to download and patch files"
+ru = "Максимальное количество потоков, которые могут быть использованы для загрузки и обработки файлов"
+
+# ----------------------------- pipeline -----------------------------
+
+[download_sophon_tools_title]
+en = "Download sophon-tools"
+ru = "Загрузить sophon-tools"
+
+[sophon_tools_game_update_not_supported]
+en = "Game integration does not support game updating yet"
+ru = "Обновление игры пока что не поддерживается"
