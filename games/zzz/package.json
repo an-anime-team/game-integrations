@@ -1,9 +1,9 @@
 {
     "format": 1,
     "inputs": {
-        "iterable": "http://127.0.0.1:8080/packages/iterable/iterable.luau",
-        "settings": "http://127.0.0.1:8080/packages/settings/settings.luau",
-        "lua-proton": "http://127.0.0.1:8080/packages/lua-proton/package.json",
+        "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/iterable/iterable.luau",
+        "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/settings/settings.luau",
+        "lua-proton": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/lua-proton/package.json",
         "locales-src": "locales.toml"
     },
     "outputs": {
