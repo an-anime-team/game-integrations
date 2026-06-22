@@ -1,4 +1,4 @@
--- ZZZ integration v0.1.0
+-- ZZZ integration v0.1.1
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -274,8 +274,35 @@ return function()
             end,
 
             get_launch_info = function(variant: GameVariant)
+                variant.edition = variant.edition or "global" :: GameEdition
+
+                -- Check if we have game binary.
+                if not fs.exists(GAME_BINARY[variant.edition]) then
+                    return nil
+                end
+
+                -- If sophon-tools is not installed then we cannot fetch info
+                -- about the game, so can't verify its version.
+                if not sophon_tools.tool.verify() then
+                    return nil
+                end
+
+                -- Check if the game is installed.
+                local game_info = sophon_tools.game.get_info(
+                    SOPHON_GAME_ID[variant.edition],
+                    variant.edition
+                ):await()
+
+                local game_version = game_version_read(variant.edition)
+
+                if not game_version or game_version ~= game_info.version then
+                    return nil
+                end
+
+                -- Try to obtain game launch info from the lua-proton library.
+                -- It will return nil if selected proton is not available.
                 local launch_info = lua_proton.game.wrap_launch_info({
-                    binary = GAME_BINARY[variant.edition or "global" :: GameEdition]
+                    binary = GAME_BINARY[variant.edition]
                 })
 
                 if not launch_info then
