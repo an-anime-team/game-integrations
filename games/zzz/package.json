@@ -3,7 +3,9 @@
     "inputs": {
         "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/iterable/iterable.luau",
         "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/settings/settings.luau",
+        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/package.json",
         "lua-proton": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/lua-proton/package.json",
+        "sophon-tools": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/sophon-tools/sophon-tools.luau",
         "locales-src": "locales.toml"
     },
     "outputs": {
