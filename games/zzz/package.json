@@ -6,6 +6,7 @@
         "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/package.json",
         "lua-proton": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/lua-proton/package.json",
         "sophon-tools": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/sophon-tools/sophon-tools.luau",
+        "nixos-command-wrapper": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/nixos-command-wrapper/nixos-command-wrapper.luau",
         "locales-src": "locales.toml"
     },
     "outputs": {
