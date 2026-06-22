@@ -274,9 +274,18 @@ return function()
             end,
 
             get_launch_info = function(variant: GameVariant)
-                return lua_proton.game.wrap_launch_info({
+                local launch_info = lua_proton.game.wrap_launch_info({
                     binary = GAME_BINARY[variant.edition or "global" :: GameEdition]
                 })
+
+                if not launch_info then
+                    return nil
+                end
+
+                -- Wrap game launch command with steam-run for NixOS hosts.
+                local nixos_wrapper = import("nixos-command-wrapper")
+
+                return nixos_wrapper(launch_info)
             end,
 
             get_actions_pipeline = function(variant: GameVariant)

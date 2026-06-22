@@ -6,6 +6,7 @@
         "i18n": "http://127.0.0.1:8080/packages/i18n/package.json",
         "lua-proton": "http://127.0.0.1:8080/packages/lua-proton/package.json",
         "sophon-tools": "http://127.0.0.1:8080/packages/sophon-tools/sophon-tools.luau",
+        "nixos-command-wrapper": "http://127.0.0.1:8080/packages/nixos-command-wrapper/nixos-command-wrapper.luau",
         "locales-src": "locales.toml"
     },
     "outputs": {
