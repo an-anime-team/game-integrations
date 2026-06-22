@@ -9,15 +9,15 @@
         "developer": "HoYoverse",
         "publisher": "COGNOSPHERE",
         "images": {
-            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zzz/icon.png",
-            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zzz/poster.png",
-            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zzz/background.png",
+            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/icon.png",
+            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/poster.png",
+            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/background.png",
             "slides": [
-                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zzz/slide1.jpg",
-                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zzz/slide2.jpg",
-                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zzz/slide3.jpg",
-                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zzz/slide4.jpg",
-                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zzz/slide5.jpg"
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/slide1.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/slide2.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/slide3.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/slide4.jpg",
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/slide5.jpg"
             ]
         },
         "tags": [
@@ -32,7 +32,7 @@
         }
     },
     "package": {
-        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zzz/package.json",
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/package.json",
         "output": "integration"
     }
 }
