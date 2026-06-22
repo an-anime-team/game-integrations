@@ -2,12 +2,16 @@
     "format": 1,
     "games": [
         {
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/manifest.json",
+            "featured": true
+        },
+        {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/votv/manifest.json",
             "featured": true
         },
         {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/manifest.json",
-            "featured": true
+            "featured": false
         },
         {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/manifest.json",
