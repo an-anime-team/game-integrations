@@ -38,11 +38,11 @@ if not import then
     end
 end
 
-local data_dir_path: string = path.persist_dir("lua-proton")
+local DATA_DIR: string = path.persist_dir("lua-proton")
 
-local versions_dir_path: string = path.join(data_dir_path, "versions")
-local prefixes_dir_path: string = path.join(data_dir_path, "prefixes")
-local umu_launcher_path: string = path.join(data_dir_path, "umu-run")
+local PROTON_VERSIONS_DIR: string = path.join(DATA_DIR, "versions")
+local PROTON_PREFIXES_DIR: string = path.join(DATA_DIR, "prefixes")
+local UMU_BINARY_PATH: string = path.join(DATA_DIR, "umu-run")
 
 local __i18n = nil
 
@@ -145,11 +145,11 @@ end
 local function proton_list_downloaded_versions(): {ProtonVersionsGroup}
     local versions: {ProtonVersionsGroup} = {}
 
-    if not fs.exists(versions_dir_path) then
+    if not fs.exists(PROTON_VERSIONS_DIR) then
         return versions
     end
 
-    for _, entry in pairs(fs.read_dir(versions_dir_path):await()) do
+    for _, entry in pairs(fs.read_dir(PROTON_VERSIONS_DIR):await()) do
         if entry.type == "directory" then
             local found = false
 
@@ -201,7 +201,7 @@ end
 
 -- Check if a proton version with given name is downloaded.
 local function proton_version_is_downloaded(name: string): boolean
-    return fs.exists(path.join(versions_dir_path, name, "files", "bin", "wine"))
+    return fs.exists(path.join(PROTON_VERSIONS_DIR, name, "files", "bin", "wine"))
 end
 
 -- Try to get information about selected proton version.
@@ -339,7 +339,7 @@ return function(options: Options?)
     local umu_launcher = import("umu-launcher")(
         if options and options.umu_launcher and options.umu_launcher.binary_path
             then options.umu_launcher.binary_path
-            else umu_launcher_path
+            else UMU_BINARY_PATH
     )
 
     -- Check for missing dependencies.
@@ -487,7 +487,7 @@ return function(options: Options?)
 
                             archive.extract(
                                 archive_handle,
-                                versions_dir_path,
+                                PROTON_VERSIONS_DIR,
                                 function(current: number, total: number)
                                     updater({
                                         current = current,
@@ -514,12 +514,12 @@ return function(options: Options?)
 
                 -- If proton prefix is not available.
                 local proton_version_path: string = path.join(
-                    versions_dir_path,
+                    PROTON_VERSIONS_DIR,
                     proton_version_name
                 )
 
                 local proton_prefix_dir_path: string = path.join(
-                    prefixes_dir_path,
+                    PROTON_PREFIXES_DIR,
 
                     if options and options.prefix and options.prefix.name
                         then options.prefix.name
