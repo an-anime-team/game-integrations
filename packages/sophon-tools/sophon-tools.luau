@@ -1,4 +1,4 @@
--- sophon-tools v0.1.0
+-- sophon-tools v0.1.1
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,8 +20,8 @@
 -- THE SOFTWARE.
 
 local DOWNLOAD_INFO = {
-    url = "https://dawn.wine/dawn-winery/sophon-tools/releases/download/v0.1.7-beta.4/sophon-cli",
-    hash = "bc41e92020b2a3efa436e934a75930198f7084efff6295834b2a31a9b818eed8"
+    url = "https://dawn.wine/dawn-winery/sophon-tools/releases/download/v0.1.7/sophon-cli",
+    hash = "c5ac1678e5091aedecc9eee105eeb912a990f59acc21426788c1b459d81e0abe"
 }
 
 local DATA_DIR: string = path.persist_dir("sophon-tools")
