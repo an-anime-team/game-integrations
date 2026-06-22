@@ -11,7 +11,7 @@ Add `nixos-command-wrapper` package to your integration package inputs:
 ```json
 {
     "inputs": {
-        "nixos-command-wrapper": "http://127.0.0.1:8080/packages/nixos-command-wrapper/nixos-command-wrapper.luau"
+        "nixos-command-wrapper": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/nixos-command-wrapper/nixos-command-wrapper.luau"
     }
 }
 ```
