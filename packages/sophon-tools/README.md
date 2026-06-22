@@ -10,7 +10,7 @@ Add `sophon-tools` package to your integration package inputs:
 ```json
 {
     "inputs": {
-        "sophon-tools": "http://127.0.0.1:8080/packages/sophon-tools/sophon-tools.luau"
+        "sophon-tools": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/sophon-tools/sophon-tools.luau"
     }
 }
 ```
