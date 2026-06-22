@@ -10,8 +10,8 @@
             "featured": false
         },
         {
-            "url": "http://127.0.0.1:8080/games/zzz/manifest.json",
-            "featured": false
+            "url": "http://127.0.0.1:8080/games/zenless-zone-zero/manifest.json",
+            "featured": true
         },
         {
             "url": "http://127.0.0.1:8080/games/hsr/manifest.json",
@@ -31,11 +31,11 @@
         },
         {
             "url": "http://127.0.0.1:8080/games/mindustry/manifest.json",
-            "featured": false
+            "featured": true
         },
         {
             "url": "http://127.0.0.1:8080/games/factorio/manifest.json",
-            "featured": false
+            "featured": true
         }
     ]
 }
