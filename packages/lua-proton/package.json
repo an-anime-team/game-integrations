@@ -1,8 +1,8 @@
 {
     "format": 1,
     "inputs": {
-        "i18n": "http://127.0.0.1:8080/packages/i18n/package.json",
-        "umu-launcher": "http://127.0.0.1:8080/packages/umu-launcher/umu-launcher.luau",
+        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/package.json",
+        "umu-launcher": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/umu-launcher/umu-launcher.luau",
         "locales-src": "locales.toml",
         "dwproton-src": "dwproton.json"
     },

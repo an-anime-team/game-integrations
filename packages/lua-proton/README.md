@@ -10,7 +10,7 @@ Add `lua-proton` package to your integration package inputs:
 ```json
 {
     "inputs": {
-        "lua-proton": "http://127.0.0.1:8080/packages/lua-proton/package.json"
+        "lua-proton": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/lua-proton/package.json"
     }
 }
 ```
