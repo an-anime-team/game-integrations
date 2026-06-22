@@ -3,8 +3,8 @@
     "game": {
         "title": "Zenless Zone Zero",
         "description": {
-            "en": "WIP implementation used for testing",
-            "ru": "Реализация пакета, используемая для тестов"
+            "en": "Zenless Zone Zero is a free-to-play action role-playing game that takes place in a semi open-world, post-apocalyptic futuristic metropolis, New Eridu, displaying a retro and analog aesthetic. It features an interactive action-based combat system, revolving around the usage of Agents with different Specialties and Attributes.",
+            "ru": "Zenless Zone Zero - это бесплатная ролевая игра в жанре экшн, действие которой разворачивается в полуоткрытом мире, постапокалиптическом футуристическом мегаполисе Новый Эриду, в стиле ретро и аналоговой эстетики. В нем представлена интерактивная боевая система, основанная на использовании агентов с различными специальностями и атрибутами."
         },
         "developer": "HoYoverse",
         "publisher": "COGNOSPHERE",
@@ -25,7 +25,11 @@
             "payments",
             "anti-cheat",
             "workarounds"
-        ]
+        ],
+        "agreement": {
+            "en": "Current game integration has limited functionality and is released as an open beta. Follow integration development in the Dawn Winery's kitchen channel on Discord.",
+            "ru": "Текущая интеграция игры имеет ограниченный функционал и опубликована как открытая бета. Следите за новостями на Discord-сервере Dawn Winery в канале kitchen."
+        }
     },
     "package": {
         "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zzz/package.json",
