@@ -9,3 +9,4 @@
 | `4v54vm6dsocqk` | [umu-launcher v0.1.1](./umu-launcher/umu-launcher.luau)     | umu-launcher uses process API to create proton prefix           |
 | `v2qkcg7acr16q` | [NIKKE integration v0.1.0](../games/nikke/integration.luau) | NIKKE integration uses process API to run the game installer    |
 | `pbd9p95uvl0la` | [NIKKE integration v0.2.0](../games/nikke/integration.luau) | NIKKE integration uses process API to run the game installer    |
+| `hsask1j1vvf1o` | [sophon-tools v0.1.0](./sophon-tools/sophon-tools.luau)     | `sophon-tools` is a binding to a CLI which requires process API |
