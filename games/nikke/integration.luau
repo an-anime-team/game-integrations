@@ -121,12 +121,8 @@ end
 
 ----------------------------- game detection -----------------------------
 
-local function get_prefix_pfx_path(): string
-    return path.join(lua_proton_prefix_path, "pfx")
-end
-
 local function get_nikke_launcher_path(): string
-    return path.join(get_prefix_pfx_path(), "drive_c", "NIKKE", "Launcher", "nikke_launcher.exe")
+    return path.join(lua_proton_prefix_path, "pfx", "drive_c", "NIKKE", "Launcher", "nikke_launcher.exe")
 end
 
 local function is_game_installed(): boolean
@@ -364,7 +360,7 @@ local function get_game_installer_pipeline(
                     })
 
                     if not launch_info then
-                        error("proton/umu-launcher is not available to run the installer")
+                        return
                     end
 
                     local handle = process.open(launch_info.binary, launch_info.args, launch_info.env)
