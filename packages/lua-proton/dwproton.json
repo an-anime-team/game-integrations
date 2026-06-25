@@ -3,6 +3,12 @@
     "title": "dwproton",
     "versions": [
         {
+            "name": "dwproton-11.0-5-x86_64",
+            "title": "dwproton 11.0-5",
+            "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-5/dwproton-11.0-5-x86_64.tar.xz",
+            "hash": "5a31deb12e772bdaf3218c8d49f27cfc367e2003e449baf80ffdc7851cd86414"
+        },
+        {
             "name": "dwproton-11.0-4-x86_64",
             "title": "dwproton 11.0-4",
             "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-4/dwproton-11.0-4-x86_64.tar.xz",
