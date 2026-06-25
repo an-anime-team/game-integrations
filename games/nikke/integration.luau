@@ -1,4 +1,4 @@
--- GODDESS OF VICTORY: NIKKE integration v0.2.0
+-- GODDESS OF VICTORY: NIKKE integration v0.3.0
 -- Copyright (C) 2026 NelloKudo <marshnelloosu@gmail.com>
 --                    Nikita Podvirnyi <krypt0nn@vk.com>
 --
@@ -39,17 +39,14 @@ type GameVariant = {
     edition: string
 }
 
-type ProtonBuildInfo = {
-    name: string,
-    title: string,
-    url: string,
-    path: string
-}
-
 ----------------------------- constants -----------------------------
 
 local NIKKE_SITE_BASE = "https://nikke-en.com"
 local NIKKE_ASSETS_JS = `{NIKKE_SITE_BASE}/assets/aix-18872c9c.js`
+
+-- umu-launcher game identifier and lua-proton prefix folder name.
+local GAME_ID: string = "umu-nikke"
+local PREFIX_NAME: string = "goddess_of_victory_nikke"
 
 -- launch retry: seconds to wait before checking --ProductName=nikke_launcher
 local LAUNCH_MAX_RETRIES  = 10
@@ -59,14 +56,18 @@ local LAUNCH_WAIT_SECONDS = 8
 
 local data_dir_path: string = path.persist_dir("goddess_of_victory_nikke")
 
-local umu_binary_path: string = path.join(data_dir_path, "umu-run")
-local proton_builds_path: string = path.join(data_dir_path, "proton")
-local proton_prefix_path: string = path.join(data_dir_path, "prefix")
+-- lua-proton keeps proton versions and prefixes in its own persistent dir.
+local lua_proton_dir_path: string = path.persist_dir("lua-proton")
+local lua_proton_prefix_path: string = path.join(lua_proton_dir_path, "prefixes", PREFIX_NAME)
 
------------------------------ imports -----------------------------
+-- Legacy (pre lua-proton) locations kept around only for migration.
+local legacy_prefix_path: string = path.join(data_dir_path, "prefix", "nikke")
+local legacy_proton_path: string = path.join(data_dir_path, "proton")
+local legacy_umu_binary_path: string = path.join(data_dir_path, "umu-run")
+
+----------------------------- translations -----------------------------
 
 local __i18n = nil
-local __umu = nil
 
 local function i18n(...)
     if not __i18n then
@@ -81,48 +82,51 @@ local function i18n(...)
     return (__i18n)(...)
 end
 
-local function import_umu()
-    if not __umu then
-        __umu = import("umu_launcher")(umu_binary_path)
+----------------------------- migration -----------------------------
+
+-- Silently move an existing pre lua-proton install into the layout used by the
+-- lua-proton library, then drop the now-orphaned proton/umu files.
+local function migrate_legacy_install()
+    -- Move the existing wine prefix (the installed game) into lua-proton's
+    -- prefixes directory so it keeps being detected without reinstalling.
+    if fs.exists(path.join(legacy_prefix_path, "pfx"))
+        and not fs.exists(path.join(lua_proton_prefix_path, "pfx"))
+    then
+        local prefixes_dir = path.join(lua_proton_dir_path, "prefixes")
+
+        if not fs.exists(prefixes_dir) then
+            fs.create_dir(prefixes_dir):await()
+        end
+
+        fs.move(legacy_prefix_path, lua_proton_prefix_path):await()
     end
 
-    return __umu
-end
+    -- Remove the leftover legacy prefix folder (now empty) if the move happened.
+    local legacy_prefix_parent = path.join(data_dir_path, "prefix")
 
------------------------------ component management -----------------------------
-
-local __proton_builds = nil
-
-local function list_proton_builds(): { ProtonBuildInfo }
-    if not __proton_builds then
-        local src = import("dwproton-src")
-
-        local builds = fs.read_file(src):await()
-
-        __proton_builds = str.decode("json", str.from_bytes(builds))
+    if fs.exists(legacy_prefix_parent) and not fs.exists(legacy_prefix_path) then
+        fs.remove_dir(legacy_prefix_parent):await()
     end
 
-    return clone(__proton_builds)
-end
+    -- Drop the legacy proton builds (lua-proton manages its own versions).
+    if fs.exists(legacy_proton_path) then
+        fs.remove_dir(legacy_proton_path):await()
+    end
 
-local function get_latest_proton_build(): ProtonBuildInfo
-    return list_proton_builds()[1]
-end
-
-local function check_proton_build_installed(name: string): boolean
-    return fs.exists(path.join(proton_builds_path, name, "files", "bin", "wine64"))
+    -- Drop the legacy umu-run binary (lua-proton ships its own).
+    if fs.exists(legacy_umu_binary_path) then
+        fs.remove(legacy_umu_binary_path):await()
+    end
 end
 
 ----------------------------- game detection -----------------------------
 
-local function get_prefix_path(): string
-    return path.join(proton_prefix_path, "nikke")
+local function get_nikke_launcher_path(): string
+    return path.join(lua_proton_prefix_path, "pfx", "drive_c", "NIKKE", "Launcher", "nikke_launcher.exe")
 end
 
 local function is_game_installed(): boolean
-    local nikke_launcher = path.join(get_prefix_path(), "pfx", "drive_c", "NIKKE", "Launcher", "nikke_launcher.exe")
-
-    return fs.exists(nikke_launcher)
+    return fs.exists(get_nikke_launcher_path())
 end
 
 ----------------------------- game installer -----------------------------
@@ -153,10 +157,9 @@ end
 
 -- Writes a bash script that retries the launch when nikke_launcher never
 -- appears.
-local function create_launch_wrapper(prefix_path: string, proton_name: string): string
+local function create_launch_wrapper(wineprefix: string, proton_path: string): string
     local wrapper_path    = path.join(data_dir_path, "nikke-launch-wrapper.sh")
-    local wineserver_path = path.join(proton_builds_path, proton_name, "files", "bin", "wineserver")
-    local wineprefix      = path.join(prefix_path, "pfx")
+    local wineserver_path = path.join(proton_path, "files", "bin", "wineserver")
 
     local script = string.format(
         "MAX_RETRIES=%d\n"
@@ -185,6 +188,10 @@ local function create_launch_wrapper(prefix_path: string, proton_name: string): 
         wineprefix,
         wineserver_path
     )
+
+    if not fs.exists(data_dir_path) then
+        fs.create_dir(data_dir_path):await()
+    end
 
     fs.write_file(wrapper_path, str.to_bytes(script)):await()
 
@@ -264,14 +271,8 @@ end
 
 local __settings = nil
 
-local function import_settings(refresh: boolean?)
-    if not __settings or refresh == true then
-        local proton_builds = {}
-
-        for _, info in ipairs(list_proton_builds()) do
-            proton_builds[info.name] = info.title
-        end
-
+local function get_settings_layout()
+    if not __settings then
         __settings = import("settings")({
             game = "goddess_of_victory_nikke",
             layout = {
@@ -293,21 +294,6 @@ local function import_settings(refresh: boolean?)
                             }
                         }
                     }
-                },
-                proton = {
-                    title = i18n("settings_runner_title"),
-                    entries = {
-                        build_name = {
-                            title = i18n("settings_proton_title"),
-                            description = i18n("settings_proton_description"),
-                            reactivity = "release",
-                            entry = {
-                                format = "enum",
-                                values = proton_builds,
-                                default = get_latest_proton_build().name
-                            }
-                        }
-                    }
                 }
             }
         })
@@ -316,187 +302,25 @@ local function import_settings(refresh: boolean?)
     return __settings
 end
 
-local function get_selected_proton_build_name(): string?
-    return import_settings().get_property("proton.build_name")
-end
-
-local function set_selected_proton_build_name(name: string)
-    import_settings().set_property("proton.build_name", name)
-end
-
 ----------------------------- pipelines -----------------------------
 
 type PipelineUpdater = ({ current: number, total: number, format: (() -> string) | nil }) -> ()
 
-type PipelineAction = {
-    title: string | { [string]: string },
-    description: string | { [string]: string } | nil,
-    perform: any -- (updater: PipelineUpdater?) -> ()
-}
-
-type ActionsPipeline = {
-    title: string | { [string]: string },
-    description: string | { [string]: string } | nil,
-    pipeline: { PipelineAction }
-}
-
-local function get_install_umu_pipeline(): ActionsPipeline
-    return {
-        title = i18n("install_umu_title"),
-        pipeline = {
-            {
-                title = i18n("install_umu_title"),
-                perform = function(updater: PipelineUpdater)
-                    local umu = import_umu()
-
-                    umu.umu.install(function(current: number, total: number, action: "download" | "extract")
-                        updater({
-                            current = current,
-                            total = total,
-                            format = function()
-                                local current: string = string.format("%.2f", current / 1024 / 1024)
-                                local total: string   = string.format("%.2f", total   / 1024 / 1024)
-
-                                if action == "download" then
-                                    return i18n("downloading_progress_mb", {
-                                        current = current,
-                                        total   = total
-                                    })
-                                elseif action == "extract" then
-                                    return i18n("extracting_progress_mb", {
-                                        current = current,
-                                        total   = total
-                                    })
-                                else
-                                    return i18n("processing_progress_mb", {
-                                        current = current,
-                                        total   = total
-                                    })
-                                end
-                            end
-                        })
-                    end)
-                end
-            }
-        }
-    }
-end
-
-local function get_install_proton_build_pipeline(name: string?): ActionsPipeline
-    local info = get_latest_proton_build()
-
-    if typeof(name) == "string" then
-        local iter = import("iterable")
-
-        local found_info = iter(list_proton_builds())
-            .find(function(info: ProtonBuildInfo)
-                return info.name == name
-            end)
-
-        if found_info or not info then
-            info = found_info
-        end
-    end
-
-    local archive_path: string = path.join(path.temp_dir(), "goddes_of_victory_nikke", `{info.name}.tar.xz`)
-    local extract_path: string = path.join(path.temp_dir(), "goddes_of_victory_nikke", info.name)
-    local final_path: string   = path.join(proton_builds_path, info.name)
-
-    return {
-        title = i18n("install_proton_title"),
-        pipeline = {
-            {
-                title = i18n("download_proton_title"),
-                perform = function(updater: PipelineUpdater)
-                    local downloader_handle = downloader.create()
-
-                    local task_handle = downloader.download(downloader_handle, {
-                        url = info.url,
-                        output_file = archive_path,
-                        continue_download = true,
-                        on_update = function(current: number, total: number)
-                            updater({
-                                current = current,
-                                total = total,
-                                format = function()
-                                    return i18n("downloading_progress_mb", {
-                                        current = string.format("%.2f", current / 1024 / 1024),
-                                        total   = string.format("%.2f", total   / 1024 / 1024)
-                                    })
-                                end
-                            })
-                        end
-                    })
-
-                    downloader.wait(task_handle)
-                    downloader.close(downloader_handle)
-                end
-            },
-            {
-                title = i18n("extract_proton_title"),
-                perform = function(updater: PipelineUpdater)
-                    if not fs.exists(extract_path) then
-                        fs.create_dir(extract_path):await()
-                    end
-
-                    local archive_handle = archive.open(archive_path)
-
-                    archive.extract(
-                        archive_handle,
-                        extract_path,
-                        function(current: number, total: number)
-                            updater({
-                                current = current,
-                                total = total,
-                                format = function()
-                                    return i18n("extracting_progress_mb", {
-                                        current = string.format("%.2f", current / 1024 / 1024),
-                                        total   = string.format("%.2f", total   / 1024 / 1024)
-                                    })
-                                end
-                            })
-                        end
-                    )
-
-                    archive.close(archive_handle)
-
-                    fs.remove(archive_path):await()
-                    fs.move(path.join(extract_path, info.path), final_path):await()
-                    fs.remove(extract_path):await()
-
-                    set_selected_proton_build_name(info.name)
-                end
-            }
-        }
-    }
-end
-
--- Download the official NIKKE installer and place it at a known path inside the
--- wine prefix so the user can run it manually once
+-- Download the official NIKKE installer and run it inside the proton prefix so
+-- the user can complete the installation once.
 local function get_game_installer_pipeline(
+    lua_proton: any,
     installer_url: string,
     installer_filename: string
-): ActionsPipeline
+)
     local installer_path = path.join(path.temp_dir(), installer_filename)
-
-    local wine_env = {
-        GAMEID           = "umu-nikke",
-        WINEDEBUG        = "",
-        PROTON_USE_WOW64 = "1"
-    }
 
     return {
         title = i18n("download_nikke_installer_title"),
         pipeline = {
             {
                 title = i18n("download_installer_title"),
-                perform = function(updater)
-                    local prefix_path = get_prefix_path()
-
-                    if not fs.exists(prefix_path) then
-                        fs.create_dir(prefix_path):await()
-                    end
-
+                perform = function(updater: PipelineUpdater)
                     local downloader_handle = downloader.create()
 
                     local task_handle = downloader.download(downloader_handle, {
@@ -521,48 +345,25 @@ local function get_game_installer_pipeline(
                 end
             },
             {
-                title = i18n("prepare_prefix_title"),
-                perform = function(updater)
-                    local prefix_path = get_prefix_path()
-
-                    if not fs.exists(prefix_path) then
-                        fs.create_dir(prefix_path):await()
-                    end
-
-                    local proton_name = get_selected_proton_build_name()
-                    local proton_path = path.join(proton_builds_path, proton_name)
-
-                    wine_env["PROTONPATH"] = proton_path
-                    wine_env["WINEPREFIX"] = path.join(prefix_path, "pfx")
-
-                    local umu = import_umu()
-
-                    if not umu.umu.verify() then
-                        error("umu-launcher binary is invalid")
-                    end
-
-                    if not umu.prefix.create(proton_path, prefix_path) then
-                        error("failed to initialize prefix with umu-launcher")
-                    end
-                end
-            },
-            {
                 title = i18n("run_installer_title"),
                 description = i18n("installer_running"),
                 perform = function()
-                    local umu = import_umu()
-
-                    local info = umu.umu.wrap({
+                    -- The proton prefix is created by lua-proton's actions
+                    -- pipeline, so by this point wrapping the installer command
+                    -- gives us a ready-to-run umu-launcher invocation.
+                    local launch_info = lua_proton.game.wrap_launch_info({
                         binary = installer_path,
-                        args   = {},
-                        env    = wine_env
+                        args = {},
+                        env = {
+                            PROTON_USE_WOW64 = "1"
+                        }
                     })
 
-                    if not umu.umu.verify() then
-                        error("umu-launcher binary is invalid")
+                    if not launch_info then
+                        return
                     end
 
-                    local handle = process.open(info.binary, info.args, info.env)
+                    local handle = process.open(launch_info.binary, launch_info.args, launch_info.env)
 
                     process.wait(handle)
                 end
@@ -574,51 +375,70 @@ end
 ----------------------------- module -----------------------------
 
 return function()
+    local iter = import("iterable")
+
+    -- Move an existing pre lua-proton install into the new layout, if any.
+    migrate_legacy_install()
+
+    local settings = get_settings_layout()
+
+    local lua_proton = import("lua-proton").proton({
+        umu_launcher = {
+            game_id = GAME_ID
+        },
+
+        prefix = {
+            name = PREFIX_NAME
+        },
+
+        settings = {
+            get_property = settings.get_property,
+            set_property = settings.set_property
+        }
+    })
+
     return {
         game = {
             get_launch_info = function(
                 variant: GameVariant
             ): { binary: string, args: { string }, env: { [string]: string } }?
-                local umu_launcher = import_umu()
-
-                if not umu_launcher.umu.verify() then
-                    return nil
-                end
-
-                local settings = import_settings()
-                local selected_proton_build = get_selected_proton_build_name()
-
-                if not selected_proton_build or not check_proton_build_installed(selected_proton_build) then
-                    return nil
-                end
-
+                -- Check if the game is installed.
                 if not is_game_installed() then
                     return nil
                 end
 
-                local prefix_path    = get_prefix_path()
-                local nikke_launcher = path.join(prefix_path, "pfx", "drive_c", "NIKKE", "Launcher", "nikke_launcher.exe")
-                local proton_path    = path.join(proton_builds_path, selected_proton_build)
+                -- Try to obtain game launch info from the lua-proton library.
+                -- It will return nil if selected proton is not available.
+                local wrapped = lua_proton.game.wrap_launch_info({
+                    binary = get_nikke_launcher_path(),
+                    args = {},
+                    env = {
+                        PROTON_USE_WOW64 = "1"
+                    }
+                })
 
-                -- retry wrapper: kill wineserver + relaunch if nikke_launcher never appears
-                local wrapper_path = create_launch_wrapper(prefix_path, selected_proton_build)
+                if not wrapped then
+                    return nil
+                end
+
+                -- retry wrapper: kill wineserver + relaunch if nikke_launcher
+                -- never appears.
+                local wrapper_path = create_launch_wrapper(
+                    wrapped.env["WINEPREFIX"],
+                    wrapped.env["PROTONPATH"]
+                )
 
                 local launch_info = {
                     binary = "bash",
-                    args = {
-                        wrapper_path,
-                        umu_binary_path,
-                        nikke_launcher
-                    },
-                    env = {
-                        PROTONPATH       = proton_path,
-                        WINEPREFIX       = path.join(prefix_path, "pfx"),
-                        GAMEID           = "umu-nikke",
-                        WINEDEBUG        = "",
-                        PROTON_USE_WOW64 = "1"
-                    }
+                    args = { wrapper_path, wrapped.binary },
+                    env = wrapped.env
                 }
 
+                for _, arg in ipairs(wrapped.args) do
+                    table.insert(launch_info.args, arg)
+                end
+
+                -- Apply user-defined command wrapper.
                 local command_wrapper = settings.get_property("launcher.command_wrapper")
 
                 if command_wrapper and command_wrapper ~= "" then
@@ -634,50 +454,18 @@ return function()
                     launch_info.env["MANGOHUD"] = "1"
                 end
 
-                return launch_info
+                -- Wrap game launch command with steam-run for NixOS hosts.
+                local nixos_wrapper = import("nixos-command-wrapper")
+
+                return nixos_wrapper(launch_info)
             end,
 
             get_actions_pipeline = function(variant: GameVariant): any
-                local umu_launcher = import_umu()
+                -- Install/update umu-launcher, proton and the prefix.
+                local proton_pipeline = lua_proton.game.get_actions_pipeline()
 
-                local umu_status, umu_reason = umu_launcher.umu.verify()
-
-                if not umu_status then
-                    if umu_reason == "invalid_hash" then
-                        return get_install_umu_pipeline()
-                    elseif umu_reason == "missing_python3_binary" then
-                        portal.toast({ message = i18n("umu_launcher_missing_python3") })
-                    elseif umu_reason == "missing_bwrap_binary" then
-                        portal.toast({ message = i18n("umu_launcher_missing_bwrap") })
-                    else
-                        portal.toast({ message = i18n("umu_launcher_invalid_status") })
-                    end
-
-                    return nil
-                end
-
-                -- Read selected proton build name
-                local selected_proton_build = get_selected_proton_build_name()
-
-                -- If none is selected or selected build is not installed then
-                -- return a pipeline to download a new proton build
-                if not selected_proton_build or not check_proton_build_installed(selected_proton_build) then
-                    return get_install_proton_build_pipeline(selected_proton_build)
-                end
-
-                -- If some build is selected then try to find it in installed
-                -- proton builds list
-                local iter = import("iterable")
-
-                local is_build_available: boolean = iter(list_proton_builds())
-                    .any(function(info: ProtonBuildInfo)
-                        return info.name == selected_proton_build
-                    end)
-
-                -- If it's not found - then return a pipeline to install the
-                -- latest available one
-                if not is_build_available then
-                    return get_install_proton_build_pipeline()
+                if proton_pipeline then
+                    return proton_pipeline
                 end
 
                 -- If the game is not installed - then return a pipeline to
@@ -686,11 +474,11 @@ return function()
                     local result, installer_info = pcall(get_installer_info)
 
                     if not result then
-                        -- Show error message here?
                         return nil
                     end
 
                     return get_game_installer_pipeline(
+                        lua_proton,
                         installer_info.url,
                         installer_info.filename
                     )
@@ -720,27 +508,32 @@ return function()
 
             uninstall = function(variant: GameVariant, component: string)
                 if component == "launcher" then
-                    fs.remove_dir(data_dir_path):await()
+                    if fs.exists(data_dir_path) then
+                        fs.remove_dir(data_dir_path):await()
+                    end
+
+                    -- Remove this game's proton prefix while keeping the shared
+                    -- proton versions intact.
+                    if fs.exists(lua_proton_prefix_path) then
+                        fs.remove_dir(lua_proton_prefix_path):await()
+                    end
                 end
             end
         },
 
         settings = {
             get_layout = function(variant: GameVariant)
-                local settings = import_settings(true)
-
-                return settings.get_layout(variant)
+                return iter({})
+                    .chain(settings.get_layout(variant))
+                    .chain(lua_proton.settings.get_layout(variant))
+                    .collect()
             end,
 
             get_property = function(name: string): any
-                local settings = import_settings()
-
                 return settings.get_property(name)
             end,
 
             set_property = function(name: string, value: any)
-                local settings = import_settings()
-
                 settings.set_property(name, value)
             end
         }
