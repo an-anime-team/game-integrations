@@ -22,29 +22,45 @@ ru = "Размер кеша"
 en = "Game downloader"
 ru = "Загрузчик игры"
 
-[sophon_tools_use_memory_buffer_title]
-en = "Use memory buffer"
-ru = "Использовать системную память как буфер"
+[sophon_tools_settings_user_agent_title]
+en = "User agent"
+ru = "Браузер (user-agent)"
 
-[sophon_tools_use_memory_buffer_description]
-en = "Store downloaded chunks in memory instead of writing them to disk"
-ru = "Использовать системную память для хранения загруженных данных вместо того, чтобы записывать их на диск"
+[sophon_tools_settings_user_agent_description]
+en = "User agent string to use for API requests and files downloads"
+ru = "Строка браузера (user agent), которая будет использована для запросов к API и скачивания файлов"
 
-[sophon_tools_memory_buffer_size_title]
-en = "Memory buffer size (megabytes)"
-ru = "Размер буфера (в мегабайтах)"
+[sophon_tools_settings_proxy_title]
+en = "Proxy"
+ru = "Прокси"
 
-[sophon_tools_memory_buffer_size_description]
-en = "Maximal size of chunks data which can be stored in system memory"
-ru = "Максимальный размер загруженных данных, которые можно хранить в системной памяти"
+[sophon_tools_settings_proxy_description]
+en = "Proxy string to use for API requests and files downloads"
+ru = "Прокси, который будет использован для запросов к API и скачивания файлов"
 
-[sophon_tools_threads_num_title]
-en = "Downloader threads"
-ru = "Количество потоков загрузки"
+[sophon_tools_settings_threads_title]
+en = "Runtime threads"
+ru = "Количество потоков"
 
-[sophon_tools_threads_num_description]
-en = "Maximal amount of streams that can be used to download and patch files"
-ru = "Максимальное количество потоков, которые могут быть использованы для загрузки и обработки файлов"
+[sophon_tools_settings_threads_description]
+en = "Amount of threads to use in the tokio async runtime. Keep 0 to use default value."
+ru = "Количество потоков, которые будут использованы асинхронным планировщиком задач tokio. При 0 будет использовано значение по умолчанию."
+
+[sophon_tools_settings_target_memory_usage_title]
+en = "Target memory usage"
+ru = "Использование системной памяти"
+
+[sophon_tools_settings_target_memory_usage_description]
+en = "Minimal amount of system memory in mebibytes available to downloader. Higher value will allow downloading more files in parallel."
+ru = "Минимальное количество системной памяти в мебибайтах, доступное загрузчику. Большее значение позволит скачивать больше файлов одновременно."
+
+[sophon_tools_settings_fast_verify_title]
+en = "Fast verify"
+ru = "Быстрая проверка"
+
+[sophon_tools_settings_fast_verify_description]
+en = "Use files sizes for verifications instead of calculating md5 hashes"
+ru = "Использовать размеры файлов для проверок вместо вычислений md5 хешей"
 
 # ----------------------------- pipeline -----------------------------
 
@@ -55,3 +71,19 @@ ru = "Загрузить sophon-tools"
 [sophon_tools_game_update_not_supported]
 en = "Game integration does not support game updating yet"
 ru = "Обновление игры пока что не поддерживается"
+
+[fetch_download_info_title]
+en = "Fetch download info"
+ru = "Запрос информации о загрузке"
+
+[verify_available_files_title]
+en = "Verify available files"
+ru = "Проверка доступных файлов"
+
+[download_new_files_title]
+en = "Download new files"
+ru = "Загрузка новых файлов"
+
+[finalize_download_title]
+en = "Finalize game download"
+ru = "Завершение загрузки игры"
