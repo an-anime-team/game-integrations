@@ -68,10 +68,6 @@ ru = "Использовать размеры файлов для проверо
 en = "Download sophon-tools"
 ru = "Загрузить sophon-tools"
 
-[sophon_tools_game_update_not_supported]
-en = "Game integration does not support game updating yet"
-ru = "Обновление игры пока что не поддерживается"
-
 [fetch_download_info_title]
 en = "Fetch download info"
 ru = "Запрос информации о загрузке"
@@ -87,3 +83,23 @@ ru = "Загрузка новых файлов"
 [finalize_download_title]
 en = "Finalize game download"
 ru = "Завершение загрузки игры"
+
+[fetch_update_info_title]
+en = "Fetch update info"
+ru = "Запрос информации об обновлении"
+
+[download_files_patches_title]
+en = "Download update files"
+ru = "Загрузка файлов обновления"
+
+[patch_update_files_title]
+en = "Update game files"
+ru = "Обновление файлов игры"
+
+[verify_updated_files_title]
+en = "Verify updated files"
+ru = "Проверка обновлённых файлов"
+
+[repair_files_title]
+en = "Repair game files"
+ru = "Исправление файлов игры"
