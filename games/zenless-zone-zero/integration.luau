@@ -1,4 +1,4 @@
--- ZZZ integration v0.2.0
+-- ZZZ integration v0.2.1
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -650,6 +650,8 @@ return function()
 
     local settings = get_settings_layout()
 
+    local sophon_tools = import("sophon-tools")()
+
     local lua_proton = import("lua-proton").proton({
         umu_launcher = {
             game_id = "umu-zenlesszonezero"
@@ -659,13 +661,26 @@ return function()
             name = "zenless_zone_zero"
         },
 
+        components = {
+            get_enabled = function() return true end,
+            set_enabled = function() end,
+
+            uninstall = function(
+                variant: GameVariant,
+                component: string,
+                updater: any
+            )
+                if component == "sophon_tools_cache" then
+                    sophon_tools.cache.clear():await()
+                end
+            end
+        },
+
         settings = {
             get_property = settings.get_property,
             set_property = settings.set_property
         }
     })
-
-    local sophon_tools = import("sophon-tools")()
 
     return {
         game = {
@@ -690,9 +705,9 @@ return function()
                     return nil
                 end
 
+                -- Check if the game is installed.
                 local game_version = game_version_read(variant.edition)
 
-                -- Return if game is not installed.
                 if not game_version then
                     return nil
                 end
@@ -703,10 +718,15 @@ return function()
                     return nil
                 end
 
+                -- Check if lua-proton is ready to launch the game.
+                if not lua_proton.game.can_launch() then
+                    return nil
+                end
+
+                -- Fetch list of available game versions.
                 local user_agent = settings.get_property("sophon_tools.user_agent")
                 local proxy = settings.get_property("sophon_tools.proxy")
 
-                -- Fetch list of available game versions.
                 local game_versions = sophon_tools.api.versions({
                     game_id = SOPHON_GAME_ID[variant.edition],
                     api = {
@@ -718,7 +738,7 @@ return function()
                     }
                 }):await()
 
-                -- Return if installed game version is not latest.
+                -- Check if installed game version is not latest.
                 if game_version ~= game_versions[1].version then
                     return nil
                 end
@@ -810,7 +830,7 @@ return function()
             get_layout = function(variant: GameVariant)
                 local cache_size = sophon_tools.cache.get_size():await()
 
-                return {
+                local components = {
                     {
                         title = i18n("sophon_tools_components_title"),
                         entries = {
@@ -832,20 +852,17 @@ return function()
                         }
                     }
                 }
+
+                return iter({})
+                    .chain(components)
+                    .chain(lua_proton.components.get_layout(variant))
+                    .collect()
             end,
 
-            get_enabled = function() return true end,
-            set_enabled = function() end,
+            get_enabled = lua_proton.components.get_enabled,
+            set_enabled = lua_proton.components.set_enabled,
 
-            uninstall = function(
-                variant: GameVariant,
-                component: string,
-                updater: (progress: any) -> ()
-            )
-                if component == "sophon_tools_cache" then
-                    sophon_tools.cache.clear():await()
-                end
-            end
+            uninstall = lua_proton.components.uninstall
         },
 
         settings = {
