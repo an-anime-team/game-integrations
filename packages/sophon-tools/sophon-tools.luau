@@ -1,4 +1,4 @@
--- sophon-tools v0.2.0
+-- sophon-tools v0.2.1
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1101,7 +1101,7 @@ return function(binary_path: string?)
                     and typeof(options.verify_before_updating) == "string"
                     and #options.verify_before_updating > 0
                 then
-                    table.insert(args, "--verify-before-downloading")
+                    table.insert(args, "--verify-before-updating")
                     table.insert(args, options.verify_before_updating)
                 end
 
