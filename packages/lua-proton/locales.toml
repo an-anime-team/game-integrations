@@ -1,3 +1,19 @@
+[components_group_proton_title]
+en = "Proton"
+ru = "Proton"
+
+[components_proton_prefix_title]
+en = "Proton prefix"
+ru = "Префикс Proton"
+
+[components_proton_prefix_description]
+en = "Extracted Windows compatibility libraries and game related settings. Disable the checkbox and press 'Apply changes' button to delete it"
+ru = "Распакованные библиотеки совместимости с Windows и связанные с игрой настройки. Выключите переключатель и нажмите на кнопку 'Применить изменения' чтобы удалить их"
+
+[proton_prefix_size_title]
+en = "Prefix size"
+ru = "Размер префикса"
+
 [settings_group_proton_title]
 en = "Proton"
 ru = "Proton"
