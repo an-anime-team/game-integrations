@@ -111,34 +111,50 @@ local function get_settings_layout()
                 sophon_tools = {
                     title = i18n("sophon_tools_settings_title"),
                     entries = {
-                        use_memory_buffer = {
-                            title = i18n("sophon_tools_use_memory_buffer_title"),
-                            description = i18n("sophon_tools_use_memory_buffer_description"),
+                        user_agent = {
+                            title = i18n("sophon_tools_settings_user_agent_title"),
+                            description = i18n("sophon_tools_settings_user_agent_description"),
                             entry = {
-                                format = "switch",
-                                default = false
+                                format = "text",
+                                default = ""
                             }
                         },
-                        memory_buffer_size = {
-                            title = i18n("sophon_tools_memory_buffer_size_title"),
-                            description = i18n("sophon_tools_memory_buffer_size_description"),
+                        proxy = {
+                            title = i18n("sophon_tools_settings_proxy_title"),
+                            description = i18n("sophon_tools_settings_proxy_description"),
+                            entry = {
+                                format = "text",
+                                default = ""
+                            }
+                        },
+                        threads = {
+                            title = i18n("sophon_tools_settings_threads_title"),
+                            description = i18n("sophon_tools_settings_threads_description"),
+                            entry = {
+                                format = "number",
+                                min = 0,
+                                max = 32,
+                                step = 1,
+                                default = 0
+                            }
+                        },
+                        target_memory_usage = {
+                            title = i18n("sophon_tools_settings_target_memory_usage_title"),
+                            description = i18n("sophon_tools_settings_target_memory_usage_description"),
                             entry = {
                                 format = "number",
                                 min = 64,
-                                max = 4096,
+                                max = 2048,
                                 step = 64,
                                 default = 256
                             }
                         },
-                        threads_num = {
-                            title = i18n("sophon_tools_threads_num_title"),
-                            description = i18n("sophon_tools_threads_num_description"),
+                        fast_verify = {
+                            title = i18n("sophon_tools_settings_fast_verify_title"),
+                            description = i18n("sophon_tools_settings_fast_verify_description"),
                             entry = {
-                                format = "number",
-                                min = 1,
-                                max = 32,
-                                step = 1,
-                                default = 2
+                                format = "switch",
+                                default = false
                             }
                         }
                     }
@@ -151,14 +167,6 @@ local function get_settings_layout()
 end
 
 ----------------------------- pipelines -----------------------------
-
-type DownloadGameOptions = {
-    game_edition: GameEdition,
-    game_version: string,
-    use_memory_buffer: boolean?,
-    memory_buffer_size: number?,
-    threads_num: number?
-}
 
 local function get_update_sophon_tools_pipeline(sophon_tools: any)
     return {
@@ -186,48 +194,158 @@ local function get_update_sophon_tools_pipeline(sophon_tools: any)
     }
 end
 
-local function get_download_game_pipeline(sophon_tools: any, options: DownloadGameOptions)
+local function get_download_game_pipeline(
+    sophon_tools: any,
+    options: {
+        edition: GameEdition;
+        threads: number?;
+        target_memory_usage: number?;
+        fast_verify: boolean?,
+        user_agent: string?;
+        proxy: string?;
+    }
+)
+    local future = nil
+
+    local progress = {
+        fetch_info = false,
+        verify = { current = 0, total = 0, finished = false },
+        download = { current = 0, total = 0, finished = false }
+    }
+
     return {
         title = i18n("install_game_title"),
         pipeline = {
             {
-                title = i18n("download_game_files_title"),
+                title = i18n("fetch_download_info_title"),
 
-                perform = function(updater)
-                    local download_options = {
-                        region = options.game_edition,
-                        game_id = SOPHON_GAME_ID[options.game_edition],
-                        game_dir = GAME_DIR[options.game_edition],
+                perform = function()
+                    local options = {
+                        game_id = SOPHON_GAME_ID[options.edition],
+                        game_dir = GAME_DIR[options.edition],
 
-                        on_download = function(current: number, total: number)
-                            updater({
-                                current = current,
-                                total = total,
-                                format = function()
-                                    return i18n("downloading_progress_gb", {
-                                        current = string.format("%.2f", current / 1024 / 1024 / 1024),
-                                        total = string.format("%.2f", total / 1024 / 1024 / 1024)
-                                    })
-                                end
-                            })
-                        end
+                        threads = options.threads,
+                        target_memory_usage = options.target_memory_usage,
+
+                        verify_before_downloading =
+                            if options.fast_verify == true
+                                then "fast"
+                                else "full",
+
+                        api = {
+                            region = options.edition
+                        },
+
+                        network = {
+                            user_agent = options.user_agent,
+                            proxy = options.proxy
+                        }
                     }
 
-                    if options.use_memory_buffer then
-                        download_options.use_memory_buffer = options.use_memory_buffer
+                    future = sophon_tools.game.download(options, function(msg)
+                        progress.fetch_info = true
+
+                        if msg.type == "verify" then
+                            progress.verify.current = msg.current
+                            progress.verify.total = msg.total
+                        elseif msg.type == "download" then
+                            progress.verify.finished = true
+
+                            progress.download.current = msg.current
+                            progress.download.total = msg.total
+
+                            if msg.current == msg.total then
+                                progress.download.finished = true
+                            end
+                        end
+                    end)
+
+                    while not progress.fetch_info do
+                        local status, _ = future:poll()
+
+                        if status then
+                            progress.fetch_info = true
+                            progress.verify.finished = true
+                            progress.download.finished = true
+                        end
                     end
+                end
+            },
+            {
+                title = i18n("verify_available_files_title"),
 
-                    if options.memory_buffer_size then
-                        download_options.memory_buffer_size = options.memory_buffer_size * 1024 * 1024
+                before = function()
+                    return not progress.verify.finished
+                end,
+
+                perform = function(updater: any)
+                    while not progress.verify.finished do
+                        local status, _ = future:poll()
+
+                        updater({
+                            current = progress.verify.current,
+                            total = progress.verify.total,
+                            format = function()
+                                return i18n("verifying_progress_gb", {
+                                    current = string.format("%.2f", progress.verify.current / 1024 / 1024 / 1024),
+                                    total = string.format("%.2f", progress.verify.total / 1024 / 1024 / 1024)
+                                })
+                            end
+                        })
+
+                        if status then
+                            progress.fetch_info = true
+                            progress.verify.finished = true
+                            progress.download.finished = true
+                        end
                     end
+                end
+            },
+            {
+                title = i18n("download_new_files_title"),
 
-                    if options.threads_num then
-                        download_options.threads_num = options.threads_num
+                before = function()
+                    return not progress.download.finished
+                end,
+
+                perform = function(updater: any)
+                    while not progress.download.finished do
+                        local status, _ = future:poll()
+
+                        updater({
+                            current = progress.download.current,
+                            total = progress.download.total,
+                            format = function()
+                                return i18n("downloading_progress_gb", {
+                                    current = string.format("%.2f", progress.download.current / 1024 / 1024 / 1024),
+                                    total = string.format("%.2f", progress.download.total / 1024 / 1024 / 1024)
+                                })
+                            end
+                        })
+
+                        if status then
+                            progress.fetch_info = true
+                            progress.verify.finished = true
+                            progress.download.finished = true
+                        end
                     end
+                end
+            },
+            {
+                title = i18n("finalize_download_title"),
 
-                    sophon_tools.game.download(download_options)
+                perform = function()
+                    local game_info = sophon_tools.game.detect({
+                        game_dir = GAME_DIR[options.edition],
+                        network = {
+                            user_agent = options.user_agent,
+                            proxy = options.proxy
+                        }
+                    }):await()
 
-                    game_version_write(options.game_edition, options.game_version)
+                    if game_info.version then
+                        game_version_write(options.edition, game_info.version)
+                    end
                 end
             }
         }
@@ -281,21 +399,36 @@ return function()
                     return nil
                 end
 
+                local game_version = game_version_read(variant.edition)
+
+                -- Return if game is not installed.
+                if not game_version then
+                    return nil
+                end
+
                 -- If sophon-tools is not installed then we cannot fetch info
                 -- about the game, so can't verify its version.
                 if not sophon_tools.tool.verify() then
                     return nil
                 end
 
-                -- Check if the game is installed.
-                local game_info = sophon_tools.game.get_info(
-                    SOPHON_GAME_ID[variant.edition],
-                    variant.edition
-                ):await()
+                local user_agent = settings.get_property("sophon_tools.user_agent")
+                local proxy = settings.get_property("sophon_tools.proxy")
 
-                local game_version = game_version_read(variant.edition)
+                -- Fetch list of available game versions.
+                local game_versions = sophon_tools.api.versions({
+                    game_id = SOPHON_GAME_ID[variant.edition],
+                    api = {
+                        region = variant.edition
+                    },
+                    network = {
+                        user_agent = user_agent,
+                        proxy = proxy
+                    }
+                }):await()
 
-                if not game_version or game_version ~= game_info.version then
+                -- Return if installed game version is not latest.
+                if game_version ~= game_versions[1].version then
                     return nil
                 end
 
@@ -331,26 +464,37 @@ return function()
                 -- Update game files.
                 variant.edition = variant.edition or "global" :: GameEdition
 
-                local game_info = sophon_tools.game.get_info(
-                    SOPHON_GAME_ID[variant.edition],
-                    variant.edition
-                ):await()
+                local user_agent = settings.get_property("sophon_tools.user_agent")
+                local proxy = settings.get_property("sophon_tools.proxy")
 
                 local game_version = game_version_read(variant.edition)
 
-                -- Game not installed.
+                -- Get pipeline to download game files if it's not available.
                 if not game_version then
                     return get_download_game_pipeline(sophon_tools, {
-                        game_edition = variant.edition,
-                        game_version = game_info.version,
-
-                        use_memory_buffer = settings.get_property("sophon_tools.use_memory_buffer"),
-                        memory_buffer_size = settings.get_property("sophon_tools.memory_buffer_size"),
-                        threads_num = settings.get_property("sophon_tools.threads_num")
+                        edition = variant.edition,
+                        threads = settings.get_property("sophon_tools.threads"),
+                        target_memory_usage = settings.get_property("sophon_tools.threads"),
+                        fast_verify = settings.get_property("sophon_tools.fast_verify"),
+                        user_agent = user_agent,
+                        proxy = proxy
                     })
+                end
+
+                -- Fetch list of available game versions.
+                local game_versions = sophon_tools.api.versions({
+                    game_id = SOPHON_GAME_ID[variant.edition],
+                    api = {
+                        region = variant.edition
+                    },
+                    network = {
+                        user_agent = user_agent,
+                        proxy = proxy
+                    }
+                }):await()
 
                 -- We can't update games yet.
-                elseif game_version ~= game_info.version then
+                if game_version ~= game_versions[1].version then
                     portal.toast({ message = i18n("sophon_tools_game_update_not_supported") })
                 end
 
