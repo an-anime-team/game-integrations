@@ -12,3 +12,4 @@
 | `8634jdgcmnpg6` | [NIKKE integration v0.3.0](../games/nikke/integration.luau) | NIKKE integration uses process API to run the game installer    |
 | `hsask1j1vvf1o` | [sophon-tools v0.1.0](./sophon-tools/sophon-tools.luau)     | `sophon-tools` is a binding to a CLI which requires process API |
 | `ku391s887n0s4` | [sophon-tools v0.1.1](./sophon-tools/sophon-tools.luau)     | `sophon-tools` is a binding to a CLI which requires process API |
+| `hnu8hsdedacne` | [sophon-tools v0.2.0](./sophon-tools/sophon-tools.luau)     | `sophon-tools` is a binding to a CLI which requires process API |
