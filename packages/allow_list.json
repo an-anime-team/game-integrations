@@ -48,5 +48,10 @@
         "api": {
             "process": true
         }
+    },
+    "hnu8hsdedacne": {
+        "api": {
+            "process": true
+        }
     }
 }
