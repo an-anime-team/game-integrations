@@ -53,5 +53,10 @@
         "api": {
             "process": true
         }
+    },
+    "mb8907ohevv0s": {
+        "api": {
+            "process": true
+        }
     }
 }
