@@ -1,4 +1,4 @@
--- ZZZ integration v0.2.1
+-- ZZZ integration v0.2.2
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -108,6 +108,19 @@ local function get_settings_layout()
         __settings = import("settings")({
             game = "zenless_zone_zero",
             layout = {
+                game = {
+                    title = i18n("game"),
+                    entries = {
+                        timeout_fix = {
+                            title = i18n("game_timeout_fix_title"),
+                            description = i18n("game_timeout_fix_description"),
+                            entry = {
+                                format = "switch",
+                                default = false
+                            }
+                        }
+                    }
+                },
                 sophon_tools = {
                     title = i18n("sophon_tools_settings_title"),
                     entries = {
@@ -746,7 +759,10 @@ return function()
                 -- Try to obtain game launch info from the lua-proton library.
                 -- It will return nil if selected proton is not available.
                 local launch_info = lua_proton.game.wrap_launch_info({
-                    binary = GAME_BINARY[variant.edition]
+                    binary = GAME_BINARY[variant.edition],
+                    env = {
+                        WINE_ENABLE_TIMEOUT_FIX = if settings.get_property("game.timeout_fix") == true then "1" else "0"
+                    }
                 })
 
                 if not launch_info then
