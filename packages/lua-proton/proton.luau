@@ -1,4 +1,4 @@
--- lua-proton v0.1.0
+-- lua-proton v0.2.0
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -242,36 +242,53 @@ type Options = {
     proton: {
         -- Whether or not to use default proton versions provided by the
         -- library. Default is true.
-        use_base_versions: boolean?,
+        use_base_versions: boolean?;
 
         -- List of additional proton versions.
-        extra_versions: {ProtonVersionsGroup}?
-    }?,
+        extra_versions: {ProtonVersionsGroup}?;
+    }?;
 
     umu_launcher: {
         -- Path to the umu-run binary. If unset, then default path is used.
-        binary_path: string?,
+        binary_path: string?;
 
         -- umu-launcher game identifier.
-        game_id: string?
+        game_id: string?;
     }?,
 
     prefix: {
         -- Name of the proton prefix folder. If unset, then umu-launcher's game
         -- identifier will be used. If it's unset too, then "common" will be
         -- used.
-        name: string?
-    }?,
+        name: string?;
+    }?;
+
+    components: {
+        -- Components enable getter. If set, the lua-proton's
+        -- `components.get_enable` will call this function on external
+        -- components.
+        get_enabled: ((name: string) -> any)?;
+
+        -- Components enable setter. If set, the lua-proton's
+        -- `components.set_enabled` will call this function on external
+        -- components.
+        set_enabled: ((name: string, value: any) -> ())?;
+
+        -- Components uninstaller. If set, the lua-proton's
+        -- `components.uninstall` will call this function on external
+        -- components.
+        uninstall: ((variant: any, component: any, updater: any) -> ())?;
+    }?;
 
     settings: {
         -- Proton settings getter. If unset, only default settings values will
         -- be used.
-        get_property: ((name: string) -> any)?,
+        get_property: ((name: string) -> any)?;
 
         -- Proton settings setter. If unset, settings changes will never be
         -- saved.
-        set_property: ((name: string, value: any) -> ())?
-    }?
+        set_property: ((name: string, value: any) -> ())?;
+    }?;
 }
 
 return function(options: Options?)
@@ -357,6 +374,17 @@ return function(options: Options?)
         portal.toast({ message = i18n("umu_launcher_missing_bwrap") })
     end
 
+    -- Prepare prefix name and path and calculate prefix size if it exists.
+    local proton_prefix_name: string =
+        if options and options.prefix and options.prefix.name
+            then options.prefix.name
+        elseif options and options.umu_launcher and options.umu_launcher.game_id
+            then options.umu_launcher.game_id
+        else
+            "common"
+
+    local proton_prefix_path: string = path.join(PROTON_PREFIXES_DIR, proton_prefix_name)
+
     return {
         proton = {
             register_versions = proton_register_versions,
@@ -364,6 +392,11 @@ return function(options: Options?)
             list_downloaded_versions = proton_list_downloaded_versions,
             is_version_downloaded = proton_version_is_downloaded,
             get_version_info = proton_version_get_info
+        },
+
+        prefix = {
+            name = clone(proton_prefix_name),
+            path = clone(proton_prefix_path)
         },
 
         game = {
@@ -524,17 +557,7 @@ return function(options: Options?)
                     proton_version_name
                 )
 
-                local proton_prefix_dir_path: string = path.join(
-                    PROTON_PREFIXES_DIR,
-
-                    if options and options.prefix and options.prefix.name
-                        then options.prefix.name
-                    elseif options and options.umu_launcher and options.umu_launcher.game_id
-                        then options.umu_launcher.game_id
-                    else "common"
-                )
-
-                if not umu_launcher.prefix.verify(proton_prefix_dir_path) then
+                if not umu_launcher.prefix.verify(proton_prefix_path) then
                     table.insert(actions, {
                         title = i18n("create_proton_prefix_title"),
 
@@ -542,7 +565,7 @@ return function(options: Options?)
                             pcall(
                                 umu_launcher.prefix.create,
                                 proton_version_path,
-                                proton_prefix_dir_path
+                                proton_prefix_path
                             )
                         end
                     })
@@ -556,6 +579,31 @@ return function(options: Options?)
                         pipeline = actions
                     }
                 end
+            end,
+
+            -- Check if the proton is ready to launch the game.
+            can_launch = function()
+                -- If umu-launcher is not installed.
+                local umu_available, umu_status = umu_launcher.umu.verify()
+
+                if not umu_available and umu_status == "invalid_hash" then
+                    return false
+                end
+
+                -- If selected proton version is not installed.
+                local proton_version_name = settings_get_property("proton_version_name")
+                local proton_version_info = proton_version_get_info(proton_version_name)
+
+                if proton_version_info and not proton_version_is_downloaded(proton_version_name) then
+                    return false
+                end
+
+                -- If proton prefix is not available.
+                if not umu_launcher.prefix.verify(proton_prefix_path) then
+                    return false
+                end
+
+                return true
             end,
 
             -- Wrap given game launch info, or return nil if proton/umu-launcher
@@ -574,20 +622,10 @@ return function(options: Options?)
                     selected_proton_version_name
                 )
 
-                local proton_prefix_dir_path: string = path.join(
-                    PROTON_PREFIXES_DIR,
-
-                    if options and options.prefix and options.prefix.name
-                        then options.prefix.name
-                    elseif options and options.umu_launcher and options.umu_launcher.game_id
-                        then options.umu_launcher.game_id
-                    else "common"
-                )
-
                 local umu_env = launch_info.env or {}
 
                 umu_env["PROTONPATH"] = proton_version_path
-                umu_env["WINEPREFIX"] = path.join(proton_prefix_dir_path, "pfx")
+                umu_env["WINEPREFIX"] = path.join(proton_prefix_path, "pfx")
 
                 if options and options.umu_launcher and options.umu_launcher.game_id then
                     umu_env["GAMEID"] = options.umu_launcher.game_id
@@ -596,6 +634,115 @@ return function(options: Options?)
                 launch_info.env = umu_env
 
                 return umu_launcher.umu.wrap(launch_info)
+            end
+        },
+
+        components = {
+            get_layout = function()
+                local prefix_size = 0
+
+                if fs.exists(proton_prefix_path) then
+                    local prefix_files = {proton_prefix_path}
+
+                    for _, prefix_file_path in ipairs(prefix_files) do
+                        local status, metadata = pcall(fs.metadata, prefix_file_path)
+
+                        if not status then
+                            continue
+                        end
+
+                        if metadata.type == "file" then
+                            prefix_size += metadata.length
+                        elseif metadata.type == "directory" then
+                            local status, entries = pcall(fs.read_dir, prefix_file_path)
+
+                            if status then
+                                status, entries = pcall(await, entries)
+                            end
+
+                            if status then
+                                for _, entry in ipairs(entries) do
+                                    if entry.name == "dosdevices" then
+                                        continue
+                                    end
+
+                                    table.insert(prefix_files, entry.path)
+                                end
+                            end
+                        end
+                    end
+                end
+
+                local prefix_values = {}
+
+                if prefix_size > 0 then
+                    table.insert(prefix_values, {
+                        title = i18n("proton_prefix_size_title"),
+                        value =
+                            if prefix_size > 1024 * 1024 * 1024 then `{string.format("%.2f", prefix_size / 1024 / 1024 / 1024)} GB`
+                            elseif prefix_size > 1024 * 1024 then `{string.format("%.2f", prefix_size / 1024 / 1024)} MB`
+                            elseif prefix_size > 1024 then `{string.format("%.2f", prefix_size / 1024)} KB`
+                            else `{prefix_size} B`
+                    })
+                end
+
+                return {
+                    {
+                        title = i18n("components_group_proton_title"),
+                        entries = {
+                            {
+                                name = "proton_prefix",
+                                title = i18n("components_proton_prefix_title"),
+                                description = i18n("components_proton_prefix_description"),
+                                values = prefix_values
+                            }
+                        }
+                    }
+                }
+            end,
+
+            get_enabled = function(name: string): boolean
+                if name == "proton_prefix" then
+                    return true
+                end
+
+                if
+                    not options
+                    or not options.components
+                    or not options.components.get_enabled
+                then
+                    return true
+                end
+
+                return options.components.get_enabled(name)
+            end,
+
+            set_enabled = function(name: string, value: boolean)
+                if
+                    options
+                    and options.components
+                    and options.components.set_enabled
+                then
+                    options.components.set_enabled(name, value)
+                end
+            end,
+
+            uninstall = function(
+                variant: any,
+                component: string,
+                updater: any
+            )
+                if component == "proton_prefix" then
+                    if fs.exists(proton_prefix_path) then
+                        fs.remove_dir(proton_prefix_path):await()
+                    end
+                elseif
+                    options
+                    and options.components
+                    and options.components.uninstall
+                then
+                    (options.components.uninstall)(variant, component, updater)
+                end
             end
         },
 
