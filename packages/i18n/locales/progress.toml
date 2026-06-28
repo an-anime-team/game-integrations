@@ -1,3 +1,21 @@
+# ------------------------ Verify ------------------------
+
+[verifying_progress]
+en = "Verifying {progress}"
+ru = "Загрузка {progress}"
+
+[verifying_progress_kb]
+en = "Verifying {current} KB / {total} KB"
+ru = "Проверка {current} КБ / {total} КБ"
+
+[verifying_progress_mb]
+en = "Verifying {current} MB / {total} MB"
+ru = "Проверка {current} МБ / {total} МБ"
+
+[verifying_progress_gb]
+en = "Verifying {current} GB / {total} GB"
+ru = "Проверка {current} ГБ / {total} ГБ"
+
 # ------------------------ Download ------------------------
 
 [downloading_progress]
