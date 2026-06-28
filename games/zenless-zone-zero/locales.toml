@@ -18,6 +18,14 @@ ru = "Размер кеша"
 
 # ----------------------------- settings -----------------------------
 
+[game_timeout_fix_title]
+en = "Enable timeout fix"
+ru = "Включить исправление времени ожидания"
+
+[game_timeout_fix_description]
+en = "Set WINE_ENABLE_TIMEOUT_FIX=1 environment variable to fix white dialog problem on the game launch"
+ru = "Установить переменную окружения WINE_ENABLE_TIMEOUT_FIX=1 для исправления диалогового окна с ошибкой во время запуска игры"
+
 [sophon_tools_settings_title]
 en = "Game downloader"
 ru = "Загрузчик игры"
