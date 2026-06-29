@@ -1,4 +1,4 @@
-# sophon-tools v0.1.0
+# sophon-tools
 
 Lua bindings to the [sophon-tools](https://dawn.wine/dawn-winery/sophon-tools)
 CLI.
