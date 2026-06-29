@@ -1,4 +1,4 @@
-# lua-proton v0.1.0
+# lua-proton
 
 Simple library to handle proton versions. Unlike `components`, this library is
 designed to be more straightforward for end users.

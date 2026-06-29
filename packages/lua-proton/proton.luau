@@ -369,9 +369,9 @@ return function(options: Options?)
     local _, umu_status = umu_launcher.umu.verify()
 
     if umu_status == "missing_bwrap_binary" then
-        portal.toast({ message = i18n("umu_launcher_missing_python3") })
-    elseif umu_status == "missing_python3_binary" then
         portal.toast({ message = i18n("umu_launcher_missing_bwrap") })
+    elseif umu_status == "missing_python3_binary" then
+        portal.toast({ message = i18n("umu_launcher_missing_python3") })
     end
 
     -- Prepare prefix name and path and calculate prefix size if it exists.
