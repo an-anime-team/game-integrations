@@ -1,4 +1,4 @@
--- ZZZ integration v0.2.3
+-- ZZZ integration v0.2.4
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -364,7 +364,7 @@ local function get_download_game_pipeline(
                         }
                     }):await()
 
-                    if game_info.version then
+                    if game_info and game_info.version then
                         game_version_write(options.edition, game_info.version)
                     end
                 end
@@ -673,7 +673,7 @@ local function get_update_game_pipeline(
                         }
                     }):await()
 
-                    if game_info.version then
+                    if game_info and game_info.version then
                         game_version_write(options.edition, game_info.version)
                     end
                 end
