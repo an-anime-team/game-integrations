@@ -1,4 +1,4 @@
--- ZZZ integration v0.2.2
+-- ZZZ integration v0.2.3
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -271,10 +271,12 @@ local function get_download_game_pipeline(
                         end
                     end)
 
-                    while not progress.fetch_info do
+                    while not progress.fetch_info and future do
                         local status, _ = future:poll()
 
                         if status then
+                            future = nil
+
                             progress.fetch_info = true
                             progress.verify.finished = true
                             progress.download.finished = true
@@ -286,11 +288,11 @@ local function get_download_game_pipeline(
                 title = i18n("verify_available_files_title"),
 
                 before = function()
-                    return not progress.verify.finished
+                    return not progress.verify.finished and future
                 end,
 
                 perform = function(updater: any)
-                    while not progress.verify.finished do
+                    while not progress.verify.finished and future do
                         local status, _ = future:poll()
 
                         updater({
@@ -305,6 +307,8 @@ local function get_download_game_pipeline(
                         })
 
                         if status then
+                            future = nil
+
                             progress.fetch_info = true
                             progress.verify.finished = true
                             progress.download.finished = true
@@ -316,11 +320,11 @@ local function get_download_game_pipeline(
                 title = i18n("download_new_files_title"),
 
                 before = function()
-                    return not progress.download.finished
+                    return not progress.download.finished and future
                 end,
 
                 perform = function(updater: any)
-                    while not progress.download.finished do
+                    while not progress.download.finished and future do
                         local status, _ = future:poll()
 
                         updater({
@@ -335,6 +339,8 @@ local function get_download_game_pipeline(
                         })
 
                         if status then
+                            future = nil
+
                             progress.fetch_info = true
                             progress.verify.finished = true
                             progress.download.finished = true
@@ -346,6 +352,10 @@ local function get_download_game_pipeline(
                 title = i18n("finalize_download_title"),
 
                 perform = function()
+                    if future then
+                        future:await()
+                    end
+
                     local game_info = sophon_tools.game.detect({
                         game_dir = GAME_DIR[options.edition],
                         network = {
@@ -426,8 +436,8 @@ local function get_update_game_pipeline(
                         elseif msg.type == "updater-download" then
                             progress.updater_verify.finished = true
 
-                            progress.updater_verify.current = msg.current
-                            progress.updater_verify.total = msg.total
+                            progress.updater_download.current = msg.current
+                            progress.updater_download.total = msg.total
                         elseif msg.type == "updater-patch" then
                             progress.updater_verify.finished = true
                             progress.updater_download.finished = true
@@ -456,10 +466,12 @@ local function get_update_game_pipeline(
                         end
                     end)
 
-                    while not progress.fetch_info do
+                    while not progress.fetch_info and future do
                         local status, _ = future:poll()
 
                         if status then
+                            future = nil
+
                             progress.fetch_info = true
                             progress.updater_verify.finished = true
                             progress.updater_download.finished = true
@@ -474,11 +486,11 @@ local function get_update_game_pipeline(
                 title = i18n("verify_available_files_title"),
 
                 before = function()
-                    return not progress.updater_verify.finished
+                    return not progress.updater_verify.finished and future
                 end,
 
                 perform = function(updater: any)
-                    while not progress.updater_verify.finished do
+                    while not progress.updater_verify.finished and future do
                         local status, _ = future:poll()
 
                         updater({
@@ -493,6 +505,8 @@ local function get_update_game_pipeline(
                         })
 
                         if status then
+                            future = nil
+
                             progress.fetch_info = true
                             progress.updater_verify.finished = true
                             progress.updater_download.finished = true
@@ -507,11 +521,11 @@ local function get_update_game_pipeline(
                 title = i18n("download_files_patches_title"),
 
                 before = function()
-                    return not progress.updater_download.finished
+                    return not progress.updater_download.finished and future
                 end,
 
                 perform = function(updater: any)
-                    while not progress.updater_download.finished do
+                    while not progress.updater_download.finished and future do
                         local status, _ = future:poll()
 
                         updater({
@@ -526,6 +540,8 @@ local function get_update_game_pipeline(
                         })
 
                         if status then
+                            future = nil
+
                             progress.fetch_info = true
                             progress.updater_verify.finished = true
                             progress.updater_download.finished = true
@@ -540,11 +556,11 @@ local function get_update_game_pipeline(
                 title = i18n("patch_update_files_title"),
 
                 before = function()
-                    return not progress.updater_patch.finished
+                    return not progress.updater_patch.finished and future
                 end,
 
                 perform = function(updater: any)
-                    while not progress.updater_patch.finished do
+                    while not progress.updater_patch.finished and future do
                         local status, _ = future:poll()
 
                         updater({
@@ -559,6 +575,8 @@ local function get_update_game_pipeline(
                         })
 
                         if status then
+                            future = nil
+
                             progress.fetch_info = true
                             progress.updater_verify.finished = true
                             progress.updater_download.finished = true
@@ -573,11 +591,11 @@ local function get_update_game_pipeline(
                 title = i18n("verify_updated_files_title"),
 
                 before = function()
-                    return not progress.repairer_verify.finished
+                    return not progress.repairer_verify.finished and future
                 end,
 
                 perform = function(updater: any)
-                    while not progress.repairer_verify.finished do
+                    while not progress.repairer_verify.finished and future do
                         local status, _ = future:poll()
 
                         updater({
@@ -592,6 +610,8 @@ local function get_update_game_pipeline(
                         })
 
                         if status then
+                            future = nil
+
                             progress.fetch_info = true
                             progress.repairer_verify.finished = true
                             progress.updater_download.finished = true
@@ -606,11 +626,11 @@ local function get_update_game_pipeline(
                 title = i18n("repair_files_title"),
 
                 before = function()
-                    return not progress.repairer_download.finished
+                    return not progress.repairer_download.finished and future
                 end,
 
                 perform = function(updater: any)
-                    while not progress.repairer_download.finished do
+                    while not progress.repairer_download.finished and future do
                         local status, _ = future:poll()
 
                         updater({
@@ -625,6 +645,8 @@ local function get_update_game_pipeline(
                         })
 
                         if status then
+                            future = nil
+
                             progress.fetch_info = true
                             progress.updater_verify.finished = true
                             progress.updater_download.finished = true
@@ -639,6 +661,10 @@ local function get_update_game_pipeline(
                 title = i18n("finalize_download_title"),
 
                 perform = function()
+                    if future then
+                        future:await()
+                    end
+
                     local game_info = sophon_tools.game.detect({
                         game_dir = GAME_DIR[options.edition],
                         network = {
