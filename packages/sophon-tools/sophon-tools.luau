@@ -1,4 +1,4 @@
--- sophon-tools v0.2.1
+-- sophon-tools lua bindings v0.2.2
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,8 +23,8 @@
 -- licensed under GPL-3.0-or-later
 
 local DOWNLOAD_INFO = {
-    url = "https://dawn.wine/dawn-winery/sophon-tools/releases/download/v0.2.0/sophon-tools",
-    hash = "02c3005f70e520f19affe31fd6fd743d3be8472bfce70eb4c4b22e8e3ce2b19e"
+    url = "https://dawn.wine/dawn-winery/sophon-tools/releases/download/v0.2.1/sophon-tools",
+    hash = "cc15994967c434d04fd9a64b6c724f24a07d5441e5917a4b9b5f68a33f268ff5"
 }
 
 local DATA_DIR: string = path.persist_dir("sophon-tools")
@@ -337,20 +337,26 @@ end
 local function handle_process_jsonl_output(
     handle: any,
     callback: (any) -> ()
-): Promise<nil>
+): Promise<boolean>
     local buf = ""
+    local exit_status = nil
 
-    return task.create(function(): (boolean, nil)
+    return task.create(function(): (boolean, boolean?)
         if not handle then
-            return true, nil
+            return true, exit_status
         end
 
         if process.finished(handle) then
-            process.wait(handle)
+            local output = process.wait(handle)
 
+            if #output.stderr > 0 then
+                error(`sophon-tools exited with error: {output.stderr:as_string()}`)
+            end
+
+            exit_status = output.is_ok
             handle = nil
 
-            return true, nil
+            return true, exit_status
         end
 
         local output = process.stdout(handle)
@@ -739,7 +745,7 @@ return function(binary_path: string?)
             verify = function(
                 options: VerifyGameOptions,
                 updater: (msg: VerifyGameMsg) -> ()
-            ): Promise<nil>
+            ): Promise<boolean>
                 if not options
                     or not options.game_id
                     or typeof(options.game_id) ~= "string"
@@ -847,7 +853,7 @@ return function(binary_path: string?)
             download = function(
                 options: DownloadGameOptions,
                 updater: (msg: DownloadGameMsg) -> ()
-            ): Promise<nil>
+            ): Promise<boolean>
                 if not options
                     or not options.game_id
                     or typeof(options.game_id) ~= "string"
@@ -1003,7 +1009,7 @@ return function(binary_path: string?)
             update = function(
                 options: UpdateGameOptions,
                 updater: (msg: UpdateGameMsg) -> ()
-            ): Promise<nil>
+            ): Promise<boolean>
                 if not options
                     or not options.game_id
                     or typeof(options.game_id) ~= "string"
