@@ -1,4 +1,4 @@
--- lua-proton v0.2.0
+-- lua-proton v0.2.1
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -98,20 +98,52 @@ local function proton_register_versions(group: ProtonVersionsGroup)
         return
     end
 
-    if not __versions[group.name] then
-        __versions[group.name] = {
-            versions = {}
-        }
+    local group_index = nil
+
+    for index, stored_group in ipairs(__versions) do
+        if stored_group.name == group.name then
+            group_index = index
+
+            break
+        end
     end
 
-    __versions[group.name].title = group.title or group.name
+    if not group_index then
+        table.insert(__versions, {
+            name = group.name,
+            versions = {}
+        })
+
+        group_index = #__versions
+    end
+
+    __versions[group_index].title = group.title or group.name
 
     if typeof(group.versions) == "table" then
         for _, version in ipairs(group.versions) do
             if version.name and typeof(version.name) == "string"
                 and version.url and typeof(version.url) == "string"
             then
-                __versions[group.name].versions[version.name] = {
+                local version_index = nil
+
+                for index, stored_version in ipairs(__versions[group_index].versions) do
+                    if stored_version.name == version.name then
+                        version_index = index
+
+                        break
+                    end
+                end
+
+                if not version_index then
+                    table.insert(__versions[group_index].versions, {
+                        name = version.name
+                    })
+
+                    version_index = #__versions[group_index].versions
+                end
+
+                __versions[group_index].versions[version_index] = {
+                    name = version.name,
                     title = version.title or version.name,
                     url = version.url,
                     hash = if not version.hash or version.hash == "" then nil else version.hash
@@ -125,21 +157,21 @@ end
 local function proton_list_available_versions(): {ProtonVersionsGroup}
     local versions: {ProtonVersionsGroup} = {}
 
-    for group_name, group in pairs(__versions) do
+    for _, group in ipairs(__versions) do
         local group_versions: {ProtonVersion} = {}
 
-        for version_name, version in pairs(group.versions) do
+        for _, version in ipairs(group.versions) do
             table.insert(group_versions, {
-                name = version_name,
-                title = version.title or version_name,
-                url = version.url,
+                name = version.name,
+                title = version.title or version.name,
+                url = version.url :: string,
                 hash = version.hash
             })
         end
 
         table.insert(versions, {
-            name = group_name,
-            title = group.title or group_name,
+            name = group.name,
+            title = group.title or group.name,
             versions = group_versions
         })
     end
@@ -159,13 +191,13 @@ local function proton_list_downloaded_versions(): {ProtonVersionsGroup}
         if entry.type == "directory" then
             local found = false
 
-            for group_name, group in pairs(__versions) do
-                for version_name, version in pairs(group.versions) do
-                    if entry.name == version_name then
+            for _, group in ipairs(__versions) do
+                for _, version in ipairs(group.versions) do
+                    if entry.name == version.name then
                         local group_index = nil
 
                         for i, group in ipairs(versions) do
-                            if group.name == group_name then
+                            if group.name == group.name then
                                 group_index = i
 
                                 break
@@ -174,8 +206,8 @@ local function proton_list_downloaded_versions(): {ProtonVersionsGroup}
 
                         if not group_index then
                             table.insert(versions, {
-                                name = group_name,
-                                title = group.title or group_name,
+                                name = group.name,
+                                title = group.title or group.name,
                                 versions = {}
                             })
 
@@ -183,9 +215,9 @@ local function proton_list_downloaded_versions(): {ProtonVersionsGroup}
                         end
 
                         table.insert(versions[group_index].versions, {
-                            name = version_name,
-                            title = version.title or version_name,
-                            url = version.url,
+                            name = version.name,
+                            title = version.title or version.name,
+                            url = version.url :: string,
                             hash = version.hash
                         })
 
@@ -212,30 +244,19 @@ end
 
 -- Try to get information about selected proton version.
 local function proton_version_get_info(name: string, group_name: string?): ProtonVersion?
-    local version = nil
+    for _, group in ipairs(__versions) do
+        if typeof(group_name) == "string" and group.name ~= group_name then
+            continue
+        end
 
-    if group_name and __versions[group_name] then
-        version = clone(__versions[group_name].versions[name])
-    else
-        for _, group in pairs(__versions) do
-            if group.versions[name] then
-                version = clone(group.versions[name])
-
-                break
+        for _, version in ipairs(group.versions) do
+            if version.name == name then
+                return clone(version)
             end
         end
     end
 
-    if not version then
-        return nil
-    end
-
-    return {
-        name = name,
-        title = version.title,
-        url = version.url,
-        hash = version.hash
-    }
+    return nil
 end
 
 type Options = {
@@ -288,6 +309,9 @@ type Options = {
         -- Proton settings setter. If unset, settings changes will never be
         -- saved.
         set_property: ((name: string, value: any) -> ())?;
+
+        -- Use pre-v2.1.1 format enum settings entries format.
+        legacy_format: boolean?;
     }?;
 }
 
@@ -752,8 +776,8 @@ return function(options: Options?)
 
             get_layout = function(): any
                 -- Prepare settings values.
-                local proton_groups = {}
-                local proton_versions = {}
+                local proton_groups: any = {}
+                local proton_versions: any = {}
 
                 local selected_proton_group_name = settings_get_property("proton_group_name")
                 local selected_proton_version_name = settings_get_property("proton_version_name")
@@ -764,7 +788,14 @@ return function(options: Options?)
 
                 -- Fill proton groups table.
                 for _, group in ipairs(available_proton_versions) do
-                    proton_groups[group.name] = group.title
+                    if options and options.settings and options.settings.legacy_format then
+                        proton_groups[group.name] = group.title
+                    else
+                        table.insert(proton_groups, {
+                            name = group.name,
+                            title = group.title
+                        })
+                    end
 
                     -- If the group is not selected then select it.
                     if not selected_proton_group_name then
@@ -799,7 +830,14 @@ return function(options: Options?)
                         local found = false
 
                         for _, version in ipairs(group.versions) do
-                            proton_versions[version.name] = version.title
+                            if options and options.settings and options.settings.legacy_format then
+                                proton_versions[version.name] = version.title
+                            else
+                                table.insert(proton_versions, {
+                                    name = version.name,
+                                    title = version.title
+                                })
+                            end
 
                             if version.name == selected_proton_version_name then
                                 found = true
