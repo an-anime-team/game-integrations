@@ -1,4 +1,4 @@
--- lua-proton v0.2.1
+-- lua-proton v0.2.2
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -362,21 +362,34 @@ return function(options: Options?)
     local selected_proton_group_name = settings_get_property("proton_group_name")
     local selected_proton_version_name = settings_get_property("proton_version_name")
 
-    if not selected_proton_group_name or not selected_proton_version_name
-        or (selected_proton_group_name and not __versions[selected_proton_group_name])
-        or (selected_proton_group_name and __versions[selected_proton_group_name] and not __versions[selected_proton_group_name].versions[selected_proton_version_name])
-    then
-        for group_name, group in pairs(__versions) do
-            selected_proton_group_name = group_name
+    local reset_selected_proton = not selected_proton_group_name or not selected_proton_version_name
 
-            for version_name, _ in pairs(group.versions) do
-                selected_proton_version_name = version_name
+    if not reset_selected_proton then
+        local has_group = false
+        local has_version = false
+
+        for _, group in ipairs(__versions) do
+            if group.name == selected_proton_group_name then
+                has_group = true
+
+                for _, version in ipairs(group.versions) do
+                    if version.name == selected_proton_version_name then
+                        has_version = true
+
+                        break
+                    end
+                end
 
                 break
             end
-
-            break
         end
+
+        reset_selected_proton = not has_group or not has_version
+    end
+
+    if reset_selected_proton then
+        selected_proton_group_name = __versions[1].name
+        selected_proton_version_name = __versions[1].versions[1].name
 
         settings_set_property("proton_group_name", selected_proton_group_name)
         settings_set_property("proton_version_name", selected_proton_version_name)
