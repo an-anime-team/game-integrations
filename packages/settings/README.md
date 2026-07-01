@@ -1,4 +1,4 @@
-# Settings v0.1.1
+# Settings
 
 A general library for managing game integration settings. Helps to construct
 game settings layout and handles properties storing in a shared SQLite database.
@@ -9,7 +9,6 @@ Add settings module to your package inputs:
 
 ```json
 {
-    "format": 1,
     "inputs": {
         "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/settings/settings.luau"
     }
@@ -23,49 +22,50 @@ It's recommended to follow this architecture:
 ```luau
 local __settings = nil
 
--- Initialize settings object
-local function import_settings()
+local function get_settings()
     if not __settings then
-        local settings = load("settings").value
-
-        __settings = settings({
+        __settings = import("settings")({
             game = "name_of_your_game",
             layout = {
-                example_group = {
-                    title = "Example group title",
-                    description = "Example group description",
+                {
+                    name = "example_group",
+                    group = {
+                        title = "Example group title",
+                        description = "Example group description",
 
-                    entries = {
-                        example_entry = {
-                            title = "Example entry",
-                            description = "Example entry description",
+                        entries = {
+                            {
+                                name = "example_entry",
+                                entry = {
+                                    title = "Example entry",
+                                    description = "Example entry description",
 
-                            entry = {
-                                format = "switch",
+                                    entry = {
+                                        format = "switch",
 
-                                -- Instead of `value` you specify `default` property.
-                                -- It will be used as default value during database
-                                -- record creation.
-                                default = false
-                            },
+                                        -- Instead of `value` you specify
+                                        -- `default` property. It will be used
+                                        -- as default value during database
+                                        -- record creation.
+                                        default = false
+                                    },
 
-                            -- Optional database-related settings
-                            options = {
-                                -- Getter function is called every time whe you
-                                -- retrieve a value from the database.
-                                get = function(value: boolean): string
-                                    if value then
-                                        return "YES"
-                                    else
-                                        return "NO"
-                                    end
-                                end,
+                                    -- Optional database-related settings
+                                    options = {
+                                        -- Getter function is called every time
+                                        -- when you retrieve a value from the
+                                        -- database.
+                                        get = function(value: boolean): string
+                                            return if value then "YES" else "NO"
+                                        end,
 
-                                -- Setter function is called every time when you
-                                -- write values to the database.
-                                set = function(value: string): boolean
-                                    return value == "YES"
-                                end
+                                        -- Setter function is called every time
+                                        -- when you write values to the database.
+                                        set = function(value: string): boolean
+                                            return value == "YES"
+                                        end
+                                    }
+                                }
                             }
                         }
                     }
@@ -78,23 +78,24 @@ local function import_settings()
 end
 ```
 
-The overall design is very similar to the game integration settings layot, 
+The overall design is very similar to the game integration settings layout, 
 except some minor differences. Settings library returns an object with 
 `get_property`, `set_property` and `get_layout` functions - so exactly the 
 object the game integration settings requires you to implement. So you only need 
 to do this:
 
 ```luau
--- Your game integration module
+-- Your game integration module.
 return {
-    -- Other fields
+    -- Other fields.
 
-    -- Just set here the value returned from the settings library
-    settings = import_settings()
+    -- Just set here the value returned from the settings library.
+    settings = get_settings()
 }
 ```
 
 You can also use `get_property` and `set_property` to store arbitrary values
-in the settings database. This can be used by other libraries like `components`.
+in the settings database. This can be used by other libraries like `components`
+or `lua-proton`.
 
-Licensed under [GPL-3.0-or-later](../../LICENSE).
+Licensed under MIT.
