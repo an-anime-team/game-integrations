@@ -103,15 +103,17 @@ end
 
 local __settings = nil
 
-local function get_settings_layout()
+local function get_settings()
     if not __settings then
         __settings = import("settings")({
             game = "zenless_zone_zero",
             layout = {
-                game = {
+                {
+                    name = "game",
                     title = i18n("game"),
                     entries = {
-                        timeout_fix = {
+                        {
+                            name = "timeout_fix",
                             title = i18n("game_timeout_fix_title"),
                             description = i18n("game_timeout_fix_description"),
                             reactivity = "none",
@@ -120,12 +122,14 @@ local function get_settings_layout()
                                 default = false
                             }
                         }
-                    }
+                    } :: any
                 },
-                sophon_tools = {
+                {
+                    name = "sophon_tools",
                     title = i18n("sophon_tools_settings_title"),
                     entries = {
-                        user_agent = {
+                        {
+                            name = "user_agent",
                             title = i18n("sophon_tools_settings_user_agent_title"),
                             description = i18n("sophon_tools_settings_user_agent_description"),
                             reactivity = "none",
@@ -133,8 +137,9 @@ local function get_settings_layout()
                                 format = "text",
                                 default = ""
                             }
-                        },
-                        proxy = {
+                        } :: any,
+                        {
+                            name = "proxy",
                             title = i18n("sophon_tools_settings_proxy_title"),
                             description = i18n("sophon_tools_settings_proxy_description"),
                             reactivity = "none",
@@ -143,7 +148,8 @@ local function get_settings_layout()
                                 default = ""
                             }
                         },
-                        threads = {
+                        {
+                            name = "threads",
                             title = i18n("sophon_tools_settings_threads_title"),
                             description = i18n("sophon_tools_settings_threads_description"),
                             reactivity = "none",
@@ -155,7 +161,8 @@ local function get_settings_layout()
                                 default = 0
                             }
                         },
-                        target_memory_usage = {
+                        {
+                            name = "target_memory_usage",
                             title = i18n("sophon_tools_settings_target_memory_usage_title"),
                             description = i18n("sophon_tools_settings_target_memory_usage_description"),
                             reactivity = "none",
@@ -167,7 +174,8 @@ local function get_settings_layout()
                                 default = 256
                             }
                         },
-                        fast_verify = {
+                        {
+                            name = "fast_verify",
                             title = i18n("sophon_tools_settings_fast_verify_title"),
                             description = i18n("sophon_tools_settings_fast_verify_description"),
                             reactivity = "none",
@@ -693,7 +701,7 @@ end
 return function()
     local iter = import("iterable")
 
-    local settings = get_settings_layout()
+    local settings = get_settings()
 
     local sophon_tools = import("sophon-tools")()
 
