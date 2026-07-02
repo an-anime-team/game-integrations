@@ -1,4 +1,4 @@
--- sophon-tools lua bindings v0.2.2
+-- sophon-tools lua bindings v0.2.3
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,7 +24,8 @@
 
 local DOWNLOAD_INFO = {
     url = "https://dawn.wine/dawn-winery/sophon-tools/releases/download/v0.2.1/sophon-tools",
-    hash = "cc15994967c434d04fd9a64b6c724f24a07d5441e5917a4b9b5f68a33f268ff5"
+    size = 8986512,
+    hash = "blake3:zqkzsslhyq2nat6zuzfwy4spesqh2vcb4wixus43l5ukgpzgr72q===="
 }
 
 local DATA_DIR: string = path.persist_dir("sophon-tools")
@@ -320,18 +321,6 @@ type UpdateGameOptions = {
 
 ----------------------------- module -----------------------------
 
--- Check if the sophon-tools binary is available and its hash is matching the
--- known one.
-local function verify_binary(binary_path: string): boolean
-    if not path.exists(binary_path) then
-        return false
-    end
-
-    local binary_hash = hash.digitize_file("blake3", binary_path):await()
-
-    return str.encode("hex", binary_hash) == DOWNLOAD_INFO.hash
-end
-
 -- Read stdout from the given process handle, decode jsonl objects and pass them
 -- to the given callback.
 local function handle_process_jsonl_output(
@@ -421,6 +410,12 @@ return function(binary_path: string?)
         error("sophon-tools module doesn't have access to the binary path")
     end
 
+    local verifier = import("verifier")
+
+    if not verifier then
+        error("sophon-tools became a package, use package.json in inputs")
+    end
+
     local function ensure_process_api()
         if not process then
             error("sophon-tools module requires process API")
@@ -428,7 +423,11 @@ return function(binary_path: string?)
     end
 
     local function ensure_verified_binary()
-        if not verify_binary(binary_path) then
+        if not verifier({
+            path = binary_path,
+            size = DOWNLOAD_INFO.size,
+            hash = DOWNLOAD_INFO.hash
+        }):await() then
             error("invalid sophon-tools binary hash")
         end
     end
@@ -452,7 +451,11 @@ return function(binary_path: string?)
                 downloader.wait(task_handle)
                 downloader.close(downloader_handle)
 
-                if not verify_binary(binary_path) then
+                if not verifier({
+                    path = binary_path,
+                    size = DOWNLOAD_INFO.size,
+                    hash = DOWNLOAD_INFO.hash
+                }):await() then
                     fs.remove_file(binary_path):await()
 
                     error("downloaded sophon-tools binary has invalid hash")
@@ -464,7 +467,11 @@ return function(binary_path: string?)
 
             -- Verify installed sophon-tools binary.
             verify = function(): boolean
-                return verify_binary(binary_path)
+                return verifier({
+                    path = binary_path,
+                    size = DOWNLOAD_INFO.size,
+                    hash = DOWNLOAD_INFO.hash
+                }):await()
             end
         },
 
