@@ -1,3 +1,3 @@
-# umu-launcher v0.1.0
+# umu-launcher
 
 Licensed under MIT.
