@@ -1,4 +1,4 @@
--- ZZZ integration v0.2.4
+-- ZZZ integration v0.2.5
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -703,7 +703,7 @@ return function()
 
     local settings = get_settings()
 
-    local sophon_tools = import("sophon-tools")()
+    local sophon_tools = import("sophon-tools")["sophon-tools"]()
 
     local lua_proton = import("lua-proton").proton({
         umu_launcher = {
