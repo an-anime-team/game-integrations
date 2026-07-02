@@ -1,4 +1,4 @@
--- Neverness to Everness integration v0.0.0
+-- Neverness to Everness integration v0.0.1
 -- Copyright (C) 2026 Dylan Donnell <greenicedtea@tutanota.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -513,7 +513,7 @@ local function get_game_installer_pipeline(edition: string): ActionsPipeline
 
                     local umu = import_umu()
 
-                    if not umu.umu.verify() then
+                    if not umu.umu.verify(true) then
                         error("umu-launcher binary is invalid")
                     end
 
@@ -564,7 +564,7 @@ return {
 
             local ok, reason = check_umu_ready()
             if not ok then
-                if reason == "invalid_hash" then
+                if reason == "invalid_binary" then
                     return "not-installed"
                 end
 
@@ -589,12 +589,10 @@ return {
 
             local ok, reason = check_umu_ready()
             if not ok then
-                if reason == "invalid_hash" then
+                if reason == "invalid_binary" then
                     return get_install_umu_pipeline()
-                elseif reason == "missing_python3_binary" then
+                elseif reason == "missing_python3" then
                     portal.toast({ message = i18n("umu_launcher_missing_python3") })
-                elseif reason == "missing_bwrap_binary" then
-                    portal.toast({ message = i18n("umu_launcher_missing_bwrap") })
                 else
                     portal.toast({ message = i18n("umu_launcher_invalid_status") })
                 end
