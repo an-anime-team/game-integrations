@@ -30,10 +30,6 @@ ru = "Версия Proton"
 en = "umu-launcher requires python3 to run the game"
 ru = "umu-launcher требует python3 для запуска игры"
 
-[umu_launcher_missing_bwrap]
-en = "umu-launcher requires bwrap to run the game"
-ru = "umu-launcher требует bwrap для запуска игры"
-
 [update_proton_title]
 en = "Update Proton"
 ru = "Обновить Proton"

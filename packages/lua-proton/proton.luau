@@ -1,4 +1,4 @@
--- lua-proton v0.2.2
+-- lua-proton v0.2.3
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -403,11 +403,9 @@ return function(options: Options?)
     )
 
     -- Check for missing dependencies.
-    local _, umu_status = umu_launcher.umu.verify()
+    local _, umu_status = umu_launcher.umu.verify(true)
 
-    if umu_status == "missing_bwrap_binary" then
-        portal.toast({ message = i18n("umu_launcher_missing_bwrap") })
-    elseif umu_status == "missing_python3_binary" then
+    if umu_status == "missing_python3" then
         portal.toast({ message = i18n("umu_launcher_missing_python3") })
     end
 
@@ -443,9 +441,9 @@ return function(options: Options?)
                 -- If umu-launcher is not installed.
                 -- Ignore error status messages, we're respecting hash mismatch
                 -- only.
-                local umu_available, umu_status = umu_launcher.umu.verify()
+                local umu_available, umu_status = umu_launcher.umu.verify(true)
 
-                if not umu_available and umu_status == "invalid_hash" then
+                if not umu_available and umu_status == "invalid_binary" then
                     table.insert(actions, {
                         title = i18n("install_umu_launcher_title"),
                         perform = function(updater)
@@ -620,13 +618,6 @@ return function(options: Options?)
 
             -- Check if the proton is ready to launch the game.
             can_launch = function()
-                -- If umu-launcher is not installed.
-                local umu_available, umu_status = umu_launcher.umu.verify()
-
-                if not umu_available and umu_status == "invalid_hash" then
-                    return false
-                end
-
                 -- If selected proton version is not installed.
                 local proton_version_name = settings_get_property("proton_version_name")
                 local proton_version_info = proton_version_get_info(proton_version_name)
@@ -637,6 +628,11 @@ return function(options: Options?)
 
                 -- If proton prefix is not available.
                 if not umu_launcher.prefix.verify(proton_prefix_path) then
+                    return false
+                end
+
+                -- If umu-launcher is not installed.
+                if not umu_launcher.umu.verify(true) then
                     return false
                 end
 
@@ -651,6 +647,10 @@ return function(options: Options?)
                 if not selected_proton_version_name
                     or not proton_version_is_downloaded(selected_proton_version_name)
                 then
+                    return nil
+                end
+
+                if not umu_launcher.umu.verify(true) then
                     return nil
                 end
 
