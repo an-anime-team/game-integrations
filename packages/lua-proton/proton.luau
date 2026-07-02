@@ -1,4 +1,4 @@
--- lua-proton v0.2.3
+-- lua-proton v0.2.4
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -396,7 +396,7 @@ return function(options: Options?)
     end
 
     -- Import umu-launcher.
-    local umu_launcher = import("umu-launcher")(
+    local umu_launcher = import("umu-launcher")["umu-launcher"](
         if options and options.umu_launcher and options.umu_launcher.binary_path
             then options.umu_launcher.binary_path
             else UMU_BINARY_PATH
