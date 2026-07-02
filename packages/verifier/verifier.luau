@@ -1,4 +1,4 @@
--- verifier v0.1.0
+-- verifier v0.1.1
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,6 +35,7 @@ return function(args: Args): Promise<boolean>
     local result = nil
 
     local timestamp = nil
+    local expected_hash = nil
     local hash_future = nil
 
     return task.create(function(): (boolean, boolean?)
@@ -53,7 +54,7 @@ return function(args: Args): Promise<boolean>
             end
 
             -- Otherwise compare hashes and return the result.
-            result = str.encode("base32", file_hash) == args.hash
+            result = str.encode("base32", file_hash) == (expected_hash or args.hash)
 
             __cache[args.path] = {
                 timestamp = timestamp,
@@ -122,8 +123,7 @@ return function(args: Args): Promise<boolean>
             -- If ":" found then strip "[hash]" part.
             if algorithm_pos then
                 hash_algorithm = string.sub(args.hash, 1, algorithm_pos - 1)
-
-                args.hash = string.sub(args.hash, algorithm_pos + 1)
+                expected_hash = string.sub(args.hash, algorithm_pos + 1)
             end
 
             hash_future = hash.digitize_file(hash_algorithm, args.path)
