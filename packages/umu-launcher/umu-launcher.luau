@@ -1,4 +1,4 @@
--- umu-launcher v0.1.1
+-- umu-launcher v0.2.0
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --                    NelloKudo <marshnelloosu@gmail.com>
 --
@@ -28,31 +28,42 @@ type LaunchInfo = {
 
 type VerifyResult =
     | "success"
-    | "invalid_hash"
-    | "missing_python3_binary"
-    | "missing_bwrap_binary"
+    | "invalid_binary"
+    | "missing_python3"
 
-local umu_info = {
+local UMU_INFO = {
     url = "https://github.com/Open-Wine-Components/umu-launcher/releases/download/1.4.0/umu-launcher-1.4.0-zipapp.tar",
-    version = "1.4.0",
+    size = 419043,
     hash = "1383ead8ce563197"
 }
 
-local function verify_umu_binary(umu_path: string): boolean
+local function verify_umu_binary(umu_path: string, fast: boolean): boolean
     if not path.exists(umu_path) then
         return false
     end
 
-    local umu_hash = hash.digitize_file("seahash", umu_path):await()
+    if fast == true then
+        local metadata = fs.metadata(umu_path)
 
-    umu_hash = str.encode("hex", umu_hash)
+        if not UMU_INFO.size then
+            dbg(`size("{umu_path}") = {metadata.length}`)
 
-    if #umu_info.hash == 0 then
-        dbg(`seahash("{umu_path}") = "{umu_hash}"`)
+            return false
+        end
 
-        return false
+        return metadata.length == UMU_INFO.size
     else
-        return umu_hash == umu_info.hash
+        local umu_hash = hash.digitize_file("seahash", umu_path):await()
+
+        umu_hash = str.encode("hex", umu_hash)
+
+        if not UMU_INFO.hash then
+            dbg(`seahash("{umu_path}") = "{umu_hash}"`)
+
+            return false
+        end
+
+        return umu_hash == UMU_INFO.hash
     end
 end
 
@@ -65,12 +76,6 @@ return function(umu_binary: string)
         error("umu-launcher module doesn't have access to the umu-run binary")
     end
 
-    local function ensure_verified_umu()
-        if not verify_umu_binary(umu_binary) then
-            error("invalid umu-launcher binary hash")
-        end
-    end
-
     return {
         umu = {
             path = clone(umu_binary),
@@ -81,11 +86,15 @@ return function(umu_binary: string)
             -- Note that this method *does not* verify if this binary is already
             -- installed.
             install = function(updater: (current: number, total: number, action: "download" | "extract") -> ()): string
-                local umu_temp_download_path: string = path.join(path.temp_dir(), `umu-{umu_info.version}.tar`)
-                local umu_temp_extract_path: string  = path.join(path.temp_dir(), `umu-launcher-{umu_info.version}`)
+                local umu_temp_download_path: string = path.join(path.temp_dir(), `umu-{UMU_INFO.hash or "unknown"}.tar`)
+                local umu_temp_extract_path: string  = path.join(path.temp_dir(), `umu-launcher-{UMU_INFO.hash or "unknown"}`)
                 local umu_temp_binary_path: string   = path.join(umu_temp_extract_path, "umu", "umu-run")
 
                 -- Delete temporary files
+
+                if fs.exists(umu_binary) then
+                    fs.remove(umu_binary):await()
+                end
 
                 if fs.exists(umu_temp_download_path) then
                     fs.remove(umu_temp_download_path):await()
@@ -102,7 +111,7 @@ return function(umu_binary: string)
                 local handle = downloader.create()
 
                 local task = downloader.download(handle, {
-                    url = umu_info.url,
+                    url = UMU_INFO.url,
                     output_file = umu_temp_download_path,
                     continue_download = false, -- 420 KB total, can redownload easily
                     on_update = function(current: number, total: number)
@@ -133,7 +142,7 @@ return function(umu_binary: string)
                     error("failed to extract umu-launcher archive")
                 end
 
-                if not verify_umu_binary(umu_temp_binary_path) then
+                if not verify_umu_binary(umu_temp_binary_path, false) then
                     error("downloaded umu-launcher binary has invalid hash")
                 end
 
@@ -148,20 +157,15 @@ return function(umu_binary: string)
             end,
 
             -- Verify installed umu-launcher binary hash.
-            verify = function(): (boolean, VerifyResult)
+            verify = function(fast: boolean): (boolean, VerifyResult)
                 -- verify the umu-launcher's binary hash
-                if not verify_umu_binary(umu_binary) then
-                    return false, "invalid_hash"
+                if not verify_umu_binary(umu_binary, fast) then
+                    return false, "invalid_binary"
                 end
 
-                -- python3 binary is required to run umu-launcher
+                -- python3 is required to run umu-launcher
                 if not system.find("python3") then
-                    return false, "missing_python3_binary"
-                end
-
-                -- bwrap binary is required to run umu-launcher
-                if not system.find("bwrap") then
-                    return false, "missing_bwrap_binary"
+                    return false, "missing_python3"
                 end
 
                 return true, "success"
@@ -210,7 +214,9 @@ return function(umu_binary: string)
                     error("umu-launcher module doesn't have access to the given proton prefix path")
                 end
 
-                ensure_verified_umu()
+                if not verify_umu_binary(umu_binary, false) then
+                    error("invalid umu-launcher binary hash")
+                end
 
                 local handle = process.open(umu_binary, { "wineboot", "-u" }, {
                     PROTONPATH       = proton_path,
