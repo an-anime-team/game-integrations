@@ -1,4 +1,4 @@
--- Neverness to Everness integration v0.0.1
+-- Neverness to Everness integration v0.0.2
 -- Copyright (C) 2026 Dylan Donnell <greenicedtea@tutanota.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -97,7 +97,7 @@ end
 
 local function import_umu()
     if not __umu then
-        __umu = import("umu_launcher")(umu_binary_path)
+        __umu = import("umu-launcher")["umu-launcher"](umu_binary_path)
     end
 
     return __umu
