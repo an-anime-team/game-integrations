@@ -1,4 +1,4 @@
--- sophon-tools lua bindings v0.2.3
+-- sophon-tools lua bindings v0.2.4
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,6 +21,25 @@
 --
 -- Original tool: https://dawn.wine/dawn-winery/sophon-tools
 -- licensed under GPL-3.0-or-later
+
+if not import then
+    -- polyfill: old agl-runtime versions don't have `import` function
+    function import(name: string)
+        local resource = load(name)
+
+        if resource.format ~= "package" then
+            return resource.value
+        end
+
+        local outputs = {}
+
+        for name, value in pairs(resource.value) do
+            outputs[name] = value.value
+        end
+
+        return outputs
+    end
+end
 
 local DOWNLOAD_INFO = {
     url = "https://dawn.wine/dawn-winery/sophon-tools/releases/download/v0.2.1/sophon-tools",
