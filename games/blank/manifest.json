@@ -1,12 +1,7 @@
 {
-    "version": 1,
-    "maintainers": [
-        {
-            "en": "Nikita Podvirnyi <krypt0nn@vk.com>",
-            "ru": "Никита Подвирный <krypt0nn@vk.com>"
-        }
-    ],
+    "format": 1,
     "game": {
+        "name": "blank",
         "title": "Example game",
         "description": {
             "en": "A blank game integration",
@@ -21,10 +16,19 @@
             "slides": [
                 "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/blank/background.jpg"
             ]
-        }
+        },
+        "tags": [
+            "free-to-play"
+        ]
     },
     "package": {
         "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/blank/package.json",
         "output": "integration"
-    }
+    },
+    "maintainers": [
+        {
+            "en": "Nikita Podvirnyi <krypt0nn@dawn.wine>",
+            "ru": "Никита Подвирный <krypt0nn@dawn.wine>"
+        }
+    ]
 }

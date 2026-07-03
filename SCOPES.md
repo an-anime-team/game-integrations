@@ -7,11 +7,13 @@
 | # | Hash            | Name                                         |
 | - | --------------- | -------------------------------------------- |
 | 1 | `8634jdgcmnpg6` | [NIKKE v0.3.0](games/nikke/integration.luau) |
+| 2 | `v1il786cpt9oe` | [NIKKE v0.3.0](games/nikke/integration.luau) |
 
 1. Current NIKKE integration uses "fake game installation" trick. Instead of
    handling game itself, it downloads official launcher to prepared wine prefix
    and asks user to perform game installation through the launcher. Thus it
    requires `process_api` to run the official installer.
+2. The same NIKKE integration, but with updated license comment.
 
 ## Packages
 

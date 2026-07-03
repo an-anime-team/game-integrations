@@ -1,6 +1,7 @@
 {
-    "version": 1,
+    "format": 1,
     "game": {
+        "name": "zenless_zone_zero",
         "title": "Zenless Zone Zero",
         "description": {
             "en": "Zenless Zone Zero is a free-to-play action role-playing game that takes place in a semi open-world, post-apocalyptic futuristic metropolis, New Eridu, displaying a retro and analog aesthetic. It features an interactive action-based combat system, revolving around the usage of Agents with different Specialties and Attributes.",
@@ -21,10 +22,11 @@
             ]
         },
         "tags": [
+            "free-to-play",
+            "social-features",
+            "controller-support",
             "gambling",
-            "payments",
-            "anti-cheat",
-            "workarounds"
+            "in-game-purchases"
         ],
         "agreement": {
             "en": "Current game integration has limited functionality and is released as an open beta. Follow integration development in the Dawn Winery's kitchen channel on Discord.",
@@ -34,5 +36,11 @@
     "package": {
         "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/zenless-zone-zero/package.json",
         "output": "integration"
-    }
+    },
+    "maintainers": [
+        {
+            "en": "Nikita Podvirnyi <krypt0nn@dawn.wine>",
+            "ru": "Никита Подвирный <krypt0nn@dawn.wine>"
+        }
+    ]
 }

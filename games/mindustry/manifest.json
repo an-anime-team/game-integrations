@@ -1,13 +1,7 @@
 {
     "format": 1,
-    "maintainers": [
-        "Dylan Donnell <greenicedtea@tutanota.com>",
-        {
-            "en": "Nikita Podvirnyi <krypt0nn@vk.com>",
-            "ru": "Никита Подвирный <krypt0nn@vk.com>"
-        }
-    ],
     "game": {
+        "name": "mindustry",
         "title": "Mindustry",
         "description": {
             "en": "A sandbox tower-defense game. Create elaborate supply chains of conveyor belts to feed ammo into your turrets, produce materials to use for building, and defend your structures from waves of enemies.",
@@ -27,10 +21,20 @@
                 "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/slide5.jpg",
                 "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/slide6.jpg"
             ]
-        }
+        },
+        "tags": [
+            "free-to-play"
+        ]
     },
     "package": {
         "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/package.json",
         "output": "integration"
-    }
+    },
+    "maintainers": [
+        "Dylan Donnell <greenicedtea@tutanota.com>",
+        {
+            "en": "Nikita Podvirnyi <krypt0nn@dawn.wine>",
+            "ru": "Никита Подвирный <krypt0nn@dawn.wine>"
+        }
+    ]
 }

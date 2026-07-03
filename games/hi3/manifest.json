@@ -1,6 +1,7 @@
 {
-    "version": 1,
+    "format": 1,
     "game": {
+        "name": "honkai_impact_3rd",
         "title": "Honkai Impact 3rd",
         "description": {
             "en": "WIP implementation used for testing",
@@ -22,14 +23,21 @@
             ]
         },
         "tags": [
+            "free-to-play",
+            "cooperative",
+            "social-features",
             "gambling",
-            "payments",
-            "anti-cheat",
-            "workaround"
+            "in-game-purchases"
         ]
     },
     "package": {
         "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/hi3/package.json",
         "output": "integration"
-    }
+    },
+    "maintainers": [
+        {
+            "en": "Nikita Podvirnyi <krypt0nn@dawn.wine>",
+            "ru": "Никита Подвирный <krypt0nn@dawn.wine>"
+        }
+    ]
 }

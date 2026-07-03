@@ -1,6 +1,7 @@
 {
-    "standard": 1,
+    "format": 1,
     "game": {
+        "name": "wuthering_waves",
         "title": "Wuthering Waves",
         "description": {
             "en": "Wuthering Waves is a story-rich open-world action RPG with a high degree of freedom. You wake from your slumber as Rover, joined by a vibrant cast of Resonators on a journey to reclaim your lost memories and surmount the Lament.",
@@ -21,14 +22,16 @@
             ]
         },
         "tags": [
+            "free-to-play",
             "gambling",
-            "payments",
-            "anti-cheat",
-            "workarounds"
+            "in-game-purchases"
         ]
     },
     "package": {
         "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/wuwa/package.json",
         "output": "integration"
-    }
+    },
+    "maintainers": [
+        "Dylan Donnell <greenicedtea@tutanota.com>"
+    ]
 }

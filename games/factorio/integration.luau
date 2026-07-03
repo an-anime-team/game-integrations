@@ -1,6 +1,6 @@
 -- Factorio integration v1.0.1
 -- Copyright (C) 2026  mrkyss <mkryss@dawn.wine>
---                     Nikita Podvirnyi <krypt0nn@vk.com>
+--                     Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by

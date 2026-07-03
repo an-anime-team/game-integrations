@@ -1,5 +1,5 @@
 -- HI3rd integration v0.0.0
--- Copyright (C) 2025  Nikita Podvirnyi <krypt0nn@vk.com>, mkrsym1 <mkrsym1@gmail.com>
+-- Copyright (C) 2025  Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
