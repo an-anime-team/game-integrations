@@ -1,4 +1,4 @@
--- VotV integration v0.2.1
+-- VotV integration v0.2.2
 -- Copyright (C) 2025 - 2026  Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -322,7 +322,7 @@ return function()
             set_enabled = function() end,
 
             uninstall = function(variant: GameVariant, component: string)
-                if component == "game" then
+                if component == "game" and fs.exists(data_dir_path) then
                     fs.remove_dir(data_dir_path):await()
                 end
             end
