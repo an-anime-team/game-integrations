@@ -1,4 +1,4 @@
-# List of all the allowed resources
+# List of resources and their priveleges
 
 | Hash            | Name                                                        | Description                                                     |
 | --------------- | ----------------------------------------------------------- | --------------------------------------------------------------- |
