@@ -1,5 +1,7 @@
 # List of resources and their priveleges
 
+> Do not forget to update both `scopes.json` and `packages/allow_list.json`.
+
 ## Games
 
 | # | Hash            | Name                                         |
