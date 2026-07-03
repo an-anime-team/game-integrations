@@ -1,5 +1,5 @@
 -- umu-launcher v0.2.2
--- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
+-- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@dawn.wine>
 --                    NelloKudo <marshnelloosu@gmail.com>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
