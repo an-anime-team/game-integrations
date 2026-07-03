@@ -1,12 +1,7 @@
 {
     "format": 1,
-    "maintainers": [
-        {
-            "en": "Nikita Podvirnyi <krypt0nn@vk.com>",
-            "ru": "Никита Подвирный <krypt0nn@vk.com>"
-        }
-    ],
     "game": {
+        "name": "voices_of_the_void",
         "title": "Voices of the Void [local]",
         "description": {
             "en": "You work as a scientist in the isolated research lab in the mountains of Switzerland. Your task is to gather signals from space, analyze them, process them and sell them to get points. You can get regular signals and objects like dwarf planets and stars, or you can get something \"unusual\" or even \"strange\" and \"unexplainable\".",
@@ -25,10 +20,19 @@
                 "http://127.0.0.1:8080/games/votv/slide4.png",
                 "http://127.0.0.1:8080/games/votv/slide5.png"
             ]
-        }
+        },
+        "tags": [
+            "free-to-play"
+        ]
     },
     "package": {
         "url": "http://127.0.0.1:8080/games/votv/package.json",
         "output": "integration"
-    }
+    },
+    "maintainers": [
+        {
+            "en": "Nikita Podvirnyi <krypt0nn@dawn.wine>",
+            "ru": "Никита Подвирный <krypt0nn@dawn.wine>"
+        }
+    ]
 }

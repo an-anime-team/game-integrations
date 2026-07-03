@@ -1,6 +1,6 @@
 -- Mindustry integration v1.0.2
 -- Copyright (C) 2026  Dylan Donnell <greenicedtea@tutanota.com>,
---                     Nikita Podvirnyi <krypt0nn@vk.com>
+--                     Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by

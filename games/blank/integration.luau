@@ -1,8 +1,6 @@
 -- Blank game integration. Use it for learning basics.
 
 return {
-    version = 1,
-
     game = {
         get_launch_info = function(variant)
             return nil

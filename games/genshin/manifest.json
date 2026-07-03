@@ -1,6 +1,7 @@
 {
-    "standard": 1,
+    "format": 1,
     "game": {
+        "name": "genshin_impact",
         "title": "Genshin Impact [local]",
         "description": {
             "en": "WIP implementation used for testing",
@@ -17,13 +18,22 @@
             ]
         },
         "tags": [
+            "free-to-play",
+            "cooperative",
+            "social-features",
+            "controller-support",
             "gambling",
-            "payments",
-            "anti-cheat"
+            "in-game-purchases"
         ]
     },
     "package": {
         "url": "http://127.0.0.1:8080/games/genshin/package.json",
         "output": "integration"
-    }
+    },
+    "maintainers": [
+        {
+            "en": "Nikita Podvirnyi <krypt0nn@dawn.wine>",
+            "ru": "Никита Подвирный <krypt0nn@dawn.wine>"
+        }
+    ]
 }

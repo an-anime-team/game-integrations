@@ -1,13 +1,7 @@
 {
-    "version": 1,
-    "maintainers": [
-        "mkryss <mkryss@dawn.wine>",
-        {
-            "en": "Nikita Podvirnyi <krypt0nn@vk.com>",
-            "ru": "Никита Подвирный <krypt0nn@vk.com>"
-        }
-    ],
+    "format": 1,
     "game": {
+        "name": "factorio",
         "title": "Factorio [local]",
         "description": {
             "en": "Factorio is a game where you mine resources, research technologies, automate production, and fight enemies.\n\nFactorio is a paid game, so you have to buy the license from official game website here: https://www.factorio.com",
@@ -29,6 +23,10 @@
                 "http://127.0.0.1:8080/games/factorio/slide6.jpg"
             ]
         },
+        "tags": [
+            "cooperative",
+            "social-features"
+        ],
         "agreement": {
             "en": "Factorio is a paid game. In order to play it you have to buy a license from its developers. This integration only allows you to install the game files using official API, and to launch the game with your credentials which are available on the official game website.\n\nFactorio terms of service: https://www.factorio.com/terms-of-service",
             "ru": "Factorio - это платная игра. Чтобы играть в неё вы должны приобрести лицензию у разработчиков. Эта интеграция позволяет вам скачать файлы игры через официальный API, а также запустить игру с данными вашей учётной записи, которые доступны на официальном сайте игры.\n\nУсловия пользования Factorio: https://www.factorio.com/terms-of-service",
@@ -38,5 +36,12 @@
     "package": {
         "url": "http://127.0.0.1:8080/games/factorio/package.json",
         "output": "integration"
-    }
+    },
+    "maintainers": [
+        "mkryss <mkryss@dawn.wine>",
+        {
+            "en": "Nikita Podvirnyi <krypt0nn@dawn.wine>",
+            "ru": "Никита Подвирный <krypt0nn@dawn.wine>"
+        }
+    ]
 }

@@ -1,5 +1,5 @@
 -- ZZZ integration v0.2.6
--- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@vk.com>
+-- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
