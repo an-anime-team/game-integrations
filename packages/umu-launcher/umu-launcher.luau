@@ -1,4 +1,4 @@
--- umu-launcher v0.2.1
+-- umu-launcher v0.2.2
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
 --                    NelloKudo <marshnelloosu@gmail.com>
 --
@@ -19,6 +19,25 @@
 -- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 -- THE SOFTWARE.
+
+if not import then
+    -- polyfill: old agl-runtime versions don't have `import` function
+    function import(name: string)
+        local resource = load(name)
+
+        if resource.format ~= "package" then
+            return resource.value
+        end
+
+        local outputs = {}
+
+        for name, value in pairs(resource.value) do
+            outputs[name] = value.value
+        end
+
+        return outputs
+    end
+end
 
 type LaunchInfo = {
     binary: string,
