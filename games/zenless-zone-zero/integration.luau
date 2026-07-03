@@ -1,4 +1,4 @@
--- ZZZ integration v0.2.5
+-- ZZZ integration v0.2.6
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@vk.com>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -116,7 +116,7 @@ local function get_settings()
                             name = "timeout_fix",
                             title = i18n("game_timeout_fix_title"),
                             description = i18n("game_timeout_fix_description"),
-                            reactivity = "none",
+                            -- reactivity = "none",
                             entry = {
                                 format = "switch",
                                 default = false
@@ -132,7 +132,7 @@ local function get_settings()
                             name = "user_agent",
                             title = i18n("sophon_tools_settings_user_agent_title"),
                             description = i18n("sophon_tools_settings_user_agent_description"),
-                            reactivity = "none",
+                            -- reactivity = "none",
                             entry = {
                                 format = "text",
                                 default = ""
@@ -142,7 +142,7 @@ local function get_settings()
                             name = "proxy",
                             title = i18n("sophon_tools_settings_proxy_title"),
                             description = i18n("sophon_tools_settings_proxy_description"),
-                            reactivity = "none",
+                            -- reactivity = "none",
                             entry = {
                                 format = "text",
                                 default = ""
@@ -152,7 +152,7 @@ local function get_settings()
                             name = "threads",
                             title = i18n("sophon_tools_settings_threads_title"),
                             description = i18n("sophon_tools_settings_threads_description"),
-                            reactivity = "none",
+                            -- reactivity = "none",
                             entry = {
                                 format = "number",
                                 min = 0,
@@ -165,7 +165,7 @@ local function get_settings()
                             name = "target_memory_usage",
                             title = i18n("sophon_tools_settings_target_memory_usage_title"),
                             description = i18n("sophon_tools_settings_target_memory_usage_description"),
-                            reactivity = "none",
+                            -- reactivity = "none",
                             entry = {
                                 format = "number",
                                 min = 64,
@@ -178,7 +178,7 @@ local function get_settings()
                             name = "fast_verify",
                             title = i18n("sophon_tools_settings_fast_verify_title"),
                             description = i18n("sophon_tools_settings_fast_verify_description"),
-                            reactivity = "none",
+                            -- reactivity = "none",
                             entry = {
                                 format = "switch",
                                 default = false
