@@ -9,7 +9,7 @@
         "dxvk-gplasync-src": "dxvk/dxvk-gplasync.json",
         "wine": {
             "uri": "wine.luau",
-            "hash": "i56s4ooq2iomi"
+            "hash": "mk20kfjcsu6jq"
         },
         "dxvk": "dxvk.luau"
     },

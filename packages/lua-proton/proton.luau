@@ -1,5 +1,5 @@
 -- lua-proton v0.2.4
--- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@vk.com>
+-- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
 -- of this software and associated documentation files (the “Software”), to deal
