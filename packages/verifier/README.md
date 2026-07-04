@@ -10,7 +10,7 @@ Add `verifier` library to your package inputs:
 ```json
 {
     "inputs": {
-        "verifier": "http://127.0.0.1:8080/packages/verifier/verifier.luau"
+        "verifier": "http://127.0.0.1:8080/packages/verifier/v0/verifier.luau"
     }
 }
 ```
