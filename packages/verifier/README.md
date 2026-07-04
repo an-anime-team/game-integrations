@@ -10,7 +10,7 @@ Add `verifier` library to your package inputs:
 ```json
 {
     "inputs": {
-        "verifier": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/verifier/verifier.luau"
+        "verifier": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/verifier/v0/verifier.luau"
     }
 }
 ```
