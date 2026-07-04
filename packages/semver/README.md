@@ -1,4 +1,4 @@
-# Semver v1.0.2
+# Semver
 
 Semver implements support for the same-called [versions format](https://semver.org).
 
@@ -8,9 +8,9 @@ Add semver module to your package inputs:
 
 ```json
 {
-    "format": 1,
+
     "inputs": {
-        "semver": "http://127.0.0.1:8080/packages/semver/semver.luau"
+        "semver": "http://127.0.0.1:8080/packages/semver/v0/semver.luau"
     }
 }
 ```
@@ -46,4 +46,4 @@ print(a == b) -- false
 print(a <= b) -- true
 ```
 
-Licensed under [GPL-3.0-or-later](../../LICENSE).
+Licensed under MIT.
