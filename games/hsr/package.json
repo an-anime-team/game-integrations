@@ -2,7 +2,7 @@
     "format": 1,
     "inputs": {
         "hyvlib": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/hyvlib/package.json",
-        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/package.json"
+        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/v0/package.json"
     },
     "outputs": {
         "integration": "integration.luau"

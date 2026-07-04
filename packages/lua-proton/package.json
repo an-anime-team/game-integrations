@@ -1,7 +1,7 @@
 {
     "format": 1,
     "inputs": {
-        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/package.json",
+        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/v0/package.json",
         "umu-launcher": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/umu-launcher/package.json",
         "locales-src": "locales.toml",
         "dwproton-src": "dwproton.json"

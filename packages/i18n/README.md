@@ -29,7 +29,7 @@ Add `i18n` package to your integration package inputs:
 ```json
 {
     "inputs": {
-        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/i18n/package.json"
+        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/i18n/v0/package.json"
     }
 }
 ```
@@ -65,4 +65,4 @@ return {
 }
 ```
 
-Module and translations are licensed under [GPL-3.0-or-later](../../LICENSE).
+Module and translations are licensed under MIT.

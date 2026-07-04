@@ -2,7 +2,7 @@
     "format": 1,
     "inputs": {
         "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/iterable/v0/iterable.luau",
-        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/package.json",
+        "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/v0/package.json",
         "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/settings/settings.luau",
         "locales-src": "locales.toml",
         "versions-src": "versions.json"
