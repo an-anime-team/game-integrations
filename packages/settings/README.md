@@ -10,7 +10,7 @@ Add settings module to your package inputs:
 ```json
 {
     "inputs": {
-        "settings": "http://127.0.0.1:8080/packages/settings/settings.luau"
+        "settings": "http://127.0.0.1:8080/packages/settings/v0/settings.luau"
     }
 }
 ```
