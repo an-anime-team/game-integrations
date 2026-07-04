@@ -1,4 +1,4 @@
-# nixos-command-wrapper v0.1.0
+# nixos-command-wrapper
 
 A very simple library that returns exactly one function to wrap a game launch
 info table. The library will check if the current system is NixOS, and if it is,
@@ -11,7 +11,7 @@ Add `nixos-command-wrapper` package to your integration package inputs:
 ```json
 {
     "inputs": {
-        "nixos-command-wrapper": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/nixos-command-wrapper/nixos-command-wrapper.luau"
+        "nixos-command-wrapper": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/nixos-command-wrapper/v0/nixos-command-wrapper.luau"
     }
 }
 ```
