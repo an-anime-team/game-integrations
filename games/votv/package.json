@@ -4,7 +4,7 @@
         "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/iterable/v0/iterable.luau",
         "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/v0/package.json",
         "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/settings/v0/settings.luau",
-        "components": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/components/package.json"
+        "components": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/components/v0/package.json"
     },
     "outputs": {
         "integration": "integration.luau"
