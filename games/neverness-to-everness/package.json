@@ -4,7 +4,7 @@
         "iterable": "http://127.0.0.1:8080/packages/iterable/v0/iterable.luau",
         "i18n": "http://127.0.0.1:8080/packages/i18n/v0/package.json",
         "settings": "http://127.0.0.1:8080/packages/settings/v0/settings.luau",
-        "umu-launcher": "http://127.0.0.1:8080/packages/umu-launcher/package.json",
+        "umu-launcher": "http://127.0.0.1:8080/packages/umu-launcher/v0/package.json",
         "locales": "locales.toml",
         "dwproton-src": "dwproton.json"
     },
