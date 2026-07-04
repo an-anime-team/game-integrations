@@ -4,7 +4,7 @@
         "iterable": "http://127.0.0.1:8080/packages/iterable/v0/iterable.luau",
         "i18n": "http://127.0.0.1:8080/packages/i18n/v0/package.json",
         "settings": "http://127.0.0.1:8080/packages/settings/v0/settings.luau",
-        "components": "http://127.0.0.1:8080/packages/components/package.json"
+        "components": "http://127.0.0.1:8080/packages/components/v0/package.json"
     },
     "outputs": {
         "integration": "integration.luau"

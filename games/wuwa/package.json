@@ -6,7 +6,7 @@
         "settings": "http://127.0.0.1:8080/packages/settings/v0/settings.luau",
         "dpatchz": "http://127.0.0.1:8080/packages/dpatchz/dpatchz.luau",
         "jadeite": "http://127.0.0.1:8080/packages/jadeite/jadeite.luau",
-        "components": "http://127.0.0.1:8080/packages/components/package.json"
+        "components": "http://127.0.0.1:8080/packages/components/v0/package.json"
     },
     "outputs": {
         "integration": "integration.luau"
