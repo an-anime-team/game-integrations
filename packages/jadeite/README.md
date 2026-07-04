@@ -1,4 +1,4 @@
-# jadeite v0.0.0
+# jadeite
 
 Module for running games with the jadeite autopatcher.
 
@@ -8,9 +8,8 @@ Add jadeite module to your package inputs:
 
 ```json
 {
-    "standard": 1,
     "inputs": {
-        "jadeite": "http://127.0.0.1:8080/packages/jadeite/jadeite.luau"
+        "jadeite": "http://127.0.0.1:8080/packages/jadeite/v0/jadeite.luau"
     }
 }
 ```
