@@ -1,7 +1,7 @@
 {
     "format": 1,
     "inputs": {
-        "i18n": "http://127.0.0.1:8080/packages/i18n/package.json",
+        "i18n": "http://127.0.0.1:8080/packages/i18n/v0/package.json",
         "umu-launcher": "http://127.0.0.1:8080/packages/umu-launcher/package.json",
         "locales-src": "locales.toml",
         "dwproton-src": "dwproton.json"

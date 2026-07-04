@@ -3,7 +3,7 @@
     "inputs": {
         "iterable": "http://127.0.0.1:8080/packages/iterable/v0/iterable.luau",
         "settings": "http://127.0.0.1:8080/packages/settings/settings.luau",
-        "i18n": "http://127.0.0.1:8080/packages/i18n/package.json",
+        "i18n": "http://127.0.0.1:8080/packages/i18n/v0/package.json",
         "lua-proton": "http://127.0.0.1:8080/packages/lua-proton/package.json",
         "sophon-tools": "http://127.0.0.1:8080/packages/sophon-tools/package.json",
         "nixos-command-wrapper": "http://127.0.0.1:8080/packages/nixos-command-wrapper/v0/nixos-command-wrapper.luau",
