@@ -5,7 +5,7 @@
         "i18n": "http://127.0.0.1:8080/packages/i18n/package.json",
         "settings": "http://127.0.0.1:8080/packages/settings/settings.luau",
         "lua-proton": "http://127.0.0.1:8080/packages/lua-proton/package.json",
-        "nixos-command-wrapper": "http://127.0.0.1:8080/packages/nixos-command-wrapper/nixos-command-wrapper.luau",
+        "nixos-command-wrapper": "http://127.0.0.1:8080/packages/nixos-command-wrapper/v0/nixos-command-wrapper.luau",
         "locales": "locales.toml"
     },
     "outputs": {
