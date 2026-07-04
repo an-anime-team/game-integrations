@@ -2,7 +2,7 @@
     "format": 1,
     "inputs": {
         "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/v0/package.json",
-        "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/settings/settings.luau",
+        "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/settings/v0/settings.luau",
         "locales": "locales.toml"
     },
     "outputs": {

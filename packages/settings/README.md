@@ -10,7 +10,7 @@ Add settings module to your package inputs:
 ```json
 {
     "inputs": {
-        "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/settings/settings.luau"
+        "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/settings/v0/settings.luau"
     }
 }
 ```

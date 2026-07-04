@@ -3,7 +3,7 @@
     "inputs": {
         "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/iterable/v0/iterable.luau",
         "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/v0/package.json",
-        "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/settings/settings.luau",
+        "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/settings/v0/settings.luau",
         "dpatchz": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/dpatchz/dpatchz.luau",
         "jadeite": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/jadeite/jadeite.luau",
         "components": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/components/package.json"
