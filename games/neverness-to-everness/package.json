@@ -4,7 +4,7 @@
         "iterable": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/iterable/v0/iterable.luau",
         "i18n": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/i18n/v0/package.json",
         "settings": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/settings/v0/settings.luau",
-        "umu-launcher": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/umu-launcher/package.json",
+        "umu-launcher": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/umu-launcher/v0/package.json",
         "locales": "locales.toml",
         "dwproton-src": "dwproton.json"
     },
