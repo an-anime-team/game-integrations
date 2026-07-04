@@ -1,6 +1,5 @@
 {
     "inputs": {
-        "import": "http://127.0.0.1:8080/packages/import/import.luau",
         "iterable": "http://127.0.0.1:8080/packages/iterable/v0/iterable.luau",
         "i18n": "http://127.0.0.1:8080/packages/i18n/v0/package.json",
         "wine-staging-tkg-src": "wine/wine-staging-tkg.json",
