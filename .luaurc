@@ -28,6 +28,7 @@
         "protobuf",
         "torrent",
         "portal",
+        "secrets",
         "process"
     ]
 }
