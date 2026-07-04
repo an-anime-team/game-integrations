@@ -7,10 +7,7 @@
         "spritz-wine-cachyos-src": "wine/spritz-wine-cachyos.json",
         "dxvk-src": "dxvk/dxvk.json",
         "dxvk-gplasync-src": "dxvk/dxvk-gplasync.json",
-        "wine": {
-            "uri": "wine.luau",
-            "hash": "mk20kfjcsu6jq"
-        },
+        "wine": "wine.luau",
         "dxvk": "dxvk.luau"
     },
     "outputs": {
