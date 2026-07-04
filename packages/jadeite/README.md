@@ -1,4 +1,4 @@
-# jadeite v0.0.0
+# jadeite
 
 Module for running games with the jadeite autopatcher.
 
@@ -8,9 +8,8 @@ Add jadeite module to your package inputs:
 
 ```json
 {
-    "standard": 1,
     "inputs": {
-        "jadeite": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/jadeite/jadeite.luau"
+        "jadeite": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/rewrite/packages/jadeite/v0/jadeite.luau"
     }
 }
 ```
