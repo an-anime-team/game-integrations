@@ -55,8 +55,11 @@ local game_binary_path: string  = path.join(game_dir_path, "VotV.exe")
 ----------------------------- Game versions -----------------------------
 
 -- Direct download links are taken from here: https://archive.org/details/votv-archive
+-- The original archive seems to be out of date, so for now, the newer versions are taken from: https://archive.votv.dev/games/votv/
 local function list_game_versions()
     return {
+        { version = "a09n",        title = "Alpha 0.9.0-n",    url = "https://r2.votv.dev/archive/votv/090n.7z"},
+        { version = "a09j_0001",   title = "Alpha 0.9.0",      url = "https://r2.votv.dev/archive/votv/090j_0001.7z" },
         { version = "082c_0010",   title = "Pre-Alpha 0.8.2c", url = "https://archive.org/download/votv-archive/pa082c_0010.7z" },
         { version = "pa0082_0012", title = "Pre-Alpha 0.8.2b", url = "https://archive.org/download/votv-archive/pa0082_0012.7z" },
         { version = "pa0081_0008", title = "Pre-Alpha 0.8.1",  url = "https://archive.org/download/votv-archive/pa0081_0008.7z" },
