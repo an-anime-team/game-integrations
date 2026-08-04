@@ -3,45 +3,53 @@ en = "Download"
 ru = "Загрузить"
 it = "Scarica"
 es = "Descargar"
+ja = "ダウンロード"
 
 [install]
 en = "Install"
 ru = "Установить"
 it = "Installa"
 es = "Instalar"
+ja = "インストール"
 
 [update]
 en = "Update"
 ru = "Обновить"
 it = "Aggiorna"
 es = "Actualizar"
+ja = "アップデート"
 
 [extract]
 en = "Extract"
 ru = "Распаковать"
 it = "Estrai"
 es = "Extraer"
+ja = "展開"
 
 [process]
 en = "Process"
 ru = "Обработать"
 it = "Elabora"
 es = "Procesar"
+ja = "プロセス"
 
 [repair]
 en = "Repair"
 ru = "Исправить"
 it = "Ripara"
 es = "Reparar"
+ja = "修復"
 
 [delete]
 en = "Delete"
 ru = "Удалить"
 it = "Elimina"
 es = "Eliminar"
+ja = "削除"
 
 [version]
 en = "Version"
 ru = "Версия"
 it = "Versione"
 es = "Versión"
+ja = "バージョン"
