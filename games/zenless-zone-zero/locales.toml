@@ -3,78 +3,96 @@
 [sophon_tools_components_title]
 en = "Game downloader"
 ru = "Загрузчик игры"
+ja = "ゲームダウンローダー"
 
 [sophon_tools_cache_title]
 en = "Downloader cache"
 ru = "Кеш загрузчика"
+ja = "ダウンローダーキャッシュ"
 
 [sophon_tools_cache_description]
 en = "Disable the checkbox and press 'Apply changes' button to clear the downloader cache"
 ru = "Выключите переключатель и нажмите на кнопку 'Применить изменения' для очистки кеша загрузчика"
+ja = "ダウンローダーキャッシュを削除するには、チェックを外して'変更を適用'ボタンを押します"
 
 [sophon_tools_cache_size_title]
 en = "Cache size"
 ru = "Размер кеша"
+ja = "キャッシュサイズ"
 
 # ----------------------------- settings -----------------------------
 
 [game_timeout_fix_title]
 en = "Enable timeout fix"
 ru = "Включить исправление времени ожидания"
+ja = "タイムアウトの修正を有効にする"
 
 [game_timeout_fix_description]
 en = "Set WINE_ENABLE_TIMEOUT_FIX=1 environment variable to fix white dialog problem on the game launch"
 ru = "Установить переменную окружения WINE_ENABLE_TIMEOUT_FIX=1 для исправления диалогового окна с ошибкой во время запуска игры"
+ja = "環境変数 WINE_ENABLE_TIMEOUT_FIX=1 を設定することにより、ゲーム起動時に白いダイアログが発生する問題を修正します"
 
 [sophon_tools_settings_title]
 en = "Game downloader"
 ru = "Загрузчик игры"
+ja = "ゲームダウンローダー"
 
 [sophon_tools_settings_user_agent_title]
 en = "User agent"
 ru = "Браузер (user-agent)"
+ja = "ユーザーエージェント"
 
 [sophon_tools_settings_user_agent_description]
 en = "User agent string to use for API requests and files downloads"
 ru = "Строка браузера (user agent), которая будет использована для запросов к API и скачивания файлов"
+ja = "APIリクエストとファイルのダウンロードに使用するユーザーエージェント"
 
 [sophon_tools_settings_proxy_title]
 en = "Proxy"
 ru = "Прокси"
+ja = "プロキシ"
 
 [sophon_tools_settings_proxy_description]
 en = "Proxy string to use for API requests and files downloads"
 ru = "Прокси, который будет использован для запросов к API и скачивания файлов"
+ja = "APIリクエストとファイルのダウンロードに使用するプロキシ文字列"
 
 [sophon_tools_settings_threads_title]
 en = "Runtime threads"
 ru = "Количество потоков"
+ja = "ランタイムスレッド"
 
 [sophon_tools_settings_threads_description]
 en = "Amount of threads to use in the tokio async runtime. Keep 0 to use default value."
 ru = "Количество потоков, которые будут использованы асинхронным планировщиком задач tokio. При 0 будет использовано значение по умолчанию."
+ja = "tokio非同期ランタイムで使用するスレッド数を指定します。デフォルト値を使用するには、0のままにしてください。"
 
 [sophon_tools_settings_target_memory_usage_title]
 en = "Target memory usage"
 ru = "Использование системной памяти"
+ja = "目標メモリ使用量"
 
 [sophon_tools_settings_target_memory_usage_description]
 en = "Minimal amount of system memory in mebibytes available to downloader. Higher value will allow downloading more files in parallel."
 ru = "Минимальное количество системной памяти в мебибайтах, доступное загрузчику. Большее значение позволит скачивать больше файлов одновременно."
+ja = "ダウンローダーに割り当てるメモリの最小値をメビバイトで指定します。高い値に設定することで並列ダウンロード数を増やせます。"
 
 [sophon_tools_settings_fast_verify_title]
 en = "Fast verify"
 ru = "Быстрая проверка"
+ja = "高速検証"
 
 [sophon_tools_settings_fast_verify_description]
 en = "Use files sizes for verifications instead of calculating md5 hashes"
 ru = "Использовать размеры файлов для проверок вместо вычислений md5 хешей"
+ja = "MD5ハッシュを計算する代わりにファイルサイズを利用して検証を行います。"
 
 # ----------------------------- pipeline -----------------------------
 
 [download_sophon_tools_title]
 en = "Download sophon-tools"
 ru = "Загрузить sophon-tools"
+ja = "sophon-toolsをダウンロード"
 
 [fetch_download_info_title]
 en = "Fetch download info"

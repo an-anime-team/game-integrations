@@ -1,55 +1,69 @@
 [components_group_proton_title]
 en = "Proton"
 ru = "Proton"
+ja = "Proton"
 
 [components_proton_prefix_title]
 en = "Proton prefix"
 ru = "Префикс Proton"
+ja = "Protonプレフィックス"
 
 [components_proton_prefix_description]
 en = "Extracted Windows compatibility libraries and game related settings. Disable the checkbox and press 'Apply changes' button to delete it"
 ru = "Распакованные библиотеки совместимости с Windows и связанные с игрой настройки. Выключите переключатель и нажмите на кнопку 'Применить изменения' чтобы удалить их"
+ja = "展開済みのWindows互換用ライブラリとゲーム関連の設定。削除するには、チェックを外して'変更を適用'ボタンを押してください。"
 
 [proton_prefix_size_title]
 en = "Prefix size"
 ru = "Размер префикса"
+ja = "プレフィックスのサイズ"
 
 [settings_group_proton_title]
 en = "Proton"
 ru = "Proton"
+ja = "Proton"
 
 [settings_proton_group_name_title]
 en = "Proton variant"
 ru = "Вариант Proton"
+ja = "Protonの種類"
 
 [settings_proton_version_name_title]
 en = "Proton version"
 ru = "Версия Proton"
+ja = "Protonバージョン"
 
 [umu_launcher_missing_python3]
 en = "umu-launcher requires python3 to run the game"
 ru = "umu-launcher требует python3 для запуска игры"
+ja = "umu-launcherがゲームを実行するにはpython3が必要です"
 
 [update_proton_title]
 en = "Update Proton"
 ru = "Обновить Proton"
+ja = "Protonを更新"
 
 [install_umu_launcher_title]
 en = "Install umu-launcher"
 ru = "Установить umu-launcher"
+ja = "umu-launcherのインストール"
 
 [download_proton_version_title]
 en = "Download {title}"
 ru = "Загрузить {title}"
+ja = "{title}のダウンロード"
 
 [verify_proton_version_title]
 en = "Verify {title}"
 ru = "Проверить {title}"
+ja = "{title}の検証"
 
 [extract_proton_version_title]
 en = "Extract {title}"
 ru = "Распаковать {title}"
+ja = "{title}の展開"
 
 [create_proton_prefix_title]
 en = "Create Proton prefix"
 ru = "Создать префикс Proton"
+ja = "Protonプレフィックスの作成"
