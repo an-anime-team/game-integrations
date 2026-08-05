@@ -3,18 +3,22 @@
 [verifying_progress]
 en = "Verifying {progress}"
 ru = "Загрузка {progress}"
+ja = "検証中 {progress}"
 
 [verifying_progress_kb]
 en = "Verifying {current} KB / {total} KB"
 ru = "Проверка {current} КБ / {total} КБ"
+ja = "検証中: {total} KB 中 {current} KB"
 
 [verifying_progress_mb]
 en = "Verifying {current} MB / {total} MB"
 ru = "Проверка {current} МБ / {total} МБ"
+ja = "検証中: {total} MB 中 {current} MB"
 
 [verifying_progress_gb]
 en = "Verifying {current} GB / {total} GB"
 ru = "Проверка {current} ГБ / {total} ГБ"
+ja = "検証中: {total} GB 中 {current} GB"
 
 # ------------------------ Download ------------------------
 
@@ -22,21 +26,28 @@ ru = "Проверка {current} ГБ / {total} ГБ"
 en = "Downloading {progress}"
 ru = "Загрузка {progress}"
 it = "Scaricamento {progress}"
+es = "Descargando {progress}"
+ja = "ダウンロード中 {progress}"
 
 [downloading_progress_kb]
 en = "Downloading {current} KB / {total} KB"
 ru = "Загрузка {current} КБ / {total} КБ"
 it = "Scaricamento {current} KB / {total} KB"
+ja = "ダウンロード中: {total} KB 中 {current} KB"
 
 [downloading_progress_mb]
 en = "Downloading {current} MB / {total} MB"
 ru = "Загрузка {current} МБ / {total} МБ"
 it = "Scaricamento {current} MB / {total} MB"
+es = "Descargando {current} MB / {total} MB"
+ja = "ダウンロード中: {total} MB 中 {current} MB"
 
 [downloading_progress_gb]
 en = "Downloading {current} GB / {total} GB"
 ru = "Загрузка {current} ГБ / {total} ГБ"
 it = "Scaricamento {current} GB / {total} GB"
+es = "Descargando {current} GB / {total} GB"
+ja = "ダウンロード中: {total} GB 中 {current} GB"
 
 # ------------------------ Extract ------------------------
 
@@ -44,21 +55,28 @@ it = "Scaricamento {current} GB / {total} GB"
 en = "Extracting {progress}"
 ru = "Распаковка {progress}"
 it = "Estrazione {progress}"
+es = "Extrayendo {progress}"
+ja = "展開中 {progress}"
 
 [extracting_progress_kb]
 en = "Extracting {current} KB / {total} KB"
 ru = "Распаковка {current} КБ / {total} КБ"
 it = "Estrazione {current} KB / {total} KB"
+ja = "展開中: {total} KB 中 {current} KB"
 
 [extracting_progress_mb]
 en = "Extracting {current} MB / {total} MB"
 ru = "Распаковка {current} МБ / {total} МБ"
 it = "Estrazione {current} MB / {total} MB"
+es = "Extrayendo {current} MB / {total} MB"
+ja = "展開中: {total} MB 中 {current} MB"
 
 [extracting_progress_gb]
 en = "Extracting {current} GB / {total} GB"
 ru = "Распаковка {current} ГБ / {total} ГБ"
 it = "Estrazione {current} GB / {total} GB"
+es = "Extrayendo {current} GB / {total} GB"
+ja = "展開中: {total} GB 中 {current} GB"
 
 # ------------------------ Process ------------------------
 
@@ -88,21 +106,28 @@ it = "Elaborazione {current} GB / {total} GB"
 en = "Repairing {progress}"
 ru = "Исправление {progress}"
 it = "Riparazione {progress}"
+es = "Reparando {progress}"
+ja = "修復中 {progress}"
 
 [repairing_progress_kb]
 en = "Repairing {current} KB / {total} KB"
 ru = "Исправление {current} КБ / {total} КБ"
 it = "Riparazione {current} KB / {total} KB"
+ja = "修復中: {total} KB 中 {current} KB"
 
 [repairing_progress_mb]
 en = "Repairing {current} MB / {total} MB"
 ru = "Исправление {current} МБ / {total} МБ"
 it = "Riparazione {current} MB / {total} MB"
+es = "Reparando {current} MB / {total} MB"
+ja = "修復中: {total} MB 中 {current} MB"
 
 [repairing_progress_gb]
 en = "Repairing {current} GB / {total} GB"
 ru = "Исправление {current} ГБ / {total} ГБ"
 it = "Riparazione {current} GB / {total} GB"
+es = "Reparando {current} GB / {total} GB"
+ja = "修復中: {total} GB 中 {current} GB"
 
 # ------------------------ Delete ------------------------
 
@@ -110,18 +135,25 @@ it = "Riparazione {current} GB / {total} GB"
 en = "Deleting {progress}"
 ru = "Удаление {progress}"
 it = "Eliminazione {progress}"
+es = "Eliminando {progress}"
+ja = "削除中 {progress}"
 
 [deleting_progress_kb]
 en = "Deleting {current} KB / {total} KB"
 ru = "Удаление {current} КБ / {total} КБ"
 it = "Eliminazione {current} KB / {total} KB"
+ja = "削除中: {total} KB 中 {current} KB"
 
 [deleting_progress_mb]
 en = "Deleting {current} MB / {total} MB"
 ru = "Удаление {current} МБ / {total} МБ"
 it = "Eliminazione {current} MB / {total} MB"
+es = "Eliminando {current} MB / {total} MB"
+ja = "削除中: {total} MB 中 {current} MB"
 
 [deleting_progress_gb]
 en = "Deleting {current} GB / {total} GB"
 ru = "Удаление {current} ГБ / {total} ГБ"
 it = "Eliminazione {current} GB / {total} GB"
+es = "Eliminando {current} GB / {total} GB"
+ja = "削除中: {total} GB 中 {current} GB"

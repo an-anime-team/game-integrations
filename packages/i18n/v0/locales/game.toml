@@ -4,16 +4,22 @@
 en = "Game"
 ru = "Игра"
 it = "Gioco"
+es = "Juego"
+ja = "ゲーム"
 
 [game_version]
 en = "Game version"
 ru = "Версия игры"
 it = "Versione del gioco"
+es = "Versión del juego"
+ja = "ゲームバージョン"
 
 [game_not_installed_title]
 en = "Game is not installed"
 ru = "Игра не установлена"
 it = "Il gioco non è installato"
+es = "El juego no está instalado"
+ja = "ゲームがインストールされていません"
 
 [game_outdated_title]
 en = "Game is outdated"
@@ -24,11 +30,15 @@ it = "Il gioco non è aggiornato"
 en = "Install game"
 ru = "Установить игру"
 it = "Installa il gioco"
+es = "Instalar el juego"
+ja = "ゲームをインストール"
 
 [update_game_title]
 en = "Update game"
 ru = "Обновить игру"
 it = "Aggiorna il gioco"
+es = "Actualizar el juego"
+ja = "ゲームをアップデート"
 
 [delete_game_title]
 en = "Delete game"

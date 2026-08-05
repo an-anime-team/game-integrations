@@ -3,52 +3,64 @@
 [settings_launcher_title]
 en = "Launcher"
 ru = "Лаунчер"
+ja = "ランチャー"
 
 [settings_mangohud_title]
 en = "Enable MangoHud"
 ru = "Включить MangoHUD"
+ja = "MangoHudを有効にする"
 
 [settings_command_wrapper_title]
 en = "Command wrapper"
 ru = "Команда запуска"
+ja = "起動コマンド"
 
 # ---- Pipeline: NIKKE Installer ----
 
 [download_nikke_installer_title]
 en = "Download NIKKE Installer"
 ru = "Установка игры"
+ja = "NIKKEインストーラーをダウンロード"
 
 [download_installer_title]
 en = "Download installer"
 ru = "Загрузка установщика"
+ja = "インストーラーのダウンロード"
 
 [run_installer_title]
 en = "Run installer"
 ru = "Запуск установщика"
+ja = "インストーラーの実行"
 
 [installer_running]
 en = "Finish game installation via the running installer, then close it without launching the game"
 ru = "Завершите установку игры через запущенный установщик, затем закройте его не нажимая кнопку запуска игры"
+ja = "インストーラーからゲームのインストールを完了させ、その後ゲームを起動させずに閉じてください。"
 
 # ---- Tools ----
 
 [tool_winecfg_title]
 en = "Wine Configuration"
+ja = "Wineの設定"
 
 [tool_winecfg_description]
 en = "Open winecfg to adjust Wine settings for NIKKE"
 
 [tool_wineconsole_title]
 en = "Wine Console"
+ja = "Wineコンソール"
 
 [tool_wineconsole_description]
 en = "Open an interactive Wine console inside the prefix"
+ja = "プレフィックス内でWineコンソールを開きます"
 
 [tool_kill_wineserver_title]
 en = "Kill Wineserver"
+ja = "wineserverを強制終了する"
 
 [tool_kill_wineserver_description]
 en = "Send wineserver -k to immediately stop all Wine processes in the prefix"
+ja = "wineserver -kを実行して、プレフィックス内の全てのWineプロセスを強制終了します"
 
 [tool_open_folder_title]
 en = "Open Integration Folder"
