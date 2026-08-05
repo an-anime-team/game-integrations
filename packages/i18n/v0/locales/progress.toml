@@ -139,7 +139,7 @@ en = "Deleting {progress}"
 ru = "Удаление {progress}"
 it = "Eliminazione {progress}"
 es = "Eliminando {progress}"
-ja = "削除中: {progress}"
+ja = "削除中 {progress}"
 
 [deleting_progress_kb]
 en = "Deleting {current} KB / {total} KB"
