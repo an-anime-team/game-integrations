@@ -1,0 +1,25 @@
+[downloader_settings_title]
+en = "Downloader"
+ru = "Загрузчик"
+
+[downloader_settings_target_memory_usage_title]
+en = "Target memory usage"
+ru = "Использование системной памяти"
+ja = "目標メモリ使用量"
+
+[downloader_settings_target_memory_usage_description]
+en = "Minimal amount of system memory in mebibytes available to downloader. Higher value will allow downloading more files in parallel."
+ru = "Минимальное количество системной памяти в мебибайтах, доступное загрузчику. Большее значение позволит скачивать больше файлов одновременно."
+ja = "ダウンローダーに割り当てるメモリの最小値をメビバイトで指定します。高い値に設定することで並列ダウンロード数を増やせます。"
+
+[fetch_download_info_title]
+en = "Fetch download info"
+ru = "Запрос информации о загрузке"
+
+[verify_available_files_title]
+en = "Verify available files"
+ru = "Проверка доступных файлов"
+
+[download_new_files_title]
+en = "Download new files"
+ru = "Загрузка новых файлов"
