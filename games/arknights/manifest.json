@@ -22,7 +22,9 @@
             ]
         },
         "tags": [
-            "free-to-play"
+            "free-to-play",
+            "gambling",
+            "in-game-purchases"
         ]
     },
     "package": {
