@@ -7,6 +7,10 @@
         },
         {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/votv/manifest.json",
+            "featured": false
+        },
+        {
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/arknights/manifest.json",
             "featured": true
         },
         {
@@ -15,11 +19,11 @@
         },
         {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/mindustry/manifest.json",
-            "featured": true
+            "featured": false
         },
         {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/factorio/manifest.json",
-            "featured": true
+            "featured": false
         }
     ]
 }
