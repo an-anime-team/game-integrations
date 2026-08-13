@@ -3,51 +3,57 @@
     "title": "dwproton",
     "versions": [
         {
+            "name": "dwproton-11.0-11-x86_64",
+            "title": "dwproton 11.0-11",
+            "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-11/dwproton-11.0-11-x86_64.tar.xz",
+            "hash": "e7c70bac855b13935986e7d38ce659f070e7baec0c150cfdcef22a22f3e1e7d1"
+        },
+        {
             "name": "dwproton-11.0-10-x86_64",
             "title": "dwproton 11.0-10",
-            "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-10/dwproton-11.0-10-x86_64.tar.xz",
+            "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-10/dwproton-11.0-10-x86_64.tar.xz",
             "hash": "c7b0eb798c0402f0552a64d52322c5031f5b75cc3d438d87a9feb786f008518f"
         },
         {
             "name": "dwproton-11.0-9-x86_64",
             "title": "dwproton 11.0-9",
-            "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-9/dwproton-11.0-9-x86_64.tar.xz",
+            "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-9/dwproton-11.0-9-x86_64.tar.xz",
             "hash": "99d7eba7e8996b470156c4ec6133f1250bb7998e358506815990cdc3d1e86469"
         },
         {
             "name": "dwproton-11.0-7-x86_64",
             "title": "dwproton 11.0-7",
-            "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-7/dwproton-11.0-7-x86_64.tar.xz",
+            "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-7/dwproton-11.0-7-x86_64.tar.xz",
             "hash": "612264805a3122914370bbea7231fd91e4ae153b8ba8fb4afd2d9133620291a0"
         },
         {
             "name": "dwproton-11.0-5-x86_64",
             "title": "dwproton 11.0-5",
-            "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-5/dwproton-11.0-5-x86_64.tar.xz",
+            "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-5/dwproton-11.0-5-x86_64.tar.xz",
             "hash": "5a31deb12e772bdaf3218c8d49f27cfc367e2003e449baf80ffdc7851cd86414"
         },
         {
             "name": "dwproton-11.0-4-x86_64",
             "title": "dwproton 11.0-4",
-            "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-4/dwproton-11.0-4-x86_64.tar.xz",
+            "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-4/dwproton-11.0-4-x86_64.tar.xz",
             "hash": "f246be65e471ce27b740a35657d2fe2690a06835c81dcdd3764d0c5ec1d72a5c"
         },
         {
             "name": "dwproton-11.0-3-x86_64",
             "title": "dwproton 11.0-3",
-            "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-3/dwproton-11.0-3-x86_64.tar.xz",
+            "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-3/dwproton-11.0-3-x86_64.tar.xz",
             "hash": "ea8c93b89967b2ac6517720203fdac1aba8b33919905c5e417935e139a3575d5"
         },
         {
             "name": "dwproton-11.0-2-x86_64",
             "title": "dwproton 11.0-2",
-            "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-2/dwproton-11.0-2-x86_64.tar.xz",
+            "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-2/dwproton-11.0-2-x86_64.tar.xz",
             "hash": "eb4320d83c5c9bd5904888ae35fd0fa09452b0fe564f1318b582849e3b00b52f"
         },
         {
             "name": "dwproton-11.0-1-x86_64",
             "title": "dwproton 11.0-1",
-            "url": "https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-1/dwproton-11.0-1-x86_64.tar.xz",
+            "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-1/dwproton-11.0-1-x86_64.tar.xz",
             "hash": "6f3dee264fb9cb85a7411a56f011851d677b1aa28b4262fc879577c931d73e4d"
         }
     ]
