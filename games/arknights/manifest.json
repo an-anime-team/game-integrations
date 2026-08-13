@@ -1,0 +1,38 @@
+{
+    "format": 1,
+    "game": {
+        "name": "arknights",
+        "title": "Arknights",
+        "description": {
+            "en": "Arknights is a tower-defense RPG set in a dystopian sci-fi world ravaged by a deadly infection. You play as the \"Doctor,\" commanding a team of unique \"Operators\" to strategically defend against enemy waves on grid-based maps.",
+            "ru": "Arknights - это RPG в жанре tower-defence, действие которой происходит в антиутопичном научно-фантастическом мире, опустошённом смертельной инфекцией. Вы играете за \"Доктора\", командуя отрядом уникальных \"Операторов\", чтобы защищаться от волн врагов."
+        },
+        "developer": "Hypergryph",
+        "publisher": {
+            "en": "Yostar",
+            "zh-cn": "Hypergryph",
+            "zh-tw": "Gryphline"
+        },
+        "images": {
+            "icon": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/arknights/icon.jpg",
+            "poster": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/arknights/poster.jpg",
+            "background": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/arknights/background.jpg",
+            "slides": [
+                "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/arknights/background.jpg"
+            ]
+        },
+        "tags": [
+            "free-to-play"
+        ]
+    },
+    "package": {
+        "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/arknights/package.json",
+        "output": "integration"
+    },
+    "maintainers": [
+        {
+            "en": "Nikita Podvirnyi <krypt0nn@dawn.wine>",
+            "ru": "Никита Подвирный <krypt0nn@dawn.wine>"
+        }
+    ]
+}
