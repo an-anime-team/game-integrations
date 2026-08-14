@@ -390,6 +390,8 @@ local function get_download_game_pipeline(
                                 queue_empty = false
 
                                 game_files[file_path] = nil
+
+                                break
                             end
 
                             if queue_empty then
@@ -409,6 +411,8 @@ local function get_download_game_pipeline(
                                 local download_progress = downloader.progress(download_info.task_handle)
 
                                 if download_progress.finished then
+                                    downloader.wait(download_info.task_handle)
+
                                     curr_progress += download_info.size
 
                                     queue[file_path] = nil
