@@ -17,6 +17,9 @@ Add `verifier` library to your package inputs:
 
 ## Usage
 
+Obtain file size using `du --bytes <path>` command, and blake3 hash using
+`b3sum <path> --raw | base32 | awk '{print tolower($0)}'`. Then:
+
 ```luau
 local verifier = import("verifier")
 
