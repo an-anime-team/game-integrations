@@ -1,4 +1,4 @@
--- Arknights integration v0.1.0
+-- Arknights integration v0.1.1
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -248,13 +248,26 @@ local function get_settings()
                             name = "target_memory_usage",
                             title = i18n("downloader_settings_target_memory_usage_title"),
                             description = i18n("downloader_settings_target_memory_usage_description"),
-                            -- reactivity = "none",
+                            reactivity = "none",
                             entry = {
                                 format = "number",
                                 min = 64,
                                 max = 2048,
                                 step = 64,
                                 default = 256
+                            }
+                        },
+                        {
+                            name = "max_parallel_streams",
+                            title = i18n("downloader_settings_max_parallel_streams_title"),
+                            description = i18n("downloader_settings_max_parallel_streams_description"),
+                            reactivity = "none",
+                            entry = {
+                                format = "number",
+                                min = 0,
+                                max = 256,
+                                step = 16,
+                                default = 64
                             }
                         }
                     }
@@ -271,9 +284,11 @@ end
 local function get_download_game_pipeline(
     edition: GameEdition,
     version: string,
-    target_memory_usage: number?
+    target_memory_usage: number?,
+    max_parallel_streams: number?
 )
     local target_memory_usage = target_memory_usage or 256 * 1024 * 1024
+    local max_parallel_streams = max_parallel_streams or 64
 
     local game_files: { [string]: { url: string, size: number } } = {}
 
@@ -368,14 +383,21 @@ local function get_download_game_pipeline(
 
                     while true do
                         local queue_size = 0
-                        local queue_empty = true
+                        local queue_count = 0
 
                         for file_path, download_info in pairs(queue) do
                             queue_size += download_info.size
-                            queue_empty = false
+                            queue_count += 1
                         end
 
-                        while queue_size < target_memory_usage or queue_empty do
+                        -- If queue is empty, or both are true:
+                        -- 1. queued files are under target memory usage value,
+                        -- 2. less than max parallel files are queued
+                        while queue_count == 0 or (
+                            queue_size < target_memory_usage
+                                and (max_parallel_streams > 0 and queue_count < max_parallel_streams)
+                        )
+                        do
                             for file_path, file_info in pairs(game_files) do
                                 queue[file_path] = {
                                     size = file_info.size,
@@ -387,19 +409,19 @@ local function get_download_game_pipeline(
                                 }
 
                                 queue_size += file_info.size
-                                queue_empty = false
+                                queue_count += 1
 
                                 game_files[file_path] = nil
 
                                 break
                             end
 
-                            if queue_empty then
+                            if queue_count == 0 then
                                 break
                             end
                         end
 
-                        if queue_empty then
+                        if queue_count == 0 then
                             break
                         end
 
