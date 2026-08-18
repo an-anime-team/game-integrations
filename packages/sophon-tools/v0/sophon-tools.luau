@@ -1,4 +1,4 @@
--- sophon-tools lua bindings v0.2.4
+-- sophon-tools lua bindings v0.2.5
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,7 +19,7 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 -- THE SOFTWARE.
 --
--- Original tool: https://dawn.wine/dawn-winery/sophon-tools
+-- Original tool: https://git.dawn.wine/dawn-winery/sophon-tools
 -- licensed under GPL-3.0-or-later
 
 if not import then
@@ -42,9 +42,9 @@ if not import then
 end
 
 local DOWNLOAD_INFO = {
-    url = "https://dawn.wine/dawn-winery/sophon-tools/releases/download/v0.2.1/sophon-tools",
-    size = 8986512,
-    hash = "blake3:zqkzsslhyq2nat6zuzfwy4spesqh2vcb4wixus43l5ukgpzgr72q===="
+    url = "https://git.dawn.wine/dawn-winery/sophon-tools/releases/download/v0.2.2/sophon-tools",
+    size = 7811088,
+    hash = "blake3:pzlimf3hj2yhwieswbwq6a5rqqlxantuv6t3jlxw5bofwzmfinta===="
 }
 
 local DATA_DIR: string = path.persist_dir("sophon-tools")
@@ -306,6 +306,7 @@ type DownloadGameOptions = {
     verify_before_downloading: "none" | "fast" | "full" | nil;
     threads: number?;
     target_memory_usage: string | number | nil;
+    max_parallel_streams: number?;
     chunk_download_attempts: number?;
     fetch_manifest_timeout: number | string | nil;
     fetch_chunk_per_mb_timeout: number | string | nil;
@@ -331,6 +332,7 @@ type UpdateGameOptions = {
     repair_broken_assets: "none" | "fast" | "full" | nil;
     threads: number?;
     target_memory_usage: string | number | nil;
+    max_parallel_streams: number?;
     chunk_download_attempts: number?;
     fetch_manifest_timeout: number | string | nil;
     fetch_chunk_per_mb_timeout: number | string | nil;
@@ -458,6 +460,8 @@ return function(binary_path: string?)
             -- Download sophon-tools binary. Overwrite existing binary if it's
             -- available.
             download = function(updater: (current: number, total: number) -> ())
+                ensure_process_api()
+
                 local downloader_handle = downloader.create()
 
                 local task_handle = downloader.download(downloader_handle, {
@@ -977,12 +981,20 @@ return function(binary_path: string?)
                     table.insert(args, tostring(options.target_memory_usage))
                 end
 
+                if
+                    options.max_parallel_streams
+                    and typeof(options.max_parallel_streams) == "number"
+                then
+                    table.insert(args, "--max-parallel-streams")
+                    table.insert(args, tostring(math.clamp(options.max_parallel_streams, 0, 65535)))
+                end
+
                 if options.chunk_download_attempts
                     and typeof(options.chunk_download_attempts) == "number"
                     and options.chunk_download_attempts > 0
                 then
                     table.insert(args, "--chunk-download-attempts")
-                    table.insert(args, tostring(options.chunk_download_attempts))
+                    table.insert(args, tostring(math.clamp(options.chunk_download_attempts, 0, 255)))
                 end
 
                 if options.fetch_manifest_timeout
@@ -1192,12 +1204,20 @@ return function(binary_path: string?)
                     table.insert(args, tostring(options.target_memory_usage))
                 end
 
+                if
+                    options.max_parallel_streams
+                    and typeof(options.max_parallel_streams) == "number"
+                then
+                    table.insert(args, "--max-parallel-streams")
+                    table.insert(args, tostring(math.clamp(options.max_parallel_streams, 0, 65535)))
+                end
+
                 if options.chunk_download_attempts
                     and typeof(options.chunk_download_attempts) == "number"
                     and options.chunk_download_attempts > 0
                 then
                     table.insert(args, "--chunk-download-attempts")
-                    table.insert(args, tostring(options.chunk_download_attempts))
+                    table.insert(args, tostring(math.clamp(options.chunk_download_attempts, 0, 255)))
                 end
 
                 if options.fetch_manifest_timeout
