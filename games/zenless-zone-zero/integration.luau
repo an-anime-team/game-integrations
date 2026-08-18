@@ -1,4 +1,4 @@
--- ZZZ integration v0.2.6
+-- ZZZ integration v0.2.7
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -116,7 +116,7 @@ local function get_settings()
                             name = "timeout_fix",
                             title = i18n("game_timeout_fix_title"),
                             description = i18n("game_timeout_fix_description"),
-                            -- reactivity = "none",
+                            reactivity = "none",
                             entry = {
                                 format = "switch",
                                 default = false
@@ -132,7 +132,7 @@ local function get_settings()
                             name = "user_agent",
                             title = i18n("sophon_tools_settings_user_agent_title"),
                             description = i18n("sophon_tools_settings_user_agent_description"),
-                            -- reactivity = "none",
+                            reactivity = "none",
                             entry = {
                                 format = "text",
                                 default = ""
@@ -142,7 +142,7 @@ local function get_settings()
                             name = "proxy",
                             title = i18n("sophon_tools_settings_proxy_title"),
                             description = i18n("sophon_tools_settings_proxy_description"),
-                            -- reactivity = "none",
+                            reactivity = "none",
                             entry = {
                                 format = "text",
                                 default = ""
@@ -152,7 +152,7 @@ local function get_settings()
                             name = "threads",
                             title = i18n("sophon_tools_settings_threads_title"),
                             description = i18n("sophon_tools_settings_threads_description"),
-                            -- reactivity = "none",
+                            reactivity = "none",
                             entry = {
                                 format = "number",
                                 min = 0,
@@ -165,7 +165,7 @@ local function get_settings()
                             name = "target_memory_usage",
                             title = i18n("sophon_tools_settings_target_memory_usage_title"),
                             description = i18n("sophon_tools_settings_target_memory_usage_description"),
-                            -- reactivity = "none",
+                            reactivity = "none",
                             entry = {
                                 format = "number",
                                 min = 64,
@@ -175,10 +175,23 @@ local function get_settings()
                             }
                         },
                         {
+                            name = "max_parallel_streams",
+                            title = i18n("sophon_tools_settings_max_parallel_streams_title"),
+                            description = i18n("sophon_tools_settings_max_parallel_streams_description"),
+                            reactivity = "none",
+                            entry = {
+                                format = "number",
+                                min = 0,
+                                max = 256,
+                                step = 16,
+                                default = 64
+                            }
+                        },
+                        {
                             name = "fast_verify",
                             title = i18n("sophon_tools_settings_fast_verify_title"),
                             description = i18n("sophon_tools_settings_fast_verify_description"),
-                            -- reactivity = "none",
+                            reactivity = "none",
                             entry = {
                                 format = "switch",
                                 default = false
@@ -227,6 +240,7 @@ local function get_download_game_pipeline(
         edition: GameEdition;
         threads: number?;
         target_memory_usage: number?;
+        max_parallel_streams: number?;
         fast_verify: boolean?,
         user_agent: string?;
         proxy: string?;
@@ -253,6 +267,7 @@ local function get_download_game_pipeline(
 
                         threads = options.threads,
                         target_memory_usage = options.target_memory_usage,
+                        max_parallel_streams = options.max_parallel_streams,
 
                         verify_before_downloading =
                             if options.fast_verify == true then "fast" else "full",
@@ -394,6 +409,7 @@ local function get_update_game_pipeline(
         from_version: string;
         threads: number?;
         target_memory_usage: number?;
+        max_parallel_streams: number?;
         fast_verify: boolean?,
         user_agent: string?;
         proxy: string?;
@@ -424,6 +440,7 @@ local function get_update_game_pipeline(
                         from_version = options.from_version,
                         threads = options.threads,
                         target_memory_usage = options.target_memory_usage,
+                        max_parallel_streams = options.max_parallel_streams,
 
                         verify_before_updating =
                             if options.fast_verify == true then "fast" else "full",
@@ -847,6 +864,7 @@ return function()
                         edition = variant.edition,
                         threads = settings.get_property("sophon_tools.threads"),
                         target_memory_usage = target_memory_usage,
+                        max_parallel_streams = settings.get_property("sophon_tools.max_parallel_streams"),
                         fast_verify = settings.get_property("sophon_tools.fast_verify"),
                         user_agent = user_agent,
                         proxy = proxy
@@ -872,6 +890,7 @@ return function()
                         from_version = game_version,
                         threads = settings.get_property("sophon_tools.threads"),
                         target_memory_usage = target_memory_usage,
+                        max_parallel_streams = settings.get_property("sophon_tools.max_parallel_streams"),
                         fast_verify = settings.get_property("sophon_tools.fast_verify"),
                         user_agent = user_agent,
                         proxy = proxy
