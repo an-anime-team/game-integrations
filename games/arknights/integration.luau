@@ -105,6 +105,11 @@ end
 
 ----------------------------- game api -----------------------------
 
+-- avoid parsing everything after a `#` symbol as an URL fragment
+local function url_encode_path(file_path: string): string
+    return (file_path:gsub("#", "%%23"))
+end
+
 local __api_auth_header: { [GameEdition]: string } = {}
 
 local function api_get_auth_header(edition: GameEdition): string
@@ -303,8 +308,10 @@ local function get_download_game_pipeline(
 
                     if game_files_info then
                         for _, file_info in pairs(game_files_info.files) do
+                            local file_url_path = url_encode_path(`{game_files_info.source}{file_info.path}`)
+
                             game_files[file_info.path] = {
-                                url = `{GAME_API_INFO[edition].cdn_url}{game_files_info.source}{file_info.path}`,
+                                url = `{GAME_API_INFO[edition].cdn_url}{file_url_path}`,
                                 size = tonumber(file_info.size) or 0
                             }
                         end
@@ -398,6 +405,8 @@ local function get_download_game_pipeline(
                                 and (max_parallel_streams > 0 and queue_count < max_parallel_streams)
                         )
                         do
+                            local queued_file = false
+
                             for file_path, file_info in pairs(game_files) do
                                 queue[file_path] = {
                                     size = file_info.size,
@@ -413,10 +422,13 @@ local function get_download_game_pipeline(
 
                                 game_files[file_path] = nil
 
+                                queued_file = true
+
                                 break
                             end
 
-                            if queue_count == 0 then
+                            -- no files left to queue
+                            if not queued_file then
                                 break
                             end
                         end
