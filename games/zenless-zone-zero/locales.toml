@@ -22,6 +22,14 @@ ja = "キャッシュサイズ"
 
 # ----------------------------- settings -----------------------------
 
+[game_use_d3d12_title]
+en = "Use DirectX 12"
+ru = "Использовать DirectX 12"
+
+[game_use_d3d12_description]
+en = "Launch the game with -use-d3d12 flag to enable DirectX 12 support."
+ru = "Запускать игру с флагом -use-d3d12 для поддержки DirectX 12."
+
 [game_timeout_fix_title]
 en = "Enable timeout fix"
 ru = "Включить исправление времени ожидания"
