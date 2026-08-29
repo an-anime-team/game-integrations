@@ -827,7 +827,7 @@ return function()
                 local launch_args = {}
                 local launch_env = {}
 
-                if settings.get_property("game.timeout_fix") == true then
+                if settings.get_property("game.use_d3d12") == true then
                     table.insert(launch_args, "-use-d3d12")
                 end
 
