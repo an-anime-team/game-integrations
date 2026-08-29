@@ -1,4 +1,4 @@
--- ZZZ integration v0.2.7
+-- ZZZ integration v0.2.8
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -112,6 +112,16 @@ local function get_settings()
                     name = "game",
                     title = i18n("game"),
                     entries = {
+                        {
+                            name = "use_d3d12",
+                            title = i18n("game_use_d3d12_title"),
+                            description = i18n("game_use_d3d12_description"),
+                            reactivity = "none",
+                            entry = {
+                                format = "switch",
+                                default = false
+                            }
+                        },
                         {
                             name = "timeout_fix",
                             title = i18n("game_timeout_fix_title"),
@@ -813,13 +823,24 @@ return function()
                     return nil
                 end
 
+                -- Prepare game launch info.
+                local launch_args = {}
+                local launch_env = {}
+
+                if settings.get_property("game.timeout_fix") == true then
+                    table.insert(launch_args, "-use-d3d12")
+                end
+
+                if settings.get_property("game.timeout_fix") == true then
+                    launch_env["WINE_ENABLE_TIMEOUT_FIX"] = "1"
+                end
+
                 -- Try to obtain game launch info from the lua-proton library.
                 -- It will return nil if selected proton is not available.
                 local launch_info = lua_proton.game.wrap_launch_info({
                     binary = GAME_BINARY[variant.edition],
-                    env = {
-                        WINE_ENABLE_TIMEOUT_FIX = if settings.get_property("game.timeout_fix") == true then "1" else "0"
-                    }
+                    args = launch_args,
+                    env = launch_env
                 })
 
                 if not launch_info then
