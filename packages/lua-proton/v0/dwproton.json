@@ -3,6 +3,12 @@
     "title": "dwproton",
     "versions": [
         {
+            "name": "dwproton-11.0-14-x86_64",
+            "title": "dwproton 11.0-14",
+            "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-14/dwproton-11.0-14-x86_64.tar.xz",
+            "hash": "c3807fe91aeaef787b83f9a8701f321da97387f919cc92572b1c251b16798288"
+        },
+        {
             "name": "dwproton-11.0-13-x86_64",
             "title": "dwproton 11.0-13",
             "url": "https://git.dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-13/dwproton-11.0-13-x86_64.tar.xz",
