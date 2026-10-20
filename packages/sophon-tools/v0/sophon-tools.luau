@@ -1,4 +1,4 @@
--- sophon-tools lua bindings v0.2.5
+-- sophon-tools lua bindings v0.2.6
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,9 +42,9 @@ if not import then
 end
 
 local DOWNLOAD_INFO = {
-    url = "https://git.dawn.wine/dawn-winery/sophon-tools/releases/download/v0.2.2/sophon-tools",
-    size = 7811088,
-    hash = "blake3:pzlimf3hj2yhwieswbwq6a5rqqlxantuv6t3jlxw5bofwzmfinta===="
+    url = "https://git.dawn.wine/dawn-winery/sophon-tools/releases/download/v0.2.3/sophon-tools",
+    size = 7843920,
+    hash = "blake3:vjfxe5ybbfgkt7fe3n6jmay5y7y576rsivrpxmdko366pot52oca===="
 }
 
 local DATA_DIR: string = path.persist_dir("sophon-tools")
@@ -78,6 +78,7 @@ type GameComponentInfo = {
 type GameVersionInfo = {
     version: string;
     hash_md5: string;
+    predownload: boolean;
 }
 
 type GameDownloadFileInfo = {
@@ -502,10 +503,9 @@ return function(binary_path: string?)
             games = function(options: ListGamesOptions?): Promise<{GameInfo}>
                 local options: ListGamesOptions = options or {}
 
-                local cache_key = if options.api then
-                    `{options.api.region or "global"}-{options.api.launcher_id or "default"}`
-                else
-                    "global-default"
+                local cache_key = if options.api
+                    then `{options.api.region or "global"}-{options.api.launcher_id or "default"}`
+                    else "global-default"
 
                 if __cache.games[cache_key] then
                     return task.create(function() return true, clone(__cache.games[cache_key]) end)
@@ -552,10 +552,9 @@ return function(binary_path: string?)
                     error("sophon-tools module didn't receive game identifier")
                 end
 
-                local cache_key = if options.api then
-                    `{options.api.region or "global"}-{options.api.launcher_id or "default"}-{options.game_id}`
-                else
-                    `global-default-{options.game_id}`
+                local cache_key = if options.api
+                    then `{options.api.region or "global"}-{options.api.launcher_id or "default"}-{options.game_id}`
+                    else `global-default-{options.game_id}`
 
                 if __cache.components[cache_key] then
                     return task.create(function() return true, clone(__cache.components[cache_key]) end)
@@ -612,10 +611,9 @@ return function(binary_path: string?)
                     error("sophon-tools module didn't receive game identifier")
                 end
 
-                local cache_key = if options.api then
-                    `{options.api.region or "global"}-{options.api.launcher_id or "default"}-{options.game_id}`
-                else
-                    `global-default-{options.game_id}`
+                local cache_key = if options.api
+                    then `{options.api.region or "global"}-{options.api.launcher_id or "default"}-{options.game_id}`
+                    else `global-default-{options.game_id}`
 
                 if __cache.versions[cache_key] then
                     return task.create(function() return true, clone(__cache.versions[cache_key]) end)
@@ -665,10 +663,9 @@ return function(binary_path: string?)
                     error("sophon-tools module didn't receive game identifier")
                 end
 
-                local cache_key = if options.api then
-                    `{options.api.region or "global"}-{options.api.launcher_id or "default"}-{options.game_id}-{options.component_id or "game"}-{options.version or "latest"}-{options.regex or "all"}`
-                else
-                    `global-default-{options.game_id}-game-latest-all`
+                local cache_key = if options.api
+                    then `{options.api.region or "global"}-{options.api.launcher_id or "default"}-{options.game_id}-{options.component_id or "game"}-{options.version or "latest"}-{options.regex or "all"}`
+                    else `global-default-{options.game_id}-game-latest-all`
 
                 if __cache.files[cache_key] then
                     return task.create(function() return true, clone(__cache.files[cache_key]) end)
