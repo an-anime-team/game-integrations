@@ -90,13 +90,13 @@ local function game_version_read(edition: GameEdition): string?
 
     local version = fs.read_file(version_path):await()
 
-    return str.from_bytes(version)
+    return str.trim(str.from_bytes(version))
 end
 
 local function game_version_write(edition: GameEdition, version: string)
     local version_path = GAME_VERSION_PATH[edition]
 
-    fs.write_file(version_path, str.to_bytes(version)):await()
+    fs.write_file(version_path, str.to_bytes(str.trim(version))):await()
 end
 
 ----------------------------- settings -----------------------------
