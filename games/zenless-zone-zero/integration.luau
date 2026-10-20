@@ -1,4 +1,4 @@
--- ZZZ integration v0.2.8
+-- ZZZ integration v0.2.9
 -- Copyright (C) 2026  Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -248,6 +248,7 @@ local function get_download_game_pipeline(
     sophon_tools: any,
     options: {
         edition: GameEdition;
+        version: string?;
         threads: number?;
         target_memory_usage: number?;
         max_parallel_streams: number?;
@@ -275,6 +276,7 @@ local function get_download_game_pipeline(
                         game_id = SOPHON_GAME_ID[options.edition],
                         game_dir = GAME_DIR[options.edition],
 
+                        version = options.version,
                         threads = options.threads,
                         target_memory_usage = options.target_memory_usage,
                         max_parallel_streams = options.max_parallel_streams,
@@ -818,8 +820,20 @@ return function()
                     }
                 }):await()
 
+                -- Find latest non-predownload version.
+                local i = 1
+
+                while game_versions[i] and game_versions[i].predownload do
+                    i += 1
+                end
+
+                -- No versions available.
+                if not game_versions[i] then
+                    return nil
+                end
+
                 -- Check if installed game version is not latest.
-                if game_version ~= game_versions[1].version then
+                if game_version ~= game_versions[i].version then
                     return nil
                 end
 
@@ -879,19 +893,6 @@ return function()
 
                 local game_version = game_version_read(variant.edition)
 
-                -- Get pipeline to download game files if it's not available.
-                if not game_version then
-                    return get_download_game_pipeline(sophon_tools, {
-                        edition = variant.edition,
-                        threads = settings.get_property("sophon_tools.threads"),
-                        target_memory_usage = target_memory_usage,
-                        max_parallel_streams = settings.get_property("sophon_tools.max_parallel_streams"),
-                        fast_verify = settings.get_property("sophon_tools.fast_verify"),
-                        user_agent = user_agent,
-                        proxy = proxy
-                    })
-                end
-
                 -- Fetch list of available game versions.
                 local game_versions = sophon_tools.api.versions({
                     game_id = SOPHON_GAME_ID[variant.edition],
@@ -904,7 +905,34 @@ return function()
                     }
                 }):await()
 
-                -- We can't update games yet.
+                -- Find latest non-predownload version.
+                local i = 1
+
+                while game_versions[i] and game_versions[i].predownload do
+                    i += 1
+                end
+
+                -- No versions available.
+                if not game_versions[i] then
+                    return nil
+                end
+
+                -- Get pipeline to download game files if it's not available.
+                if not game_version then
+                    return get_download_game_pipeline(sophon_tools, {
+                        edition = variant.edition,
+                        version = game_versions[i].version, -- download latest non-predownload version
+                        threads = settings.get_property("sophon_tools.threads"),
+                        target_memory_usage = target_memory_usage,
+                        max_parallel_streams = settings.get_property("sophon_tools.max_parallel_streams"),
+                        fast_verify = settings.get_property("sophon_tools.fast_verify"),
+                        user_agent = user_agent,
+                        proxy = proxy
+                    })
+                end
+
+                -- Get pipeline to update game files if version is outdated.
+                -- TODO: support pre-downloads.
                 if game_version ~= game_versions[1].version then
                     return get_update_game_pipeline(sophon_tools, {
                         edition = variant.edition,
