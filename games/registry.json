@@ -6,8 +6,8 @@
             "featured": true
         },
         {
-            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/votv/manifest.json",
-            "featured": false
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/genshin-impact/manifest.json",
+            "featured": true
         },
         {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/arknights/manifest.json",
@@ -15,6 +15,10 @@
         },
         {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/nikke/manifest.json",
+            "featured": false
+        },
+        {
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/votv/manifest.json",
             "featured": false
         },
         {

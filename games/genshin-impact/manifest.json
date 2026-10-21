@@ -1,0 +1,46 @@
+{
+    "format": 1,
+    "game": {
+        "name": "genshin_impact",
+        "title": "Genshin Impact [local]",
+        "description": {
+            "en": "Genshin Impact is an open-world adventure RPG. In the game, set forth on a journey across a fantasy world called Teyvat. In this vast world, you can explore seven nations, meet a diverse cast of characters with unique personalities and abilities, and fight powerful enemies together with them, all on the way during your quest to find your lost sibling.",
+            "ru": "Genshin Impact - это приключенческая ролевая игра с открытым миром. Отправляйтесь в путешествие по фантастическому миру Тейвата. В этом огромном мире вы сможете исследовать семь государств, познакомиться с множеством персонажей - каждый со своим характером и способностями - и сражаться вместе с ними против могущественных врагов, продолжая поиски пропавшего брата или сестры."
+        },
+        "developer": "HoYoverse",
+        "publisher": "COGNOSPHERE",
+        "images": {
+            "icon": "http://127.0.0.1:8080/games/genshin-impact/icon.jpg",
+            "poster": "http://127.0.0.1:8080/games/genshin-impact/poster.jpg",
+            "background": "http://127.0.0.1:8080/games/genshin-impact/background.jpg",
+            "slides": [
+                "http://127.0.0.1:8080/games/genshin-impact/slide1.jpg",
+                "http://127.0.0.1:8080/games/genshin-impact/slide2.jpg",
+                "http://127.0.0.1:8080/games/genshin-impact/slide3.jpg",
+                "http://127.0.0.1:8080/games/genshin-impact/slide4.jpg"
+            ]
+        },
+        "tags": [
+            "free-to-play",
+            "cooperative",
+            "social-features",
+            "controller-support",
+            "gambling",
+            "in-game-purchases"
+        ],
+        "agreement": {
+            "en": "Current game integration has limited functionality and is released as an open beta. Follow integration development in the Dawn Winery's kitchen channel on Discord.",
+            "ru": "Текущая интеграция игры имеет ограниченный функционал и опубликована как открытая бета. Следите за новостями на Discord-сервере Dawn Winery в канале kitchen."
+        }
+    },
+    "package": {
+        "url": "http://127.0.0.1:8080/games/genshin-impact/package.json",
+        "output": "integration"
+    },
+    "maintainers": [
+        {
+            "en": "Nikita Podvirnyi <krypt0nn@dawn.wine>",
+            "ru": "Никита Подвирный <krypt0nn@dawn.wine>"
+        }
+    ]
+}
