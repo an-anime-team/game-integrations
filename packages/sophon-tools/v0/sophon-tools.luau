@@ -1,4 +1,4 @@
--- sophon-tools lua bindings v0.2.6
+-- sophon-tools lua bindings v0.2.7
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,9 +42,9 @@ if not import then
 end
 
 local DOWNLOAD_INFO = {
-    url = "https://git.dawn.wine/dawn-winery/sophon-tools/releases/download/v0.2.3/sophon-tools",
-    size = 7843920,
-    hash = "blake3:vjfxe5ybbfgkt7fe3n6jmay5y7y576rsivrpxmdko366pot52oca===="
+    url = "https://git.dawn.wine/dawn-winery/sophon-tools/releases/download/v0.2.4/sophon-tools",
+    size = 7889008,
+    hash = "blake3:2g6dqf5hzdqsqvcj4y5ozyxbbvmrabuinzhvingozsa4mx5dgt7a===="
 }
 
 local DATA_DIR: string = path.persist_dir("sophon-tools")

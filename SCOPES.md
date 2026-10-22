@@ -20,6 +20,7 @@
 | 3 | `0iwgnv2bh5fw6ssacwmxmnws6v` | [sophon-tools v0.2.4](packages/sophon-tools/sophon-tools.luau) |
 | 3 | `5azxviib25ybq376nqmg0y2wc7` | [sophon-tools v0.2.5](packages/sophon-tools/sophon-tools.luau) |
 | 3 | `1ysyvgnjvahb1alrdifgi2mhc6` | [sophon-tools v0.2.6](packages/sophon-tools/sophon-tools.luau) |
+| 3 | `1glir4gl6adxzgyhq3rfkc20vw` | [sophon-tools v0.2.7](packages/sophon-tools/sophon-tools.luau) |
 
 1. `components/wine` requires `process_api` to run downloaded wine binary
    to create wine prefix (`wine wineboot -u`).
