@@ -1,6 +1,7 @@
 {
     "inputs": {
-        "verifier": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/verifier/v0/verifier.luau"
+        "verifier": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/verifier/v0/verifier.luau",
+        "nixos-command-wrapper": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/packages/nixos-command-wrapper/v0/nixos-command-wrapper.luau"
     },
     "outputs": {
         "umu-launcher": "umu-launcher.luau"

@@ -1,4 +1,4 @@
--- umu-launcher v0.2.2
+-- umu-launcher v0.2.3
 -- Copyright (C) 2026 Nikita Podvirnyi <krypt0nn@dawn.wine>
 --                    NelloKudo <marshnelloosu@gmail.com>
 --
@@ -51,9 +51,9 @@ type VerifyResult =
     | "missing_python3"
 
 local DOWNLOAD_INFO = {
-    url = "https://github.com/Open-Wine-Components/umu-launcher/releases/download/1.4.0/umu-launcher-1.4.0-zipapp.tar",
-    size = 419043,
-    hash = "blake3:ifym7x75nzqxvb3xgd5aqw7yku6vuizgwmdgx2i25eyr7tmgexwq===="
+    url = "https://github.com/Open-Wine-Components/umu-launcher/releases/download/1.4.4/umu-launcher-1.4.4-zipapp.tar",
+    size = 419388,
+    hash = "blake3:6pxrexwibkuieb72763gufk6rkjso7la2f4xprpdzmbzzvcytopa===="
 }
 
 return function(umu_binary: string)
@@ -66,6 +66,7 @@ return function(umu_binary: string)
     end
 
     local verifier = import("verifier")
+    local nixos_wrapper = import("nixos-command-wrapper")
 
     if not verifier then
         error("umu-launcher became a package, use package.json in inputs")
@@ -81,8 +82,10 @@ return function(umu_binary: string)
             -- Note that this method *does not* verify if this binary is already
             -- installed.
             install = function(updater: (current: number, total: number, action: "download" | "extract") -> ()): string
-                local umu_temp_download_path: string = path.join(path.temp_dir(), `umu-{DOWNLOAD_INFO.hash or "unknown"}.tar`)
-                local umu_temp_extract_path: string  = path.join(path.temp_dir(), `umu-launcher-{DOWNLOAD_INFO.hash or "unknown"}`)
+                local download_id = str.encode("base16", hash.digitize("xxh3-64", DOWNLOAD_INFO.hash))
+
+                local umu_temp_download_path: string = path.join(path.temp_dir(), `umu-{download_id}.tar`)
+                local umu_temp_extract_path: string  = path.join(path.temp_dir(), `umu-launcher-{download_id}`)
                 local umu_temp_binary_path: string   = path.join(umu_temp_extract_path, "umu", "umu-run")
 
                 -- Delete temporary files
@@ -217,6 +220,17 @@ return function(umu_binary: string)
                     error("umu-launcher module doesn't have access to the given proton prefix path")
                 end
 
+                -- Wrap umu binary to support NixOS systems.
+                local launch_info = nixos_wrapper({
+                    binary = umu_binary,
+                    args = { "wineboot", "-u" },
+                    env = {
+                        PROTONPATH       = proton_path,
+                        WINEPREFIX       = path.join(prefix_path, "pfx"),
+                        PROTON_USE_WOW64 = "1"
+                    }
+                })
+
                 if not verifier({
                     path = umu_binary,
                     size = DOWNLOAD_INFO.size,
@@ -225,11 +239,11 @@ return function(umu_binary: string)
                     error("invalid umu-launcher binary hash")
                 end
 
-                local handle = process.open(umu_binary, { "wineboot", "-u" }, {
-                    PROTONPATH       = proton_path,
-                    WINEPREFIX       = path.join(prefix_path, "pfx"),
-                    PROTON_USE_WOW64 = "1"
-                })
+                local handle = process.open(
+                    launch_info.binary,
+                    launch_info.args,
+                    launch_info.env
+                )
 
                 local output = process.wait(handle)
 
