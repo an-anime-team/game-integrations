@@ -17,6 +17,7 @@
 | - | ---------------------------- | -------------------------------------------------------------- |
 | 1 | `436jznvxxrw1hxlh0y8wrlf9aa` | [components/wine v0.1.3](packages/components/wine.luau)        |
 | 2 | `35wzr0zrac7pkrjcax27chjbxw` | [umu-launcher v0.2.2](packages/umu-launcher/umu-launcher.luau) |
+| 2 | `272gbggpb7qs4gr9sk0nz5bp57` | [umu-launcher v0.2.3](packages/umu-launcher/umu-launcher.luau) |
 | 3 | `0iwgnv2bh5fw6ssacwmxmnws6v` | [sophon-tools v0.2.4](packages/sophon-tools/sophon-tools.luau) |
 | 3 | `5azxviib25ybq376nqmg0y2wc7` | [sophon-tools v0.2.5](packages/sophon-tools/sophon-tools.luau) |
 | 3 | `1ysyvgnjvahb1alrdifgi2mhc6` | [sophon-tools v0.2.6](packages/sophon-tools/sophon-tools.luau) |
