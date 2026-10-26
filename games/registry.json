@@ -10,6 +10,10 @@
             "featured": true
         },
         {
+            "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/honkai-star-rail/manifest.json",
+            "featured": true
+        },
+        {
             "url": "https://raw.githubusercontent.com/an-anime-team/game-integrations/refs/heads/master/games/arknights/manifest.json",
             "featured": true
         },
