@@ -109,22 +109,6 @@ local function get_settings()
             game = "honkai_star_rail",
             layout = {
                 {
-                    name = "game",
-                    title = i18n("game"),
-                    entries = {
-                        {
-                            name = "timeout_fix",
-                            title = i18n("game_timeout_fix_title"),
-                            description = i18n("game_timeout_fix_description"),
-                            reactivity = "none",
-                            entry = {
-                                format = "switch",
-                                default = false
-                            }
-                        }
-                    } :: any
-                },
-                {
                     name = "sophon_tools",
                     title = i18n("sophon_tools_settings_title"),
                     entries = {
@@ -826,10 +810,6 @@ return function()
                 -- Prepare game launch info.
                 local launch_args = {}
                 local launch_env = {}
-
-                if settings.get_property("game.timeout_fix") == true then
-                    launch_env["WINE_ENABLE_TIMEOUT_FIX"] = "1"
-                end
 
                 -- Try to obtain game launch info from the lua-proton library.
                 -- It will return nil if selected proton is not available.

@@ -22,16 +22,6 @@ ja = "キャッシュサイズ"
 
 # ----------------------------- settings -----------------------------
 
-[game_timeout_fix_title]
-en = "Enable timeout fix"
-ru = "Включить исправление времени ожидания"
-ja = "タイムアウトの修正を有効にする"
-
-[game_timeout_fix_description]
-en = "Set WINE_ENABLE_TIMEOUT_FIX=1 environment variable to fix white dialog problem on the game launch."
-ru = "Установить переменную окружения WINE_ENABLE_TIMEOUT_FIX=1 для исправления диалогового окна с ошибкой во время запуска игры."
-ja = "環境変数 WINE_ENABLE_TIMEOUT_FIX=1 を設定することにより、ゲーム起動時に白いダイアログが発生する問題を修正します"
-
 [sophon_tools_settings_title]
 en = "Game downloader"
 ru = "Загрузчик игры"
