@@ -3,23 +3,23 @@
     "games": [
         {
             "url": "http://127.0.0.1:8080/games/votv/manifest.json",
-            "featured": true
+            "featured": false
         },
         {
             "url": "http://127.0.0.1:8080/games/genshin-impact/manifest.json",
-            "featured": false
+            "featured": true
         },
         {
             "url": "http://127.0.0.1:8080/games/zenless-zone-zero/manifest.json",
             "featured": true
         },
         {
-            "url": "http://127.0.0.1:8080/games/arknights/manifest.json",
+            "url": "http://127.0.0.1:8080/games/honkai-star-rail/manifest.json",
             "featured": true
         },
         {
-            "url": "http://127.0.0.1:8080/games/hsr/manifest.json",
-            "featured": false
+            "url": "http://127.0.0.1:8080/games/arknights/manifest.json",
+            "featured": true
         },
         {
             "url": "http://127.0.0.1:8080/games/hi3/manifest.json",
