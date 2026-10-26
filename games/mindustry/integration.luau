@@ -1,4 +1,4 @@
--- Mindustry integration v1.0.2
+-- Mindustry integration v1.0.3
 -- Copyright (C) 2026  Dylan Donnell <greenicedtea@tutanota.com>,
 --                     Nikita Podvirnyi <krypt0nn@dawn.wine>
 --
@@ -184,7 +184,10 @@ local function import_settings()
 
                                 values = iter(list_remote_game_versions())
                                     .fold({}, function(values, info)
-                                        values[info.version] = info.version
+                                        table.insert(values, {
+                                            name = info.version,
+                                            title = info.version
+                                        })
 
                                         return values
                                     end),
